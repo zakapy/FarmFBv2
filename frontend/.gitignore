@@ -1,0 +1,15 @@
+# игнорируем build-папку (собранный проект)
+build/
+
+# игнорируем node_modules (зависимости)
+node_modules/
+
+# лог файлы и кэш
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# окружения
+.env
+.env.local
+.env.*.local

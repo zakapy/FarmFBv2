@@ -1,0 +1,26 @@
+.btn {
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: 0.3s ease-in-out;
+    cursor: pointer;
+    font-family: inherit;
+    border: none;
+  }
+  
+  .btn-primary {
+    background-color: var(--primary);
+    color: white;
+  }
+  .btn-primary:hover {
+    background-color: var(--primary-dark);
+  }
+  
+  .btn-secondary {
+    background-color: var(--secondary);
+    color: white;
+  }
+  .btn-secondary:hover {
+    background-color: var(--secondary-dark);
+  }
+  

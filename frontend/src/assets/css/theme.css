@@ -1,0 +1,87 @@
+:root {
+    --primary: #2563eb;
+    --primary-dark: #1d4ed8;
+    --secondary: #f59e0b;
+    --secondary-dark: #d97706;
+    --text: #1f2937;
+    --text-light: #6b7280;
+    --bg: #f9fafb;
+    --bg-dark: #e5e7eb;
+    --error: #ef4444;
+    --success: #10b981;
+    --border: #d1d5db;
+    --radius: 8px;
+    --shadow: rgba(0, 0, 0, 0.05);
+    --transition: 0.3s ease-in-out;
+  }
+  
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+  
+  /* Утилиты */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+  
+  .button {
+    background-color: var(--primary);
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-weight: 500;
+    transition: var(--transition);
+  }
+  
+  .button:hover {
+    background-color: var(--primary-dark);
+  }
+  
+  .input {
+    padding: 0.6rem 1rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background-color: white;
+    transition: var(--transition);
+    width: 100%;
+  }
+  
+  .input:focus {
+    outline: none;
+    border-color: var(--primary);
+  }
+  
+  .card {
+    background-color: white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    box-shadow: 0 2px 10px var(--shadow);
+  }
+  
+  /* Специальные зоны */
+  .auth-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: linear-gradient(to bottom right, var(--primary), var(--secondary));
+    padding: 2rem;
+  }
+  
+  .auth-card {
+    width: 100%;
+    max-width: 400px;
+    background-color: var(--bg);
+    padding: 2rem;
+    border-radius: var(--radius);
+    box-shadow: 0 10px 20px var(--shadow);
+  }
+  

@@ -1,0 +1,25 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background: white;
+    border-bottom: 1px solid var(--bg-dark);
+    box-shadow: 0 2px 4px var(--shadow);
+  }
+  
+  .nav {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .nav a {
+    color: var(--primary);
+    font-weight: 500;
+    transition: 0.2s;
+  }
+  
+  .nav a:hover {
+    text-decoration: underline;
+  }
+  
