@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Можно потом перенести в .env и заменить через process.env.REACT_APP_API_URL
-const API_BASE_URL = 'http://localhost:8000/api';
+const API_BASE_URL = 'http://localhost:5000/api/v1';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
