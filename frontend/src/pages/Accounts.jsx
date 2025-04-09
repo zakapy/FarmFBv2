@@ -31,7 +31,12 @@ const Accounts = () => {
   };
 
   const handleEdit = (account) => {
-    setEditData(account);
+    // Защита от null — гарантируем, что proxy всегда объект
+    const safeAccount = {
+      ...account,
+      proxy: account.proxy || { name: '' },
+    };
+    setEditData(safeAccount);
     setShowForm(true);
   };
 
