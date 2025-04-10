@@ -1,42 +1,43 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import * as authAPI from './authAPI';
+import { login, register, getProfile } from './authAPI';
 
-// Thunks
+const initialState = {
+  user: null,
+  loading: false,
+  error: null,
+  isAuthenticated: false,
+};
+
 export const loginUser = createAsyncThunk('auth/login', async (data, thunkAPI) => {
   try {
-    const res = await authAPI.login(data);
-    localStorage.setItem('access_token', res.access_token);
+    const res = await login(data);
+    localStorage.setItem('access_token', res.accessToken);
+    localStorage.setItem('refresh_token', res.refreshToken);
     return res.user;
-  } catch (err) {
-    return thunkAPI.rejectWithValue(err.response?.data?.message || 'Ошибка входа');
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error.response?.data?.message || 'Login failed');
   }
 });
 
 export const registerUser = createAsyncThunk('auth/register', async (data, thunkAPI) => {
   try {
-    const res = await authAPI.register(data);
-    return res.user;
-  } catch (err) {
-    return thunkAPI.rejectWithValue(err.response?.data?.message || 'Ошибка регистрации');
-  }
-});
-
-export const fetchProfile = createAsyncThunk('auth/profile', async (_, thunkAPI) => {
-  try {
-    const res = await authAPI.getProfile();
+    const res = await register(data);
     return res;
-  } catch (err) {
-    return thunkAPI.rejectWithValue('Не удалось загрузить профиль');
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error.response?.data?.message || 'Register failed');
   }
 });
 
-const initialState = {
-  user: null,
-  role: null,
-  loading: false,
-  error: null,
-  isAuthenticated: false,
-};
+export const fetchUserProfile = createAsyncThunk('auth/profile', async (_, thunkAPI) => {
+  try {
+    const res = await getProfile();
+    return res.user;
+  } catch (error) {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+    return thunkAPI.rejectWithValue('Session expired');
+  }
+});
 
 const authSlice = createSlice({
   name: 'auth',
@@ -46,45 +47,42 @@ const authSlice = createSlice({
       state.user = null;
       state.isAuthenticated = false;
       localStorage.removeItem('access_token');
+      localStorage.removeItem('refresh_token');
     },
   },
   extraReducers: (builder) => {
     builder
-      // Login
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
+        state.loading = false;
         state.user = action.payload;
-        state.role = action.payload.role || 'user';
         state.isAuthenticated = true;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-
-      // Register
       .addCase(registerUser.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
       .addCase(registerUser.fulfilled, (state) => {
         state.loading = false;
-        // Можно сразу логинить: state.user = action.payload; state.isAuthenticated = true;
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-         state.role = action.payload.role || 'user';
       })
-
-      // Profile
-      .addCase(fetchProfile.fulfilled, (state, action) => {
+      .addCase(fetchUserProfile.fulfilled, (state, action) => {
         state.user = action.payload;
-        state.role = action.payload.role || 'user';
         state.isAuthenticated = true;
+      })
+      .addCase(fetchUserProfile.rejected, (state) => {
+        state.user = null;
+        state.isAuthenticated = false;
       });
   },
 });

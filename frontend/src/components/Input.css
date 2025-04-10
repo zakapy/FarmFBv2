@@ -1,13 +1,15 @@
-.input {
-    padding: 0.7rem 1rem;
-    border-radius: 8px;
-    border: 1px solid var(--border);
-    width: 100%;
-    transition: 0.2s ease;
-  }
-  
-  .input:focus {
-    border-color: var(--primary);
-    outline: none;
-  }
-  
+.logout-button {
+  background: transparent;
+  border: none;
+  color: var(--primary);
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: 0.2s;
+  padding: 0;
+}
+
+.logout-button:hover {
+  text-decoration: underline;
+  color: #d9534f; /* мягкий красный при наведении */
+}

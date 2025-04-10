@@ -20,8 +20,8 @@ root.render(
   <Provider store={store}>
     <App />
     <ToastContainer
-      position="top-right"
-      autoClose={3000}
+      position="bottom-right" // ← теперь внизу справа
+      autoClose={2000}        // ← авто-закрытие через 2 секунды
       hideProgressBar={false}
       newestOnTop
       closeOnClick

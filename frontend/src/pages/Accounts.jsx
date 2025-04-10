@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+
 import {
   fetchAccounts,
   addAccount,
@@ -15,7 +16,7 @@ import Loader from '../components/Loader';
 
 const Accounts = () => {
   const dispatch = useDispatch();
-  const { list, loading } = useSelector((state) => state.accounts);
+  const { list = [], loading } = useSelector((state) => state.accounts); // защита по умолчанию
 
   const [showForm, setShowForm] = useState(false);
   const [editData, setEditData] = useState(null);
@@ -31,7 +32,6 @@ const Accounts = () => {
   };
 
   const handleEdit = (account) => {
-    // Защита от null — гарантируем, что proxy всегда объект
     const safeAccount = {
       ...account,
       proxy: account.proxy || { name: '' },
@@ -73,16 +73,21 @@ const Accounts = () => {
         <div style={{ display: 'grid', gap: '1rem', marginTop: '1rem' }}>
           {list.map((acc) => (
             <AccountCard
-              key={acc.id}
-              account={acc}
+              key={acc._id || acc.id} // подстраиваемся под Mongo _id
+              account={{
+                ...acc,
+                name: acc.name ?? '—',
+                token: acc.token ?? '',
+                platform: acc.platform ?? '',
+                meta: acc.meta ?? {},
+              }}
               onEdit={() => handleEdit(acc)}
-              onDelete={() => handleDelete(acc.id)}
+              onDelete={() => handleDelete(acc._id || acc.id)}
             />
           ))}
         </div>
       )}
 
-      {/* Модалка формы */}
       {showForm && (
         <AccountForm
           onClose={() => setShowForm(false)}
@@ -91,7 +96,6 @@ const Accounts = () => {
         />
       )}
 
-      {/* Модалка подтверждения */}
       {deleteId && (
         <ConfirmModal
           title="Удалить аккаунт?"
