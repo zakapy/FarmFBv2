@@ -1,0 +1,18 @@
+# Node
+node_modules/
+.env
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Docker
+docker-compose.override.yml
+docker-compose.dev.yml
+
+# Editor junk
+.vscode/
+.idea/
+.DS_Store
+*.swp
