@@ -1,20 +1,38 @@
 const { z } = require('zod');
 
-// Кастомный парсер cookies, чтобы не падало при строке
-const cookiesSchema = z.any().refine((val) => {
-  if (typeof val === 'object' && val !== null) return true;
-  if (typeof val === 'string') {
+// Универсальный и безопасный парсер cookies — поддерживает массивы, строки, объекты
+const cookiesSchema = z.union([
+  // ✅ Массив объектов cookies
+  z.array(
+    z.object({
+      name: z.string(),
+      value: z.string(),
+      domain: z.string().optional(),
+      path: z.string().optional(),
+      httpOnly: z.boolean().optional(),
+      secure: z.boolean().optional(),
+      expirationDate: z.number().optional()
+    })
+  ),
+
+  // ✅ Объект (fallback, если вдруг что-то другое)
+  z.record(z.any()),
+
+  // ✅ Строка, которую можно распарсить в объект
+  z.string().refine((val) => {
     try {
       const parsed = JSON.parse(val);
       return typeof parsed === 'object' && parsed !== null;
-    } catch (err) {
+    } catch {
       return false;
     }
-  }
-  return false;
-}, {
-  message: 'Cookies must be a valid object or JSON string',
-});
+  }, {
+    message: 'Invalid JSON string for cookies'
+  }),
+
+  // ✅ null (не обязательно)
+  z.null()
+]).optional();
 
 exports.createAccountSchema = z.object({
   body: z.object({
@@ -32,7 +50,7 @@ exports.updateAccountSchema = z.object({
   }),
   body: z.object({
     name: z.string().optional(),
-    cookies: cookiesSchema.optional(),
+    cookies: cookiesSchema,
     token: z.string().optional(),
     platform: z.string().optional(),
     meta: z.record(z.any()).optional()

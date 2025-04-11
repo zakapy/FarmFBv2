@@ -10,11 +10,15 @@ const AccountForm = ({ initialData, onClose, onSubmit }) => {
     proxy: '',
   });
 
+  const [error, setError] = useState(null);
+
   useEffect(() => {
     if (initialData) {
       setForm({
         name: initialData.name || '',
-        cookies: initialData.cookies || '',
+        cookies: Array.isArray(initialData.cookies)
+          ? JSON.stringify(initialData.cookies, null, 2)
+          : initialData.cookies || '',
         proxy: initialData.proxy || '',
       });
     }
@@ -25,13 +29,38 @@ const AccountForm = ({ initialData, onClose, onSubmit }) => {
     setForm((prevForm) => ({ ...prevForm, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(null);
+
     if (!form.name.trim() || !form.cookies.trim()) {
-      alert('Название и куки обязательны');
+      setError('Название и куки обязательны');
       return;
     }
-    onSubmit(form);
+
+    let parsedCookies;
+    try {
+      parsedCookies = JSON.parse(form.cookies);
+      if (!Array.isArray(parsedCookies)) throw new Error();
+    } catch {
+      setError('Невалидный формат cookies — нужен JSON-массив!');
+      return;
+    }
+
+    try {
+      const result = await onSubmit({
+        ...form,
+        cookies: parsedCookies,
+      });
+
+      // Если пришёл payload с ошибкой — показать
+      if (result?.error) {
+        setError(result.error);
+      }
+    } catch (err) {
+      console.error('Ошибка при создании:', err);
+      setError(err.message || 'Произошла ошибка при создании аккаунта');
+    }
   };
 
   return (
@@ -52,7 +81,7 @@ const AccountForm = ({ initialData, onClose, onSubmit }) => {
         />
         <Input
           name="cookies"
-          placeholder="Вставьте куки"
+          placeholder="Вставьте куки (в формате JSON массива)"
           value={form.cookies}
           onChange={handleChange}
         />
@@ -62,7 +91,16 @@ const AccountForm = ({ initialData, onClose, onSubmit }) => {
           value={form.proxy}
           onChange={handleChange}
         />
-        <Button type="submit">{initialData ? 'Сохранить' : 'Добавить'}</Button>
+
+        {error && (
+          <div style={{ color: 'red', fontSize: '14px' }}>
+            ⚠️ {error}
+          </div>
+        )}
+
+        <Button type="submit">
+          {initialData ? 'Сохранить' : 'Добавить'}
+        </Button>
       </form>
     </Modal>
   );

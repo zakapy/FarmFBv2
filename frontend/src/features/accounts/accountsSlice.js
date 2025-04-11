@@ -14,9 +14,11 @@ export const addAccount = createAsyncThunk('accounts/add', async (data, thunkAPI
   try {
     return await accountsAPI.createAccount(data);
   } catch (err) {
-    return thunkAPI.rejectWithValue('Ошибка при создании аккаунта');
+    const errorMessage = err.response?.data?.error || 'Ошибка при создании аккаунта';
+    return thunkAPI.rejectWithValue(errorMessage);
   }
 });
+
 
 export const editAccount = createAsyncThunk('accounts/update', async ({ id, data }, thunkAPI) => {
   try {

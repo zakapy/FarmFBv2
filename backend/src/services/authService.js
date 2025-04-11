@@ -15,6 +15,8 @@ exports.register = async ({ email, password }) => {
 };
 
 exports.login = async ({ email, password }) => {
+  if (!email || !password) throw new Error('Email and password are required');
+
   const user = await User.findOne({ email });
   if (!user) throw new Error('Invalid email or password');
 
@@ -39,6 +41,7 @@ exports.login = async ({ email, password }) => {
 
 exports.getProfile = async (userId) => {
   const user = await User.findById(userId).select('-password -refreshToken');
+  if (!user) throw new Error('User not found');
   return user;
 };
 
@@ -47,6 +50,8 @@ exports.logout = async (userId) => {
 };
 
 exports.handleRefreshToken = async (refreshToken) => {
+  if (!refreshToken) throw new Error('Refresh token required');
+
   try {
     const payload = jwt.verify(refreshToken, env.REFRESH_SECRET);
     const user = await User.findById(payload.id);
@@ -55,7 +60,6 @@ exports.handleRefreshToken = async (refreshToken) => {
     }
 
     const tokens = generateTokens(user._id, user.role);
-
     user.refreshToken = tokens.refreshToken;
     await user.save();
 

@@ -14,7 +14,8 @@ exports.login = async (req, res, next) => {
     const result = await authService.login(req.body);
     res.status(200).json(result);
   } catch (err) {
-    next(err);
+    console.error('❌ Ошибка логина:', err.message, err.stack); // логируем
+    res.status(500).json({ message: err.message }); // временно, чтобы видеть ошибку в ответе
   }
 };
 
