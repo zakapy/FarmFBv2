@@ -10,7 +10,11 @@ const accountService = {
   },
 
   update: async (userId, accountId, data) => {
-    const account = await Account.findOneAndUpdate({ _id: accountId, userId }, data, { new: true });
+    const account = await Account.findOneAndUpdate(
+      { _id: accountId, userId },
+      data,
+      { new: true }
+    );
     if (!account) throw new Error('Account not found or no access');
     return account;
   },
@@ -18,6 +22,11 @@ const accountService = {
   remove: async (userId, accountId) => {
     const deleted = await Account.findOneAndDelete({ _id: accountId, userId });
     if (!deleted) throw new Error('Account not found or no access');
+  },
+
+  // 👇 Название должно совпадать с тем, что в контроллере
+  getOne: async (userId, accountId) => {
+    return await Account.findOne({ _id: accountId, userId });
   }
 };
 

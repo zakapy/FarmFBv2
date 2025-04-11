@@ -19,4 +19,8 @@ router.put('/:id/update', validate(updateAccountSchema), accountController.updat
 
 router.delete('/:id/delete', validate(deleteAccountSchema), accountController.remove);
 
+router.post('/:id/check', accountController.checkStatus);
+
+
+
 module.exports = router;

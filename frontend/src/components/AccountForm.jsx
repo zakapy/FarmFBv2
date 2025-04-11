@@ -19,7 +19,9 @@ const AccountForm = ({ initialData, onClose, onSubmit }) => {
         cookies: Array.isArray(initialData.cookies)
           ? JSON.stringify(initialData.cookies, null, 2)
           : initialData.cookies || '',
-        proxy: initialData.proxy || '',
+        proxy: typeof initialData.proxy === 'string'
+          ? initialData.proxy
+          : initialData.proxy?.name || '',
       });
     }
   }, [initialData]);
@@ -48,17 +50,12 @@ const AccountForm = ({ initialData, onClose, onSubmit }) => {
     }
 
     try {
-      const result = await onSubmit({
+      await onSubmit({
         ...form,
         cookies: parsedCookies,
+        proxy: form.proxy.trim(),
       });
-
-      // Если пришёл payload с ошибкой — показать
-      if (result?.error) {
-        setError(result.error);
-      }
     } catch (err) {
-      console.error('Ошибка при создании:', err);
       setError(err.message || 'Произошла ошибка при создании аккаунта');
     }
   };
@@ -79,12 +76,24 @@ const AccountForm = ({ initialData, onClose, onSubmit }) => {
           value={form.name}
           onChange={handleChange}
         />
-        <Input
+
+        {/* 🧱 БОЛЬШОЕ МНОГОСТРОЧНОЕ ПОЛЕ */}
+        <textarea
           name="cookies"
-          placeholder="Вставьте куки (в формате JSON массива)"
+          placeholder="Вставьте куки (в формате JSON)"
           value={form.cookies}
           onChange={handleChange}
+          rows={6}
+          style={{
+            padding: '0.5rem',
+            borderRadius: '5px',
+            border: '1px solid #ccc',
+            resize: 'vertical',
+            fontFamily: 'monospace',
+            whiteSpace: 'pre-wrap',
+          }}
         />
+
         <Input
           name="proxy"
           placeholder="Прокси (необязательно)"
@@ -97,10 +106,7 @@ const AccountForm = ({ initialData, onClose, onSubmit }) => {
             ⚠️ {error}
           </div>
         )}
-
-        <Button type="submit">
-          {initialData ? 'Сохранить' : 'Добавить'}
-        </Button>
+        <Button type="submit">{initialData ? 'Сохранить' : 'Добавить'}</Button>
       </form>
     </Modal>
   );

@@ -28,3 +28,36 @@ exports.remove = async (req, res) => {
   await accountService.remove(req.user.id, req.params.id);
   res.status(204).send();
 };
+
+exports.checkStatus = async (req, res) => {
+  const { id } = req.params;
+  const account = await accountService.getById(req.user.id, id);
+
+  if (!account) {
+    return res.status(404).json({ error: 'Аккаунт не найден' });
+  }
+
+  const isValid = await checkFacebookCookies(account.cookies);
+  const status = isValid ? 'активен' : 'неактивен';
+
+  const updated = await accountService.update(req.user.id, id, { status });
+
+  res.json({ status, updated });
+};
+
+exports.checkStatus = async (req, res) => {
+  const { id } = req.params;
+
+  const account = await accountService.getOne(req.user.id, id);
+  if (!account) return res.status(404).json({ error: 'Аккаунт не найден' });
+
+  const isValid = await checkFacebookCookies(account.cookies);
+  const status = isValid ? 'active' : 'inactive';
+
+  const updated = await accountService.update(req.user.id, id, {
+    meta: { ...account.meta, status },
+  });
+
+  res.json({ success: true, status });
+};
+

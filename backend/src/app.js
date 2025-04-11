@@ -4,47 +4,56 @@ const cors = require('cors');
 const helmet = require('helmet');
 const xss = require('xss-clean');
 const rateLimit = require('express-rate-limit');
+
 const authRoutes = require('./routes/v1/authRoutes');
-const accountRoutes = require('./routes/v1/accountRoutes'); // ✅ ДОБАВИЛ
+const accountRoutes = require('./routes/v1/accountRoutes');
 const errorHandler = require('./middlewares/errorHandler');
 
 const app = express();
 
-// Логирование
+// 🔍 Логирование в dev-режиме
 app.use(morgan('dev'));
 
-// Защита от XSS
+// 🛡️ Безопасность
 app.use(xss());
-
-// Заголовки безопасности
 app.use(helmet());
 
-// Ограничение количества запросов
+// 🚫 Ограничения по запросам
 const limiter = rateLimit({
-  windowMs: 10 * 60 * 1000, // 10 минут
-  max: 100, // максимум 100 запросов за окно
+  windowMs: 10 * 60 * 1000,
+  max: 100,
 });
 app.use(limiter);
 
-// Парсинг JSON
+// 📦 Парсинг тела запроса
 app.use(express.json());
 
-// ✅ Правильная настройка CORS с credentials
+// 🌍 CORS с поддержкой credentials
 app.use(cors({
   origin: 'http://localhost:3000',
-  credentials: true
+  credentials: true,
 }));
 
-// ✅ Роуты
+// ✅ Основные маршруты
 app.use('/api/v1/auth', authRoutes);
-app.use('/api/v1/accounts', accountRoutes); // ✅ ДОБАВИЛ
+app.use('/api/v1/accounts', accountRoutes);
 
 // ❌ Обработка несуществующих маршрутов
 app.use((req, res) => {
-  res.status(404).json({ error: 'Route not found' });
+  res.status(404).json({ error: `Route not found: ${req.originalUrl}` });
 });
 
-// Обработка ошибок
+// 🧯 Глобальный обработчик ошибок
 app.use(errorHandler);
+
+// 🔥 Лог доступных роутов при запуске
+console.log('✅ API endpoints:');
+console.log(' - POST   /api/v1/auth/login');
+console.log(' - POST   /api/v1/auth/register');
+console.log(' - GET    /api/v1/accounts');
+console.log(' - POST   /api/v1/accounts/create');
+console.log(' - PUT    /api/v1/accounts/:id/update');
+console.log(' - DELETE /api/v1/accounts/:id/delete');
+console.log(' - POST   /api/v1/accounts/:id/check');
 
 module.exports = app;

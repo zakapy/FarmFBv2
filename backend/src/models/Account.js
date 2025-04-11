@@ -9,9 +9,16 @@ const accountSchema = new mongoose.Schema(
     },
     name: { type: String },
     token: { type: String },
-    cookies: { type: mongoose.Schema.Types.Mixed }, // ← сохраняем как объект или строку
+    cookies: { type: mongoose.Schema.Types.Mixed },
     platform: { type: String },
-    meta: { type: Object }
+    meta: { type: Object },
+
+    // ✅ Новый статус
+    status: {
+      type: String,
+      enum: ['активен', 'неактивен', 'неизвестно'],
+      default: 'неизвестно'
+    }
   },
   { timestamps: true }
 );

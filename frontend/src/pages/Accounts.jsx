@@ -44,10 +44,12 @@ const Accounts = () => {
     setDeleteId(id);
   };
 
-  const confirmDelete = () => {
-    dispatch(removeAccount(deleteId));
+  const confirmDelete = async () => {
+    await dispatch(removeAccount(deleteId));
     setDeleteId(null);
+    dispatch(fetchAccounts()); // 🔄 обновляем список
   };
+  
 
   const submitForm = (data) => {
     if (editData) {

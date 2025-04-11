@@ -1,0 +1,24 @@
+[2025-04-10 21:37:27] [31merror[39m: Error: Invalid email or password
+    at exports.login (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\services\authService.js:19:20)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async exports.login (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\controllers\authController.js:14:20)
+[2025-04-10 21:37:38] [31merror[39m: Error: Invalid email or password
+    at exports.login (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\services\authService.js:19:20)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async exports.login (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\controllers\authController.js:14:20)
+[2025-04-10 21:53:07] [31merror[39m: Error: Invalid email or password
+    at exports.login (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\services\authService.js:21:20)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async exports.login (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\controllers\authController.js:54:20)
+[2025-04-10 21:53:08] [31merror[39m: Error: Invalid email or password
+    at exports.login (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\services\authService.js:21:20)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async exports.login (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\controllers\authController.js:54:20)
+[2025-04-11 14:49:38] [31merror[39m: Error: Invalid or expired refresh token
+    at exports.handleRefreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\services\authService.js:70:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async exports.refreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\controllers\authController.js:47:20)
+[2025-04-11 16:23:44] [31merror[39m: Error: Invalid or expired refresh token
+    at exports.handleRefreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\services\authService.js:70:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async exports.refreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\controllers\authController.js:47:20)
