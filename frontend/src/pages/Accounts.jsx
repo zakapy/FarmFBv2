@@ -85,6 +85,7 @@ const Accounts = () => {
               }}
               onEdit={() => handleEdit(acc)}
               onDelete={() => handleDelete(acc._id || acc.id)}
+              refreshAccounts={() => dispatch(fetchAccounts())}
             />
           ))}
         </div>

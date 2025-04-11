@@ -8,7 +8,9 @@ exports.list = async (req, res) => {
 
 exports.create = async (req, res) => {
   const isValid = await checkFacebookCookies(req.body.cookies);
-  if (!isValid) return res.status(400).json({ error: 'Некорректные куки или неавторизованы в Facebook' });
+  if (!isValid) {
+    return res.status(400).json({ error: 'Некорректные куки или неавторизованы в Facebook' });
+  }
 
   const newAccount = await accountService.create(req.user.id, req.body);
   res.status(201).json(newAccount);
@@ -17,7 +19,9 @@ exports.create = async (req, res) => {
 exports.update = async (req, res) => {
   if (req.body.cookies) {
     const isValid = await checkFacebookCookies(req.body.cookies);
-    if (!isValid) return res.status(400).json({ error: 'Некорректные куки или неавторизованы в Facebook' });
+    if (!isValid) {
+      return res.status(400).json({ error: 'Некорректные куки или неавторизованы в Facebook' });
+    }
   }
 
   const updated = await accountService.update(req.user.id, req.params.id, req.body);
@@ -29,35 +33,34 @@ exports.remove = async (req, res) => {
   res.status(204).send();
 };
 
+// ✅ ЕДИНСТВЕННАЯ checkStatus функция
 exports.checkStatus = async (req, res) => {
   const { id } = req.params;
-  const account = await accountService.getById(req.user.id, id);
 
+  console.log(`🔍 Проверка статуса для аккаунта: ${id}`);
+
+  const account = await accountService.getOne(req.user.id, id);
   if (!account) {
+    console.log(`❌ Аккаунт не найден: ${id}`);
     return res.status(404).json({ error: 'Аккаунт не найден' });
+  }
+
+  if (!account.cookies || !Array.isArray(account.cookies) || account.cookies.length === 0) {
+    console.log(`⚠️ У аккаунта отсутствуют куки: ${id}`);
+    return res.status(400).json({ error: 'У аккаунта отсутствуют куки для проверки' });
   }
 
   const isValid = await checkFacebookCookies(account.cookies);
   const status = isValid ? 'активен' : 'неактивен';
 
+  console.log(`✅ Статус определён: ${status}`);
+
   const updated = await accountService.update(req.user.id, id, { status });
 
-  res.json({ status, updated });
-};
-
-exports.checkStatus = async (req, res) => {
-  const { id } = req.params;
-
-  const account = await accountService.getOne(req.user.id, id);
-  if (!account) return res.status(404).json({ error: 'Аккаунт не найден' });
-
-  const isValid = await checkFacebookCookies(account.cookies);
-  const status = isValid ? 'active' : 'inactive';
-
-  const updated = await accountService.update(req.user.id, id, {
-    meta: { ...account.meta, status },
-  });
+  if (!updated) {
+    console.log(`❌ Не удалось обновить аккаунт: ${id}`);
+    return res.status(500).json({ error: 'Не удалось сохранить статус' });
+  }
 
   res.json({ success: true, status });
 };
-
