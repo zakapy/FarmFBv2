@@ -189,3 +189,21 @@ Call log:
 Call log:
 [2m  - attempting click action[22m
 [2m    - waiting for element to be visible, enabled and stable[22m
+[2025-04-12 21:23:35] [31merror[39m: Error: Invalid or expired refresh token
+    at exports.handleRefreshToken (C:\Users\Administrator\Desktop\CODDING\FARMMAIN\backend\src\services\authService.js:70:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async exports.refreshToken (C:\Users\Administrator\Desktop\CODDING\FARMMAIN\backend\src\controllers\authController.js:47:20)
+[2025-04-12 21:23:35] [31merror[39m: Error: Invalid or expired refresh token
+    at exports.handleRefreshToken (C:\Users\Administrator\Desktop\CODDING\FARMMAIN\backend\src\services\authService.js:70:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async exports.refreshToken (C:\Users\Administrator\Desktop\CODDING\FARMMAIN\backend\src\controllers\authController.js:47:20)
+[2025-04-12 21:23:36] [31merror[39m: Error: Invalid or expired refresh token
+    at exports.handleRefreshToken (C:\Users\Administrator\Desktop\CODDING\FARMMAIN\backend\src\services\authService.js:70:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async exports.refreshToken (C:\Users\Administrator\Desktop\CODDING\FARMMAIN\backend\src\controllers\authController.js:47:20)
+[2025-04-12 21:23:36] [31merror[39m: Error: Invalid or expired refresh token
+    at exports.handleRefreshToken (C:\Users\Administrator\Desktop\CODDING\FARMMAIN\backend\src\services\authService.js:70:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async exports.refreshToken (C:\Users\Administrator\Desktop\CODDING\FARMMAIN\backend\src\controllers\authController.js:47:20)
+[2025-04-12 21:33:13] [31merror[39m: [Farm 67fab1e8a1574fc3b3c267c9] Error: Ошибка при запуске профиля: Request failed with status code 500
+[2025-04-12 21:33:13] [31merror[39m: [Farm 67fab1e8a1574fc3b3c267c9] Error: ❌ Ошибка фарминга: Не удалось запустить браузерный профиль

@@ -37,9 +37,19 @@ export const stopFarm = createAsyncThunk(
 
 export const getFarmHistory = createAsyncThunk(
   'farm/getHistory',
-  async (options, { rejectWithValue }) => {
+  async (options, { rejectWithValue, getState }) => {
     try {
-      return await farmAPI.getFarmHistory(options);
+      // Получаем текущую историю
+      const { farmHistory } = getState().farm;
+      const result = await farmAPI.getFarmHistory(options);
+      
+      // Если загружается первая страница, возвращаем только её
+      if (!options.skip || options.skip === 0) {
+        return result;
+      }
+      
+      // Иначе объединяем с предыдущими записями
+      return [...farmHistory, ...result];
     } catch (error) {
       return rejectWithValue(error.response?.data?.error || 'Не удалось получить историю фарминга');
     }
@@ -78,6 +88,12 @@ const farmSlice = createSlice({
     clearFarmDetails: (state) => {
       state.farmDetails = null;
     },
+    clearFarmHistory: (state) => {
+      state.farmHistory = [];
+    },
+    setFarmFilter: (state, action) => {
+      state.filter = action.payload;
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -116,9 +132,20 @@ const farmSlice = createSlice({
       })
       .addCase(stopFarm.fulfilled, (state, action) => {
         state.loading = false;
-        if (state.currentStatus) {
+        
+        // Обновляем статус в текущем элементе статуса
+        if (state.currentStatus && 
+            state.currentStatus.farmId === action.meta.arg) {
           state.currentStatus.status = action.payload.status;
         }
+        
+        // Обновляем статус в истории фарминга
+        state.farmHistory = state.farmHistory.map(item => {
+          if ((item._id || item.id) === action.meta.arg) {
+            return { ...item, status: action.payload.status };
+          }
+          return item;
+        });
       })
       .addCase(stopFarm.rejected, (state, action) => {
         state.loading = false;
@@ -155,5 +182,5 @@ const farmSlice = createSlice({
   },
 });
 
-export const { clearCurrentFarm, clearFarmDetails } = farmSlice.actions;
+export const { clearCurrentFarm, clearFarmDetails, clearFarmHistory, setFarmFilter } = farmSlice.actions;
 export default farmSlice.reducer;

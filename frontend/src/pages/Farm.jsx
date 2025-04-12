@@ -6,73 +6,210 @@ import useFarm from '../hooks/useFarm';
 import Button from '../components/Button';
 import Loader from '../components/Loader';
 import Modal from '../components/Modal';
+import FarmDetailsModal from './FarmDetailsModal';
 import './farm.css';
+import './FarmDetailsModal.css';
 
 const Farm = () => {
   const dispatch = useDispatch();
   const { list: accounts, loading: accountsLoading } = useSelector(state => state.accounts);
-  const { startFarming, getStatus, stopFarming, getHistory, currentStatus, farmHistory, loading: farmLoading } = useFarm();
+  const { startFarming, getStatus, stopFarming, getHistory, farmHistory, loading: farmLoading } = useFarm();
   
-  const [selectedAccount, setSelectedAccount] = useState(null);
+  // Состояние для выбранных аккаунтов (множественный выбор)
+  const [selectedAccounts, setSelectedAccounts] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  
+  // Состояние для выбранных функций фарминга
+  const [selectedFunctions, setSelectedFunctions] = useState({
+    joinGroups: true,
+    likeContent: false,
+    addFriends: false,
+    viewContent: false
+  });
+  
+  // Настройки фарминга
   const [farmSettings, setFarmSettings] = useState({
     name: '',
     groupsToJoin: 5,
-    maxActions: 10
+    maxActionsPerAccount: 10,
+    postsToLike: 3,
+    friendsToAdd: 0,
+    contentToView: 0,
+    runSequentially: true
   });
   
-  // Загрузка аккаунтов при монтировании
+  // Состояние для пагинации истории
+  const [historyPage, setHistoryPage] = useState(1);
+  const [historyLimit] = useState(10);
+  
+  // Состояние для просмотра деталей фарминга
+  const [viewDetailsId, setViewDetailsId] = useState(null);
+  
+  // Загрузка аккаунтов и истории при монтировании
   useEffect(() => {
     dispatch(fetchAccounts());
+    loadHistory();
   }, [dispatch]);
   
-  // Получаем историю фарминга при монтировании
-  useEffect(() => {
-    getHistory();
-  }, []);
+  // Загружаем историю с учетом пагинации
+  const loadHistory = () => {
+    getHistory({
+      limit: historyLimit,
+      skip: (historyPage - 1) * historyLimit
+    });
+  };
+  
+  // Загружаем следующую страницу истории
+  const loadMoreHistory = () => {
+    setHistoryPage(prev => prev + 1);
+    getHistory({
+      limit: historyLimit,
+      skip: historyPage * historyLimit
+    });
+  };
+  
+  // Обработка выбора аккаунта
+  const handleAccountSelect = (accountId) => {
+    setSelectedAccounts(prev => {
+      if (prev.includes(accountId)) {
+        return prev.filter(id => id !== accountId);
+      } else {
+        return [...prev, accountId];
+      }
+    });
+  };
+  
+  // Выбор или отмена выбора всех аккаунтов
+  const handleSelectAllAccounts = () => {
+    if (selectedAccounts.length === accounts.length) {
+      setSelectedAccounts([]);
+    } else {
+      setSelectedAccounts(accounts.map(acc => acc._id || acc.id));
+    }
+  };
+  
+  // Обработка изменения функций фарминга
+  const handleFunctionChange = (functionName) => {
+    setSelectedFunctions(prev => ({
+      ...prev,
+      [functionName]: !prev[functionName]
+    }));
+  };
+  
+  // Обработка изменения настроек фарминга
+  const handleSettingsChange = (e) => {
+    const { name, value, type } = e.target;
+    
+    // Преобразуем числовые значения
+    const parsedValue = type === 'number' ? parseInt(value) : 
+                        type === 'checkbox' ? e.target.checked : value;
+    
+    setFarmSettings(prev => ({
+      ...prev,
+      [name]: parsedValue
+    }));
+  };
   
   // Запуск фарминга
   const handleStartFarm = async () => {
-    if (!selectedAccount) {
-      toast.error('Выберите аккаунт для фарминга');
+    if (selectedAccounts.length === 0) {
+      toast.error('Выберите хотя бы один аккаунт для фарминга');
       return;
     }
     
-    if (!selectedAccount.dolphin || !selectedAccount.dolphin.profileId) {
-      toast.error('Для фарминга необходимо создать профиль Dolphin Anty. Нажмите "Создать в Dolphin" в разделе Аккаунты.');
+    if (!Object.values(selectedFunctions).some(v => v)) {
+      toast.error('Выберите хотя бы одну функцию фарминга');
       return;
     }
     
-    try {
-      // Проверяем, не запущен ли уже фарминг для этого аккаунта
-      const statusResult = await getStatus(selectedAccount._id || selectedAccount.id);
-      
-      if (statusResult.payload.status === 'running' || statusResult.payload.status === 'pending') {
-        toast.warning(`Фарминг для аккаунта "${selectedAccount.name}" уже запущен`);
-        return;
+    // Проверяем, что выбранные аккаунты имеют профили Dolphin
+    const accountsWithoutDolphin = selectedAccounts
+      .map(id => accounts.find(acc => (acc._id || acc.id) === id))
+      .filter(acc => !acc.dolphin || !acc.dolphin.profileId);
+    
+    if (accountsWithoutDolphin.length > 0) {
+      const names = accountsWithoutDolphin.map(acc => acc.name).join(', ');
+      toast.error(`Следующие аккаунты не имеют профиля Dolphin Anty: ${names}`);
+      return;
+    }
+    
+    // Установка имени фарминга, если оно не задано
+    if (!farmSettings.name) {
+      setFarmSettings(prev => ({
+        ...prev,
+        name: `Фарм ${new Date().toLocaleString('ru')} (${selectedAccounts.length} акк.)`
+      }));
+    }
+    
+    // Настройки для каждой выбранной функции
+    const functionSettings = {
+      joinGroups: selectedFunctions.joinGroups ? {
+        enabled: true,
+        count: farmSettings.groupsToJoin
+      } : { enabled: false },
+      likeContent: selectedFunctions.likeContent ? {
+        enabled: true,
+        count: farmSettings.postsToLike
+      } : { enabled: false },
+      addFriends: selectedFunctions.addFriends ? {
+        enabled: true,
+        count: farmSettings.friendsToAdd
+      } : { enabled: false },
+      viewContent: selectedFunctions.viewContent ? {
+        enabled: true,
+        count: farmSettings.contentToView
+      } : { enabled: false }
+    };
+    
+    // Создаем задание фарминга для каждого выбранного аккаунта
+    let successCount = 0;
+    let errorCount = 0;
+    
+    // Показываем индикатор загрузки
+    toast.info(`Запуск фарминга для ${selectedAccounts.length} аккаунтов...`);
+    
+    for (const accountId of selectedAccounts) {
+      try {
+        // Проверяем, не запущен ли уже фарминг для этого аккаунта
+        const statusResult = await getStatus(accountId);
+        
+        if (statusResult.payload && (statusResult.payload.status === 'running' || statusResult.payload.status === 'pending')) {
+          const account = accounts.find(acc => (acc._id || acc.id) === accountId);
+          toast.warning(`Фарминг для аккаунта "${account.name}" уже запущен`);
+          errorCount++;
+          continue;
+        }
+        
+        // Запускаем фарминг для аккаунта
+        const result = await startFarming(accountId, {
+          name: farmSettings.name,
+          maxActions: farmSettings.maxActionsPerAccount,
+          runSequentially: farmSettings.runSequentially,
+          functions: functionSettings
+        });
+        
+        if (result.meta.requestStatus === 'fulfilled') {
+          successCount++;
+        } else {
+          errorCount++;
+          toast.error(`Ошибка запуска фарминга для аккаунта ${accountId}: ${result.payload}`);
+        }
+      } catch (error) {
+        errorCount++;
+        console.error(`Ошибка при запуске фарминга для ${accountId}:`, error);
       }
-      
-      // Установка имени фарминга, если оно не задано
-      if (!farmSettings.name) {
-        setFarmSettings(prev => ({
-          ...prev,
-          name: `Фарм ${selectedAccount.name} ${new Date().toLocaleString('ru')}`
-        }));
-      }
-      
-      // Запускаем фарминг
-      const result = await startFarming(selectedAccount._id || selectedAccount.id, farmSettings);
-      
-      if (result.meta.requestStatus === 'fulfilled') {
-        toast.success(`Фарминг запущен для аккаунта "${selectedAccount.name}"`);
-        setShowModal(false);
-        // Обновляем историю фарминга
-        getHistory();
-      } else {
-        toast.error(result.payload || 'Ошибка запуска фарминга');
-      }
-    } catch (error) {
-      toast.error('Ошибка запуска фарминга');
+    }
+    
+    // Показываем результат
+    if (successCount > 0) {
+      toast.success(`Фарминг успешно запущен для ${successCount} аккаунтов`);
+      setShowModal(false);
+      // Обновляем историю фарминга
+      loadHistory();
+    }
+    
+    if (errorCount > 0) {
+      toast.error(`Не удалось запустить фарминг для ${errorCount} аккаунтов`);
     }
   };
   
@@ -84,28 +221,13 @@ const Farm = () => {
       if (result.meta.requestStatus === 'fulfilled') {
         toast.success('Фарминг остановлен');
         // Обновляем историю фарминга
-        getHistory();
+        loadHistory();
       } else {
         toast.error(result.payload || 'Ошибка остановки фарминга');
       }
     } catch (error) {
       toast.error('Ошибка остановки фарминга');
     }
-  };
-  
-  // Обработка изменения настроек фарминга
-  const handleSettingsChange = (e) => {
-    const { name, value } = e.target;
-    
-    // Преобразуем числовые значения
-    const parsedValue = ['groupsToJoin', 'maxActions'].includes(name) 
-      ? parseInt(value) 
-      : value;
-    
-    setFarmSettings(prev => ({
-      ...prev,
-      [name]: parsedValue
-    }));
   };
   
   // Отображаем статус фарминга
@@ -136,18 +258,30 @@ const Farm = () => {
   const canStopFarm = (status) => {
     return status === 'pending' || status === 'running';
   };
+
+  // Получаем список активных задач фарминга по статусу
+  const getActiveFarmCount = () => {
+    return farmHistory?.filter(item => 
+      item.status === 'pending' || item.status === 'running'
+    ).length || 0;
+  };
   
   return (
     <div className="container">
       <div className="farm-header">
-        <h1>Управление фармингом</h1>
+        <div>
+          <h1>Управление фармингом</h1>
+          <p className="farm-subtitle">
+            Активных задач: <span className="active-count">{getActiveFarmCount()}</span>
+          </p>
+        </div>
         <Button onClick={() => setShowModal(true)}>Запустить фарминг</Button>
       </div>
       
       <div className="farm-description">
         <p>
-          Здесь вы можете запустить автоматический фарминг ваших аккаунтов Facebook. 
-          Фарминг включает в себя вступление в группы и другие действия для активности аккаунта.
+          Здесь вы можете запустить автоматический фарминг для ваших аккаунтов Facebook.
+          Выберите аккаунты, настройте функции фарминга и контролируйте выполнение задач.
         </p>
       </div>
       
@@ -167,6 +301,7 @@ const Farm = () => {
                   <th>Статус</th>
                   <th>Дата запуска</th>
                   <th>Дата завершения</th>
+                  <th>Функции</th>
                   <th>Действия</th>
                 </tr>
               </thead>
@@ -179,6 +314,26 @@ const Farm = () => {
                     <td>{formatDate(item.createdAt)}</td>
                     <td>{formatDate(item.config?.completedAt)}</td>
                     <td>
+                      {item.config?.functions ? (
+                        <div className="farm-functions">
+                          {item.config.functions.joinGroups?.enabled && (
+                            <span className="function-badge join-groups">Группы</span>
+                          )}
+                          {item.config.functions.likeContent?.enabled && (
+                            <span className="function-badge like-content">Лайки</span>
+                          )}
+                          {item.config.functions.addFriends?.enabled && (
+                            <span className="function-badge add-friends">Друзья</span>
+                          )}
+                          {item.config.functions.viewContent?.enabled && (
+                            <span className="function-badge view-content">Просмотр</span>
+                          )}
+                        </div>
+                      ) : (
+                        <span className="muted">—</span>
+                      )}
+                    </td>
+                    <td>
                       {canStopFarm(item.status) && (
                         <button
                           className="btn-icon btn-secondary"
@@ -190,7 +345,7 @@ const Farm = () => {
                       )}
                       <button
                         className="btn-icon btn-primary"
-                        onClick={() => toast.info('Просмотр деталей фарминга (в разработке)')}
+                        onClick={() => setViewDetailsId(item._id || item.id)}
                         title="Просмотреть детали"
                       >
                         🔍
@@ -200,11 +355,28 @@ const Farm = () => {
                 ))}
               </tbody>
             </table>
+            
+            {farmHistory.length >= historyLimit && (
+              <div className="load-more">
+                <Button variant="secondary" onClick={loadMoreHistory}>
+                  Загрузить еще
+                </Button>
+              </div>
+            )}
           </div>
         ) : (
           <p>История фарминга пуста</p>
         )}
       </div>
+      
+      {/* Модальное окно запуска фарминга */}
+      {/* Модальное окно просмотра деталей фарминга */}
+      {viewDetailsId && (
+        <FarmDetailsModal 
+          farmId={viewDetailsId} 
+          onClose={() => setViewDetailsId(null)}
+        />
+      )}
       
       {/* Модальное окно запуска фарминга */}
       {showModal && (
@@ -223,70 +395,202 @@ const Farm = () => {
             </div>
             
             <div className="form-group">
-              <label>Выберите аккаунт:</label>
+              <label>Выберите аккаунты:</label>
               {accountsLoading ? (
                 <p>Загрузка аккаунтов...</p>
               ) : accounts && accounts.length > 0 ? (
-                <select
-                  value={selectedAccount ? (selectedAccount._id || selectedAccount.id) : ''}
-                  onChange={(e) => {
-                    const account = accounts.find(a => (a._id || a.id) === e.target.value);
-                    setSelectedAccount(account);
-                  }}
-                  className="input"
-                >
-                  <option value="">Выберите аккаунт</option>
-                  {accounts.map((account) => (
-                    <option 
-                      key={account._id || account.id} 
-                      value={account._id || account.id}
-                      disabled={!account.dolphin || !account.dolphin.profileId}
-                    >
-                      {account.name} {(!account.dolphin || !account.dolphin.profileId) ? '(нет профиля Dolphin)' : ''}
-                    </option>
-                  ))}
-                </select>
+                <div className="account-select-list">
+                  <div className="select-all">
+                    <label className="checkbox-label">
+                      <input
+                        type="checkbox"
+                        checked={selectedAccounts.length === accounts.length}
+                        onChange={handleSelectAllAccounts}
+                      />
+                      <span>Выбрать все аккаунты</span>
+                    </label>
+                  </div>
+                  
+                  <div className="account-list">
+                    {accounts.map((account) => {
+                      const accountId = account._id || account.id;
+                      const hasDolphinProfile = account.dolphin && account.dolphin.profileId;
+                      
+                      return (
+                        <div className="account-item" key={accountId}>
+                          <label className={`checkbox-label ${!hasDolphinProfile ? 'disabled' : ''}`}>
+                            <input
+                              type="checkbox"
+                              checked={selectedAccounts.includes(accountId)}
+                              onChange={() => handleAccountSelect(accountId)}
+                              disabled={!hasDolphinProfile}
+                            />
+                            <span>{account.name || 'Без названия'}</span>
+                            {!hasDolphinProfile && (
+                              <span className="account-warning">
+                                (Нет профиля Dolphin)
+                              </span>
+                            )}
+                            {account.status === 'неактивен' && (
+                              <span className="account-warning">
+                                (Неактивен)
+                              </span>
+                            )}
+                          </label>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
               ) : (
                 <p>Нет доступных аккаунтов</p>
               )}
-              {selectedAccount && (!selectedAccount.dolphin || !selectedAccount.dolphin.profileId) && (
-                <p className="warning">
-                  ⚠️ Для фарминга необходимо создать профиль Dolphin Anty.
-                </p>
+              
+              <div className="selected-count">
+                Выбрано аккаунтов: {selectedAccounts.length}
+              </div>
+            </div>
+            
+            <div className="form-group">
+              <label>Функции фарминга:</label>
+              <div className="farm-functions-selection">
+                <label className="checkbox-label">
+                  <input
+                    type="checkbox"
+                    checked={selectedFunctions.joinGroups}
+                    onChange={() => handleFunctionChange('joinGroups')}
+                  />
+                  <span>Вступление в группы</span>
+                </label>
+                
+                <label className="checkbox-label">
+                  <input
+                    type="checkbox"
+                    checked={selectedFunctions.likeContent}
+                    onChange={() => handleFunctionChange('likeContent')}
+                  />
+                  <span>Лайки постов</span>
+                </label>
+                
+                <label className="checkbox-label">
+                  <input
+                    type="checkbox"
+                    checked={selectedFunctions.addFriends}
+                    onChange={() => handleFunctionChange('addFriends')}
+                  />
+                  <span>Добавление друзей</span>
+                </label>
+                
+                <label className="checkbox-label">
+                  <input
+                    type="checkbox"
+                    checked={selectedFunctions.viewContent}
+                    onChange={() => handleFunctionChange('viewContent')}
+                  />
+                  <span>Просмотр контента</span>
+                </label>
+              </div>
+            </div>
+            
+            <div className="form-settings">
+              <h4>Настройки функций:</h4>
+              
+              {selectedFunctions.joinGroups && (
+                <div className="function-setting">
+                  <label>Количество групп для вступления:</label>
+                  <input
+                    type="number"
+                    name="groupsToJoin"
+                    value={farmSettings.groupsToJoin}
+                    onChange={handleSettingsChange}
+                    min="1"
+                    max="10"
+                    className="input"
+                  />
+                  <small>Рекомендуется не более 5 групп за один запуск</small>
+                </div>
               )}
-            </div>
-            
-            <div className="form-group">
-              <label>Количество групп для вступления:</label>
-              <input
-                type="number"
-                name="groupsToJoin"
-                value={farmSettings.groupsToJoin}
-                onChange={handleSettingsChange}
-                min="1"
-                max="10"
-                className="input"
-              />
-              <small>Рекомендуется не более 5 групп за один запуск</small>
-            </div>
-            
-            <div className="form-group">
-              <label>Максимальное количество действий:</label>
-              <input
-                type="number"
-                name="maxActions"
-                value={farmSettings.maxActions}
-                onChange={handleSettingsChange}
-                min="1"
-                max="20"
-                className="input"
-              />
-              <small>Лимит действий для одного запуска фарминга</small>
+              
+              {selectedFunctions.likeContent && (
+                <div className="function-setting">
+                  <label>Количество постов для лайков:</label>
+                  <input
+                    type="number"
+                    name="postsToLike"
+                    value={farmSettings.postsToLike}
+                    onChange={handleSettingsChange}
+                    min="0"
+                    max="10"
+                    className="input"
+                  />
+                </div>
+              )}
+              
+              {selectedFunctions.addFriends && (
+                <div className="function-setting">
+                  <label>Количество друзей для добавления:</label>
+                  <input
+                    type="number"
+                    name="friendsToAdd"
+                    value={farmSettings.friendsToAdd}
+                    onChange={handleSettingsChange}
+                    min="0"
+                    max="5"
+                    className="input"
+                  />
+                  <small>Рекомендуется не более 5 друзей за один запуск</small>
+                </div>
+              )}
+              
+              {selectedFunctions.viewContent && (
+                <div className="function-setting">
+                  <label>Количество просмотров контента:</label>
+                  <input
+                    type="number"
+                    name="contentToView"
+                    value={farmSettings.contentToView}
+                    onChange={handleSettingsChange}
+                    min="0"
+                    max="20"
+                    className="input"
+                  />
+                </div>
+              )}
+              
+              <div className="function-setting">
+                <label>Максимальное количество действий на аккаунт:</label>
+                <input
+                  type="number"
+                  name="maxActionsPerAccount"
+                  value={farmSettings.maxActionsPerAccount}
+                  onChange={handleSettingsChange}
+                  min="1"
+                  max="50"
+                  className="input"
+                />
+                <small>Общий лимит действий для одного запуска фарминга</small>
+              </div>
+              
+              <div className="function-setting">
+                <label className="checkbox-label">
+                  <input
+                    type="checkbox"
+                    name="runSequentially"
+                    checked={farmSettings.runSequentially}
+                    onChange={handleSettingsChange}
+                  />
+                  <span>Выполнять функции последовательно</span>
+                </label>
+                <small>Если отключено, будут выполняться параллельно</small>
+              </div>
             </div>
             
             <div className="form-actions">
               <Button variant="secondary" onClick={() => setShowModal(false)}>Отмена</Button>
-              <Button onClick={handleStartFarm} disabled={!selectedAccount || farmLoading}>
+              <Button 
+                onClick={handleStartFarm} 
+                disabled={!selectedAccounts.length || !Object.values(selectedFunctions).some(v => v) || farmLoading}
+              >
                 {farmLoading ? 'Запуск...' : 'Запустить фарминг'}
               </Button>
             </div>

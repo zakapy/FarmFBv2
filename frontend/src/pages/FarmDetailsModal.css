@@ -1,0 +1,234 @@
+.farm-details-container {
+    display: flex;
+    flex-direction: column;
+    max-height: 70vh;
+  }
+  
+  .details-loader, 
+  .details-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    gap: 1rem;
+  }
+  
+  .details-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 1rem;
+  }
+  
+  .tab-button {
+    padding: 0.75rem 1.25rem;
+    border: none;
+    background: none;
+    font-weight: 500;
+    color: var(--text-light);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .tab-button:hover {
+    color: var(--primary);
+    background-color: rgba(0, 0, 0, 0.02);
+  }
+  
+  .tab-button.active {
+    color: var(--primary);
+    border-bottom: 2px solid var(--primary);
+  }
+  
+  .details-content {
+    overflow-y: auto;
+    padding-right: 10px;
+    flex-grow: 1;
+  }
+  
+  .tab-content {
+    padding-bottom: 1rem;
+  }
+  
+  .details-actions {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  /* Стили для вкладки "Обзор" */
+  .overview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    margin: 1rem 0;
+  }
+  
+  .overview-item {
+    padding: 0.75rem;
+    background-color: #f9fafb;
+    border-radius: 6px;
+  }
+  
+  .overview-label {
+    font-size: 0.75rem;
+    color: var(--text-light);
+    margin-bottom: 0.25rem;
+  }
+  
+  .overview-value {
+    font-weight: 500;
+  }
+  
+  /* Стили для результатов */
+  .farm-results {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1rem;
+    margin: 1rem 0;
+  }
+  
+  .result-item {
+    padding: 0.75rem;
+    background-color: #f9fafb;
+    border-radius: 6px;
+    border-left: 3px solid var(--primary);
+  }
+  
+  .result-label {
+    font-size: 0.75rem;
+    color: var(--text-light);
+    margin-bottom: 0.25rem;
+  }
+  
+  .result-value {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--primary);
+  }
+  
+  /* Стили для функций */
+  .farm-functions-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin: 1rem 0;
+  }
+  
+  .function-detail-item {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+    background-color: #f9fafb;
+    border-radius: 8px;
+    border-left: 3px solid var(--primary);
+  }
+  
+  .function-icon {
+    font-size: 1.5rem;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .function-info {
+    flex-grow: 1;
+  }
+  
+  .function-info h4 {
+    margin: 0 0 0.5rem 0;
+    color: var(--primary);
+  }
+  
+  .function-param {
+    font-size: 0.875rem;
+    color: var(--text-light);
+  }
+  
+  /* Стили для ошибок */
+  .farm-errors {
+    margin: 1rem 0;
+  }
+  
+  .error-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+  }
+  
+  .error-item {
+    padding: 0.75rem;
+    background-color: #fee2e2;
+    border-radius: 6px;
+    border-left: 3px solid #ef4444;
+  }
+  
+  .error-stage {
+    font-size: 0.875rem;
+    margin-bottom: 0.25rem;
+  }
+  
+  .error-message {
+    margin-bottom: 0.5rem;
+  }
+  
+  .error-time {
+    font-size: 0.75rem;
+    color: var(--text-light);
+  }
+  
+  /* Стили для скриншотов */
+  .screenshots-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+    margin: 1rem 0;
+  }
+  
+  .screenshot-item {
+    background-color: white;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    transition: transform 0.2s;
+    position: relative;
+  }
+  
+  .screenshot-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .screenshot-number {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    font-size: 0.75rem;
+    padding: 2px 6px;
+    border-radius: 12px;
+  }
+  
+  .screenshot-thumb {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    display: block;
+  }
+  
+  .screenshot-name {
+    padding: 0.5rem;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--text-light);
+    text-align: center;
+  }

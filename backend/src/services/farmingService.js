@@ -207,11 +207,15 @@ class FarmingService {
    * @returns {Promise<Array>} - Список записей о фарминге
    */
   async getFarmHistory(userId, options = {}) {
-    const { limit = 10, skip = 0, accountId } = options;
+    const { limit = 10, skip = 0, accountId, status } = options;
     
     const query = { userId };
     if (accountId) {
       query.accountId = accountId;
+    }
+    
+    if (status) {
+      query.status = status;
     }
 
     return await Farm.find(query)
@@ -219,6 +223,109 @@ class FarmingService {
       .skip(skip)
       .limit(limit)
       .populate('accountId', 'name status');
+  }
+  
+  /**
+   * Получает статистику фарминга для пользователя
+   * @param {string} userId - ID пользователя
+   * @param {Object} options - Параметры для фильтрации
+   * @returns {Promise<Object>} - Статистика фарминга
+   */
+  async getFarmStats(userId, options = {}) {
+    const { period } = options;
+    
+    // Создаем объект запроса
+    const query = { userId };
+    
+    // Фильтруем по периоду, если указан
+    if (period) {
+      const now = new Date();
+      const periodStart = new Date();
+      
+      switch (period) {
+        case 'day':
+          periodStart.setDate(now.getDate() - 1);
+          break;
+        case 'week':
+          periodStart.setDate(now.getDate() - 7);
+          break;
+        case 'month':
+          periodStart.setMonth(now.getMonth() - 1);
+          break;
+        case 'year':
+          periodStart.setFullYear(now.getFullYear() - 1);
+          break;
+      }
+      
+      query.createdAt = { $gte: periodStart };
+    }
+    
+    // Получаем все записи о фарминге, соответствующие запросу
+    const farms = await Farm.find(query);
+    
+    // Статистика по статусам
+    const statusStats = {
+      completed: 0,
+      error: 0,
+      running: 0,
+      pending: 0,
+      stopped: 0
+    };
+    
+    // Статистика по функциям
+    const functionStats = {
+      groupsJoined: 0,
+      postsLiked: 0,
+      friendsAdded: 0,
+      contentViewed: 0,
+      totalActions: 0
+    };
+    
+    // Счетчик выполненных фармов
+    let completedFarms = 0;
+    
+    // Общая продолжительность фарминга
+    let totalDuration = 0;
+    
+    // Обрабатываем все записи
+    farms.forEach(farm => {
+      // Статистика по статусам
+      if (statusStats.hasOwnProperty(farm.status)) {
+        statusStats[farm.status]++;
+      }
+      
+      // Статистика по выполненным действиям
+      if (farm.results) {
+        functionStats.groupsJoined += farm.results.groupsJoined || 0;
+        functionStats.postsLiked += farm.results.postsLiked || 0;
+        functionStats.friendsAdded += farm.results.friendsAdded || 0;
+        functionStats.contentViewed += farm.results.contentViewed || 0;
+        
+        // Общее количество действий
+        functionStats.totalActions += (farm.results.groupsJoined || 0) + 
+                                      (farm.results.postsLiked || 0) + 
+                                      (farm.results.friendsAdded || 0) + 
+                                      (farm.results.contentViewed || 0);
+      }
+      
+      // Считаем продолжительность завершенных фармов
+      if (farm.status === 'completed' && farm.config && farm.config.duration) {
+        completedFarms++;
+        totalDuration += farm.config.duration;
+      }
+    });
+    
+    // Средняя продолжительность фарминга (в секундах)
+    const averageDuration = completedFarms > 0 ? Math.round(totalDuration / completedFarms) : 0;
+    
+    // Возвращаем статистику
+    return {
+      totalFarms: farms.length,
+      statusStats,
+      functionStats,
+      averageDuration,
+      completedFarms
+    };
   }
 }
 

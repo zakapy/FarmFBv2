@@ -38,22 +38,44 @@ class FacebookFarmer {
     this.results = {
       groupsJoined: 0,
       postsLiked: 0,
+      friendsAdded: 0,
+      contentViewed: 0,
       screenshots: [],
       errors: []
     };
     this.startTime = new Date();
     this.dolphinApiUrl = process.env.DOLPHIN_LOCAL_API_URL || 'http://localhost:3001';
     this.db = null;
+    this.config = {
+      maxActions: 10,
+      runSequentially: true,
+      functions: {
+        joinGroups: { enabled: true, count: 5 },
+        likeContent: { enabled: false, count: 0 },
+        addFriends: { enabled: false, count: 0 },
+        viewContent: { enabled: false, count: 0 }
+      }
+    };
   }
 
-  // Метод для подключения к базе данных
-  async connectToDB() {
+  // Метод для подключения к базе данных и загрузки конфигурации
+  async connectAndLoadConfig() {
     try {
       await mongoose.connect(process.env.MONGO_URI, {
         useNewUrlParser: true,
         useUnifiedTopology: true
       });
       console.log('✅ MongoDB подключена');
+      
+      // Загружаем конфигурацию из БД
+      const farm = await Farm.findById(this.farmId);
+      if (farm && farm.config) {
+        console.log('✅ Загружена конфигурация фарминга');
+        this.config = farm.config;
+      } else {
+        console.log('⚠️ Не удалось загрузить конфигурацию, используем стандартную');
+      }
+      
       return true;
     } catch (error) {
       console.error('❌ Ошибка подключения к MongoDB:', error.message);
@@ -183,279 +205,121 @@ class FacebookFarmer {
         if (groupsButton) {
           await groupsButton.click();
           console.log('Нажали на кнопку Группы в меню');
-          
-          // Ждем загрузки страницы групп
-          await this.page.waitForTimeout(3000);
         } else {
-          // Если не нашли, пробуем другие локаторы или переходим по прямой ссылке
-          console.log('Не нашли кнопку Группы, пробуем альтернативные локаторы...');
-          
-          // Попытка найти по другим селекторам
-          const altGroupsButton = await this.page.$('a[aria-label*="Группы"]');
-          if (altGroupsButton) {
-            await altGroupsButton.click();
-            console.log('Нажали на кнопку Группы (альтернативный локатор)');
-            await this.page.waitForTimeout(3000);
-          } else {
-            // Переходим по прямой ссылке если не нашли кнопку
-            console.log('Не нашли кнопку Группы, переходим по прямой ссылке');
-            await this.page.goto('https://www.facebook.com/groups/feed/', { 
-              waitUntil: 'domcontentloaded',
-              timeout: 40000 
-            });
-            console.log('Перешли на страницу групп по прямой ссылке');
-            await this.page.waitForTimeout(3000);
-          }
+          // Если не нашли, переходим по прямой ссылке
+          await this.page.goto('https://www.facebook.com/groups/feed/', { waitUntil: 'networkidle' });
+          console.log('Перешли на страницу групп по прямой ссылке');
         }
       } catch (error) {
         console.log(`Не смогли найти кнопку Группы: ${error.message}`);
-        
-        // Переходим по прямой ссылке как запасной вариант
-        try {
-          console.log('Пробуем перейти на страницу групп по прямой ссылке');
-          await this.page.goto('https://www.facebook.com/groups/feed/', { 
-            waitUntil: 'domcontentloaded',
-            timeout: 40000 
-          });
-          console.log('Перешли на страницу групп по прямой ссылке');
-          
-          // Дополнительное ожидание для загрузки контента
-          await this.page.waitForTimeout(5000);
-        } catch (navError) {
-          console.error(`Не удалось перейти на страницу групп: ${navError.message}`);
-          return false;
-        }
+        // Переходим по прямой ссылке
+        await this.page.goto('https://www.facebook.com/groups/feed/', { waitUntil: 'networkidle' });
+        console.log('Перешли на страницу групп по прямой ссылке');
       }
+      
+      // Ждем загрузки страницы
+      await this.page.waitForTimeout(3000);
       
       // Делаем скриншот страницы групп
       await this.takeScreenshot('groups_page');
-    
-    return true;
-  } catch (error) {
-    console.error(`Ошибка при переходе в раздел групп: ${error.message}`);
-    this.results.errors.push({
-      stage: 'navigate_to_groups',
-      message: error.message,
-      timestamp: new Date()
-    });
-    return false;
+      
+      return true;
+    } catch (error) {
+      console.error(`Ошибка при переходе в раздел групп: ${error.message}`);
+      this.results.errors.push({
+        stage: 'navigate_to_groups',
+        message: error.message,
+        timestamp: new Date()
+      });
+      return false;
+    }
   }
-}
 
-  // Метод для поиска и вступления в группы
+  // Метод для вступления в группы
   async joinGroups() {
+    if (!this.config.functions.joinGroups?.enabled) {
+      console.log('Функция вступления в группы отключена, пропускаем...');
+      return true;
+    }
+    
+    const groupsToJoin = this.config.functions.joinGroups.count || 5;
+    console.log(`Запускаем вступление в группы (количество: ${groupsToJoin})...`);
+    
     try {
       console.log('Ищем группы для вступления...');
       
       // Переходим на страницу поиска групп
       try {
-        // Прямой переход на страницу поиска групп
-        console.log('Переходим на страницу поиска групп...');
-        await this.page.goto('https://www.facebook.com/groups/discover/', { 
-          waitUntil: 'domcontentloaded',
-          timeout: 40000
-        });
-        console.log('Перешли на страницу поиска групп');
-        
-        // Достаточное ожидание для загрузки контента
-        await this.page.waitForTimeout(5000);
+        // Пробуем найти кнопку "Найти группы"
+        const findGroupsButton = await this.page.$('a[href*="/groups/discover"]');
+        if (findGroupsButton) {
+          await findGroupsButton.click();
+          console.log('Нажали на кнопку "Найти группы"');
+        } else {
+          // Если не нашли, переходим по прямой ссылке
+          await this.page.goto('https://www.facebook.com/groups/discover', { waitUntil: 'networkidle' });
+          console.log('Перешли на страницу поиска групп по прямой ссылке');
+        }
       } catch (error) {
-        console.error(`Ошибка при переходе на страницу поиска групп: ${error.message}`);
-        await this.takeScreenshot('group_discovery_error');
-        throw new Error('Не удалось перейти на страницу поиска групп');
+        console.log(`Не смогли найти кнопку "Найти группы": ${error.message}`);
+        // Переходим по прямой ссылке
+        await this.page.goto('https://www.facebook.com/groups/discover', { waitUntil: 'networkidle' });
+        console.log('Перешли на страницу поиска групп по прямой ссылке');
       }
+      
+      // Ждем загрузки страницы
+      await this.page.waitForTimeout(3000);
       
       // Делаем скриншот страницы поиска групп
       await this.takeScreenshot('discover_groups');
       
-      // Небольшой скролл, чтобы загрузить больше групп
-      await this.page.evaluate(() => {
-        window.scrollBy(0, 300);
-      });
+      // Ищем кнопки "Вступить"
+      const joinButtons = await this.page.$$('div[aria-label="Вступить"]');
       
-      await this.page.waitForTimeout(2000);
+      if (!joinButtons.length) {
+        console.log('Не найдены кнопки "Вступить" в группы');
+        this.results.errors.push({
+          stage: 'join_groups',
+          message: 'Не найдены кнопки "Вступить" в группы',
+          timestamp: new Date()
+        });
+        return false;
+      }
       
-      // Фиксируем успешное количество вступлений
-      let successfulJoins = 0;
+      console.log(`Найдено ${joinButtons.length} групп для вступления`);
       
-      // Для отладки сохраняем весь HTML страницы
-      const html = await this.page.content();
-      console.log(`Длина HTML страницы: ${html.length} символов`);
+      // Вступаем в группы (не более указанного количества за один запуск)
+      const maxGroups = Math.min(joinButtons.length, groupsToJoin);
       
-      // Используем более надежный подход - ищем кнопки непосредственно перед кликом
-      for (let attempt = 0; attempt < 5; attempt++) {
-        console.log(`Попытка ${attempt + 1} найти и нажать кнопку "Вступить"...`);
-        
-        // Делаем скриншот перед поиском кнопок
-        await this.takeScreenshot(`before_finding_buttons_${attempt + 1}`);
-        
-        // Вместо получения списка кнопок заранее, ищем и кликаем по одной кнопке за раз
+      for (let i = 0; i < maxGroups; i++) {
         try {
-          // Несколько селекторов для кнопок вступления в группы
-          const selectors = [
-            // Попытка 1: общая структура кнопки с ролью
-            'div[role="button"]',
-            
-            // Попытка 2: поиск по содержимому (универсально)
-            'div[role="button"]:has(span)',
-            
-            // Попытка 3: специфические классы Facebook (могут меняться)
-            'div.x1n2onr6.x1ja2u2z',
-            
-            // Попытка 4: контейнеры с кнопками
-            'div[role="main"] div[role="button"]'
-          ];
+          await joinButtons[i].click();
+          console.log(`Нажали кнопку "Вступить" для группы ${i + 1}`);
           
-          let joinButton = null;
-          
-          // Пробуем разные селекторы, пока не найдем видимую кнопку
-          for (const selector of selectors) {
-            const buttons = await this.page.$$(selector);
-            console.log(`Найдено ${buttons.length} элементов по селектору: ${selector}`);
-            
-            // Проверяем каждую найденную кнопку
-            for (const button of buttons) {
-              // Проверяем, видима ли кнопка
-              const isVisible = await this.page.evaluate((el) => {
-                // Проверка видимости элемента
-                const style = window.getComputedStyle(el);
-                const rect = el.getBoundingClientRect();
-                
-                return style.display !== 'none' && 
-                       style.visibility !== 'hidden' && 
-                       style.opacity !== '0' &&
-                       rect.width > 0 &&
-                       rect.height > 0;
-              }, button);
-              
-              if (isVisible) {
-                // Получаем текст кнопки для проверки
-                const buttonText = await this.page.evaluate((el) => el.textContent, button);
-                console.log(`Найдена видимая кнопка с текстом: "${buttonText.trim()}"`);
-                
-                // Проверяем, похоже ли это на кнопку вступления в группу
-                // Набор типичных слов для разных языков
-                const joinKeywords = ['join', 'вступ', 'присоед', 'приєдн', 'beitr', 'unir', 'rejoind'];
-                
-                // Если текст похож на "вступить" на любом языке
-                if (joinKeywords.some(keyword => buttonText.toLowerCase().includes(keyword))) {
-                  joinButton = button;
-                  console.log(`Найдена подходящая кнопка вступления с текстом: "${buttonText.trim()}"`);
-                  break;
-                }
-              }
-            }
-            
-            if (joinButton) break;
-          }
-          
-          if (!joinButton) {
-            console.log('Не найдена подходящая кнопка "Вступить" на этой странице');
-            
-            // Скроллим страницу, чтобы загрузить больше групп
-            await this.page.evaluate(() => {
-              window.scrollBy(0, 500);
-            });
-            
-            await this.page.waitForTimeout(2000);
-            continue;
-          }
-          
-          // Делаем скриншот кнопки с подсветкой
-          await this.page.evaluate((el) => {
-            // Добавляем заметную красную рамку вокруг найденной кнопки
-            el.style.border = '5px solid red';
-            el.style.boxShadow = '0 0 10px rgba(255,0,0,0.8)';
-          }, joinButton);
-          
-          await this.takeScreenshot(`found_join_button_${attempt + 1}`);
-          
-          // Скроллим к кнопке и делаем ее видимой
-          await this.page.evaluate((el) => {
-            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          }, joinButton);
-          
-          // Ждем завершения скролла
-          await this.page.waitForTimeout(1000);
-          
-          // Используем JavaScript click вместо Playwright click
-          await this.page.evaluate((el) => {
-            el.click();
-          }, joinButton);
-          
-          console.log(`Нажали на кнопку "Вступить" в группу (попытка ${attempt + 1})`);
-          
-          // Ждем обработки нажатия
-          await this.page.waitForTimeout(3000);
-          
-          // Делаем скриншот после клика
-          await this.takeScreenshot(`after_join_click_${attempt + 1}`);
-          
-          // Проверяем, появился ли диалог подтверждения или другие элементы
-          const confirmButtons = await this.page.$$(
-            'div[aria-label="Подтвердить"], div[aria-label="Confirm"], button:has-text("Подтвердить"), button:has-text("Confirm")'
-          );
-          
-          if (confirmButtons.length > 0) {
-            console.log('Найдена кнопка подтверждения вступления');
-            
-            // Нажимаем на кнопку подтверждения
-            await this.page.evaluate((el) => {
-              el.click();
-            }, confirmButtons[0]);
-            
-            console.log('Нажали на кнопку подтверждения');
-            await this.page.waitForTimeout(2000);
-          }
-          
-          // Закрываем возможные всплывающие окна
-          const closeButtons = await this.page.$$(
-            'div[aria-label="Закрыть"], div[aria-label="Close"], button[aria-label="Закрыть"], button[aria-label="Close"]'
-          );
-          
-          if (closeButtons.length > 0) {
-            console.log('Найдена кнопка закрытия диалога');
-            
-            await this.page.evaluate((el) => {
-              el.click();
-            }, closeButtons[0]);
-            
-            console.log('Закрыли диалог');
-            await this.page.waitForTimeout(1000);
-          }
-          
-          // Увеличиваем счетчик успешных вступлений
-          successfulJoins++;
-          this.results.groupsJoined = successfulJoins;
-          
-          console.log(`Успешно вступили в группу (всего: ${successfulJoins})`);
-          
-          // Ждем перед следующей попыткой
-          await this.page.waitForTimeout(3000);
-          
-          // Скроллим страницу, чтобы загрузить новые группы
-          await this.page.evaluate(() => {
-            window.scrollBy(0, 300);
-          });
-          
+          // Делаем небольшую паузу между действиями
           await this.page.waitForTimeout(2000);
           
-        } catch (error) {
-          console.error(`Ошибка при попытке ${attempt + 1}: ${error.message}`);
-          await this.takeScreenshot(`error_attempt_${attempt + 1}`);
+          this.results.groupsJoined++;
           
-          // Продолжаем со следующей попыткой
-          await this.page.waitForTimeout(1000);
+          // Иногда после вступления появляются дополнительные диалоги, пробуем их закрыть
+          try {
+            const closeButton = await this.page.$('div[aria-label="Закрыть"]');
+            if (closeButton) {
+              await closeButton.click();
+              console.log('Закрыли дополнительный диалог');
+            }
+          } catch (dialogError) {
+            console.log('Не было дополнительного диалога или не смогли его закрыть');
+          }
+        } catch (joinError) {
+          console.error(`Ошибка при вступлении в группу ${i + 1}: ${joinError.message}`);
         }
       }
       
-      // Делаем финальный скриншот
+      // Делаем скриншот после вступления в группы
       await this.takeScreenshot('after_joining_groups');
       
-      // Обновляем результаты
-      this.results.groupsJoined = successfulJoins;
-      console.log(`Завершено вступление в группы. Успешно вступили в ${successfulJoins} групп`);
-      
+      console.log(`Успешно вступили в ${this.results.groupsJoined} групп`);
       return true;
     } catch (error) {
       console.error(`Ошибка при вступлении в группы: ${error.message}`);
@@ -468,13 +332,230 @@ class FacebookFarmer {
     }
   }
 
+  // Метод для лайков контента
+  async likeContent() {
+    if (!this.config.functions.likeContent?.enabled) {
+      console.log('Функция лайков контента отключена, пропускаем...');
+      return true;
+    }
+    
+    const postsToLike = this.config.functions.likeContent.count || 3;
+    console.log(`Запускаем лайки постов (количество: ${postsToLike})...`);
+    
+    try {
+      // Переходим на главную ленту Facebook
+      await this.page.goto('https://www.facebook.com/', { waitUntil: 'networkidle' });
+      console.log('Перешли на главную страницу Facebook');
+      
+      // Ждем загрузки ленты
+      await this.page.waitForTimeout(3000);
+      
+      // Делаем скриншот ленты
+      await this.takeScreenshot('news_feed');
+      
+      // Ищем кнопки лайков
+      const likeButtons = await this.page.$$('div[aria-label="Нравится"]');
+      
+      if (!likeButtons.length) {
+        console.log('Не найдены кнопки "Нравится" в ленте');
+        return false;
+      }
+      
+      console.log(`Найдено ${likeButtons.length} кнопок лайков`);
+      
+      // Лайкаем посты (не более указанного количества)
+      const maxLikes = Math.min(likeButtons.length, postsToLike);
+      
+      for (let i = 0; i < maxLikes; i++) {
+        try {
+          // Прокручиваем до кнопки, чтобы она была видима
+          await likeButtons[i].scrollIntoViewIfNeeded();
+          await this.page.waitForTimeout(1000);
+          
+          await likeButtons[i].click();
+          console.log(`Поставили лайк ${i + 1}`);
+          
+          // Делаем паузу между лайками
+          await this.page.waitForTimeout(2000);
+          
+          this.results.postsLiked++;
+        } catch (likeError) {
+          console.error(`Ошибка при лайке поста ${i + 1}: ${likeError.message}`);
+        }
+      }
+      
+      // Делаем скриншот после лайков
+      await this.takeScreenshot('after_liking_posts');
+      
+      console.log(`Успешно поставили ${this.results.postsLiked} лайков`);
+      return true;
+    } catch (error) {
+      console.error(`Ошибка при лайках постов: ${error.message}`);
+      this.results.errors.push({
+        stage: 'like_content',
+        message: error.message,
+        timestamp: new Date()
+      });
+      return false;
+    }
+  }
+
+  // Метод для добавления друзей
+  async addFriends() {
+    if (!this.config.functions.addFriends?.enabled) {
+      console.log('Функция добавления друзей отключена, пропускаем...');
+      return true;
+    }
+    
+    const friendsToAdd = this.config.functions.addFriends.count || 3;
+    console.log(`Запускаем добавление друзей (количество: ${friendsToAdd})...`);
+    
+    try {
+      // Переходим на страницу рекомендаций друзей
+      await this.page.goto('https://www.facebook.com/friends/suggestions', { waitUntil: 'networkidle' });
+      console.log('Перешли на страницу рекомендаций друзей');
+      
+      // Ждем загрузки страницы
+      await this.page.waitForTimeout(3000);
+      
+      // Делаем скриншот страницы рекомендаций
+      await this.takeScreenshot('friend_suggestions');
+      
+      // Ищем кнопки "Добавить в друзья"
+      const addFriendButtons = await this.page.$$('div[aria-label="Добавить в друзья"]');
+      
+      if (!addFriendButtons.length) {
+        console.log('Не найдены кнопки "Добавить в друзья"');
+        return false;
+      }
+      
+      console.log(`Найдено ${addFriendButtons.length} кнопок добавления в друзья`);
+      
+      // Добавляем друзей (не более указанного количества)
+      const maxFriends = Math.min(addFriendButtons.length, friendsToAdd);
+      
+      for (let i = 0; i < maxFriends; i++) {
+        try {
+          // Прокручиваем до кнопки
+          await addFriendButtons[i].scrollIntoViewIfNeeded();
+          await this.page.waitForTimeout(1000);
+          
+          await addFriendButtons[i].click();
+          console.log(`Отправили запрос в друзья ${i + 1}`);
+          
+          // Делаем паузу между запросами
+          await this.page.waitForTimeout(2000);
+          
+          this.results.friendsAdded++;
+        } catch (addError) {
+          console.error(`Ошибка при добавлении друга ${i + 1}: ${addError.message}`);
+        }
+      }
+      
+      // Делаем скриншот после добавления друзей
+      await this.takeScreenshot('after_adding_friends');
+      
+      console.log(`Успешно отправили ${this.results.friendsAdded} запросов в друзья`);
+      return true;
+    } catch (error) {
+      console.error(`Ошибка при добавлении друзей: ${error.message}`);
+      this.results.errors.push({
+        stage: 'add_friends',
+        message: error.message,
+        timestamp: new Date()
+      });
+      return false;
+    }
+  }
+
+  // Метод для просмотра контента
+  async viewContent() {
+    if (!this.config.functions.viewContent?.enabled) {
+      console.log('Функция просмотра контента отключена, пропускаем...');
+      return true;
+    }
+    
+    const contentToView = this.config.functions.viewContent.count || 5;
+    console.log(`Запускаем просмотр контента (количество: ${contentToView})...`);
+    
+    try {
+      // Переходим на главную ленту Facebook
+      await this.page.goto('https://www.facebook.com/', { waitUntil: 'networkidle' });
+      console.log('Перешли на главную страницу Facebook');
+      
+      // Ждем загрузки ленты
+      await this.page.waitForTimeout(3000);
+      
+      // Делаем скриншот ленты
+      await this.takeScreenshot('content_feed');
+      
+      // Ищем посты
+      const posts = await this.page.$$('div[data-pagelet^="FeedUnit"]');
+      
+      if (!posts.length) {
+        console.log('Не найдены посты в ленте');
+        return false;
+      }
+      
+      console.log(`Найдено ${posts.length} постов в ленте`);
+      
+      // Просматриваем посты (не более указанного количества)
+      const maxPosts = Math.min(posts.length, contentToView);
+      
+      for (let i = 0; i < maxPosts; i++) {
+        try {
+          // Прокручиваем до поста
+          await posts[i].scrollIntoViewIfNeeded({ behavior: 'smooth' });
+          
+          console.log(`Просматриваем пост ${i + 1}`);
+          
+          // Ждем некоторое время, имитируя чтение
+          await this.page.waitForTimeout(3000 + Math.random() * 2000);
+          
+          // Пробуем развернуть пост, если он свернут
+          try {
+            const expandButton = await posts[i].$('div[aria-label="Посмотреть больше"]');
+            if (expandButton) {
+              await expandButton.click();
+              console.log(`Развернули пост ${i + 1}`);
+              await this.page.waitForTimeout(1000);
+            }
+          } catch (expandError) {
+            // Ничего страшного, если не нашли кнопку или не смогли развернуть
+          }
+          
+          // Продолжаем просмотр
+          await this.page.waitForTimeout(2000);
+          
+          this.results.contentViewed++;
+        } catch (viewError) {
+          console.error(`Ошибка при просмотре поста ${i + 1}: ${viewError.message}`);
+        }
+      }
+      
+      // Делаем скриншот после просмотра контента
+      await this.takeScreenshot('after_viewing_content');
+      
+      console.log(`Успешно просмотрели ${this.results.contentViewed} постов`);
+      return true;
+    } catch (error) {
+      console.error(`Ошибка при просмотре контента: ${error.message}`);
+      this.results.errors.push({
+        stage: 'view_content',
+        message: error.message,
+        timestamp: new Date()
+      });
+      return false;
+    }
+  }
+
   // Основной метод для фарминга
   async startFarming() {
     try {
       console.log(`Начинаем фарминг (ID: ${this.farmId}, профиль: ${this.profileId})`);
       
-      // Подключаемся к базе данных
-      const dbConnected = await this.connectToDB();
+      // Подключаемся к базе данных и загружаем конфигурацию
+      const dbConnected = await this.connectAndLoadConfig();
       if (!dbConnected) {
         throw new Error('Не удалось подключиться к базе данных');
       }
@@ -488,48 +569,9 @@ class FacebookFarmer {
         throw new Error('Не удалось запустить браузерный профиль');
       }
       
-      // Переходим на Facebook с более надежными параметрами
+      // Переходим на Facebook
       console.log('Открываем Facebook...');
-      
-      // 1. Используем domcontentloaded вместо networkidle для более быстрой загрузки
-      // 2. Увеличиваем таймаут до 60 секунд
-      // 3. Добавляем обработку ошибок
-      try {
-        await this.page.goto('https://www.facebook.com', { 
-          waitUntil: 'domcontentloaded',
-          timeout: 60000 
-        });
-        
-        console.log('Страница Facebook загружена (начальная загрузка)');
-        
-        // Дополнительное ожидание для загрузки контента
-        console.log('Ждем дополнительно для загрузки элементов интерфейса...');
-        await this.page.waitForTimeout(5000);
-        
-        // Ждем загрузки определенного элемента, который указывает на загрузку страницы
-        try {
-          await this.page.waitForSelector('div[role="banner"]', { timeout: 10000 });
-          console.log('Обнаружена шапка Facebook - страница загружена');
-        } catch (selectorError) {
-          console.log('Не удалось найти шапку Facebook, но продолжаем выполнение');
-        }
-      } catch (navigationError) {
-        console.error(`Ошибка при загрузке Facebook: ${navigationError.message}`);
-        
-        // Делаем скриншот при ошибке и продолжаем попытку работы
-        await this.takeScreenshot('navigation_error');
-        
-        // Проверяем, загрузилась ли страница несмотря на ошибку таймаута
-        console.log('Проверяем, загрузилась ли страница частично...');
-        const url = this.page.url();
-        console.log(`Текущий URL: ${url}`);
-        
-        if (!url.includes('facebook.com')) {
-          throw new Error('Не удалось загрузить Facebook');
-        } else {
-          console.log('Страница Facebook загружена частично, продолжаем работу');
-        }
-      }
+      await this.page.goto('https://www.facebook.com', { waitUntil: 'networkidle' });
       
       // Делаем скриншот главной страницы
       await this.takeScreenshot('facebook_main');
@@ -539,15 +581,76 @@ class FacebookFarmer {
       if (!isAuthenticated) {
         throw new Error('Аккаунт не авторизован в Facebook');
       }
-      
-      // Переходим в раздел групп
-      const navigatedToGroups = await this.navigateToGroups();
-      if (!navigatedToGroups) {
-        throw new Error('Не удалось перейти в раздел групп');
+
+      // Выполняем функции фарминга в зависимости от настроек
+      if (this.config.runSequentially) {
+        // Последовательное выполнение функций
+        console.log('Выполняем функции последовательно...');
+        
+        // Вступаем в группы
+        if (this.config.functions.joinGroups?.enabled) {
+          await this.navigateToGroups();
+          await this.joinGroups();
+        }
+        
+        // Ставим лайки
+        if (this.config.functions.likeContent?.enabled) {
+          await this.likeContent();
+        }
+        
+        // Добавляем друзей
+        if (this.config.functions.addFriends?.enabled) {
+          await this.addFriends();
+        }
+        
+        // Просматриваем контент
+        if (this.config.functions.viewContent?.enabled) {
+          await this.viewContent();
+        }
+      } else {
+        // Параллельное выполнение функций (выбираем одну случайную из включенных)
+        console.log('Выбираем случайную функцию из включенных...');
+        
+        // Собираем список включенных функций
+        const enabledFunctions = [];
+        if (this.config.functions.joinGroups?.enabled) {
+          enabledFunctions.push('joinGroups');
+        }
+        if (this.config.functions.likeContent?.enabled) {
+          enabledFunctions.push('likeContent');
+        }
+        if (this.config.functions.addFriends?.enabled) {
+          enabledFunctions.push('addFriends');
+        }
+        if (this.config.functions.viewContent?.enabled) {
+          enabledFunctions.push('viewContent');
+        }
+        
+        if (enabledFunctions.length === 0) {
+          console.log('Нет включенных функций фарминга');
+        } else {
+          // Выбираем случайную функцию
+          const randomFunction = enabledFunctions[Math.floor(Math.random() * enabledFunctions.length)];
+          console.log(`Выбрана случайная функция: ${randomFunction}`);
+          
+          // Выполняем выбранную функцию
+          switch (randomFunction) {
+            case 'joinGroups':
+              await this.navigateToGroups();
+              await this.joinGroups();
+              break;
+            case 'likeContent':
+              await this.likeContent();
+              break;
+            case 'addFriends':
+              await this.addFriends();
+              break;
+            case 'viewContent':
+              await this.viewContent();
+              break;
+          }
+        }
       }
-      
-      // Вступаем в группы
-      await this.joinGroups();
       
       // Закрываем браузер
       if (this.browser) {
@@ -561,6 +664,9 @@ class FacebookFarmer {
       
       console.log(`Фарминг успешно завершен за ${duration} секунд`);
       console.log(`Вступили в ${this.results.groupsJoined} групп`);
+      console.log(`Поставили ${this.results.postsLiked} лайков`);
+      console.log(`Добавили ${this.results.friendsAdded} друзей`);
+      console.log(`Просмотрели ${this.results.contentViewed} постов`);
       
       // Обновляем результаты в базе данных
       await Farm.findByIdAndUpdate(this.farmId, {
@@ -575,8 +681,40 @@ class FacebookFarmer {
       
       process.exit(0);
     } catch (error) {
-      // Обработка ошибок
-      // ...существующий код обработки ошибок...
+      console.error(`❌ Ошибка фарминга: ${error.message}`);
+      
+      // Добавляем ошибку в результаты
+      this.results.errors.push({
+        stage: 'main',
+        message: error.message,
+        timestamp: new Date()
+      });
+      
+      // Делаем скриншот ошибки, если страница существует
+      if (this.page) {
+        await this.takeScreenshot('error');
+      }
+      
+      // Закрываем браузер, если он открыт
+      if (this.browser) {
+        await this.browser.close();
+        console.log('Браузер закрыт');
+      }
+      
+      // Обновляем статус в базе данных
+      if (mongoose.connection.readyState === 1) {
+        await Farm.findByIdAndUpdate(this.farmId, {
+          status: 'error',
+          results: this.results,
+          'config.error': error.message,
+          'config.completedAt': new Date()
+        });
+        
+        // Закрываем соединение с БД
+        await mongoose.disconnect();
+      }
+      
+      process.exit(1);
     }
   }
 }

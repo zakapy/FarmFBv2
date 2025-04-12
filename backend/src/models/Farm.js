@@ -7,7 +7,10 @@ const farmSchema = new mongoose.Schema(
       ref: 'User',
       required: true
     },
-    name: { type: String },
+    name: { 
+      type: String,
+      default: () => `Фарм ${new Date().toLocaleString('ru')}`
+    },
     accountId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Account',
@@ -20,11 +23,28 @@ const farmSchema = new mongoose.Schema(
     },
     config: {
       type: mongoose.Schema.Types.Mixed,
-      default: {}
+      default: () => ({
+        startedAt: new Date(),
+        maxActions: 10,
+        runSequentially: true,
+        functions: {
+          joinGroups: { enabled: true, count: 5 },
+          likeContent: { enabled: false, count: 0 },
+          addFriends: { enabled: false, count: 0 },
+          viewContent: { enabled: false, count: 0 }
+        }
+      })
     },
     results: {
       type: mongoose.Schema.Types.Mixed,
-      default: {}
+      default: () => ({
+        groupsJoined: 0,
+        postsLiked: 0,
+        friendsAdded: 0,
+        contentViewed: 0,
+        screenshots: [],
+        errors: []
+      })
     }
   },
   { timestamps: true }

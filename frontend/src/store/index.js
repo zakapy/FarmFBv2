@@ -10,13 +10,16 @@ const store = configureStore({
     auth: authReducer,
     accounts: accountsReducer,
     farm: farmReducer,
-    // settings: settingsReducer, // можно добавить в будущем
   },
-  devTools: process.env.NODE_ENV !== 'production',
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: false, // если будешь использовать Date, FormData и т.п.
+      serializableCheck: {
+        // Игнорируем некоторые пути, которые могут содержать не сериализуемые значения
+        ignoredActions: ['farm/getDetails/fulfilled'],
+        ignoredPaths: ['farm.farmDetails.results.screenshots'],
+      },
     }),
+  devTools: process.env.NODE_ENV !== 'production',
 });
 
 export default store;
