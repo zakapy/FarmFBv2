@@ -78,3 +78,50 @@
 [2025-04-12 14:20:27] [31merror[39m: Status: 401
 [2025-04-12 14:20:27] [31merror[39m: Data: "Unauthorized."
 [2025-04-12 14:20:27] [31merror[39m: Failed to import cookies: Request failed with status code 401
+[2025-04-12 14:30:17] [31merror[39m: Error: Invalid or expired refresh token
+    at exports.handleRefreshToken (C:\Users\Administrator\Desktop\CODDING\FarmFBv2\backend\src\services\authService.js:70:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async exports.refreshToken (C:\Users\Administrator\Desktop\CODDING\FarmFBv2\backend\src\controllers\authController.js:47:20)
+[2025-04-12 14:30:24] [31merror[39m: Ошибка импорта cookies: Request failed with status code 404
+[2025-04-12 14:30:24] [31merror[39m: Status: 404
+[2025-04-12 14:30:24] [31merror[39m: Data: {"success":false,"error":""}
+[2025-04-12 14:30:24] [31merror[39m: Failed to import cookies: Request failed with status code 404
+[2025-04-12 14:35:47] [31merror[39m: Ошибка импорта cookies: Request failed with status code 404
+[2025-04-12 14:35:47] [31merror[39m: Status: 404
+[2025-04-12 14:35:47] [31merror[39m: Data: {"success":false,"error":""}
+[2025-04-12 14:35:47] [31merror[39m: Failed to import cookies: Request failed with status code 404
+[2025-04-12 14:39:27] [31merror[39m: Ошибка импорта cookies: Request failed with status code 404
+[2025-04-12 14:39:27] [31merror[39m: Status: 404
+[2025-04-12 14:39:27] [31merror[39m: Data: {"success":false,"error":""}
+[2025-04-12 14:39:27] [31merror[39m: Failed to import cookies: Request failed with status code 404
+[2025-04-12 14:40:09] [31merror[39m: Ошибка импорта cookies: Request failed with status code 404
+[2025-04-12 14:40:09] [31merror[39m: Status: 404
+[2025-04-12 14:40:09] [31merror[39m: Data: {"success":false,"error":""}
+[2025-04-12 14:40:09] [31merror[39m: Failed to import cookies: Request failed with status code 404
+[2025-04-12 14:43:21] [31merror[39m: Ошибка импорта cookies по URL https://dolphin-anty-api.com/v1.0/cookies/import: Request failed with status code 404
+[2025-04-12 14:43:21] [31merror[39m: Status: 404
+[2025-04-12 14:43:21] [31merror[39m: Data: {"success":false,"error":""}
+[2025-04-12 14:43:21] [31merror[39m: Ошибка импорта cookies по URL https://dolphin-anty-api.com/browser_profiles/596558218/cookies: Request failed with status code 404
+[2025-04-12 14:43:21] [31merror[39m: Status: 404
+[2025-04-12 14:43:21] [31merror[39m: Data: {"success":false,"error":""}
+[2025-04-12 14:43:21] [31merror[39m: Ошибка импорта cookies по URL https://dolphin-anty-api.com/cookies/import: Request failed with status code 404
+[2025-04-12 14:43:21] [31merror[39m: Status: 404
+[2025-04-12 14:43:21] [31merror[39m: Data: {"success":false,"error":""}
+[2025-04-12 14:44:33] [31merror[39m: Ошибка импорта cookies по URL https://dolphin-anty-api.com/v1.0/cookies/import: Request failed with status code 404
+[2025-04-12 14:44:33] [31merror[39m: Status: 404
+[2025-04-12 14:44:33] [31merror[39m: Data: {"success":false,"error":""}
+[2025-04-12 14:44:33] [31merror[39m: Ошибка импорта cookies по URL https://dolphin-anty-api.com/browser_profiles/596558454/cookies: Request failed with status code 404
+[2025-04-12 14:44:33] [31merror[39m: Status: 404
+[2025-04-12 14:44:33] [31merror[39m: Data: {"success":false,"error":""}
+[2025-04-12 14:44:33] [31merror[39m: Ошибка импорта cookies по URL https://dolphin-anty-api.com/cookies/import: Request failed with status code 404
+[2025-04-12 14:44:33] [31merror[39m: Status: 404
+[2025-04-12 14:44:33] [31merror[39m: Data: {"success":false,"error":""}
+[2025-04-12 14:45:13] [31merror[39m: Ошибка импорта cookies по URL https://dolphin-anty-api.com/v1.0/cookies/import: Request failed with status code 404
+[2025-04-12 14:45:13] [31merror[39m: Status: 404
+[2025-04-12 14:45:13] [31merror[39m: Data: {"success":false,"error":""}
+[2025-04-12 14:45:13] [31merror[39m: Ошибка импорта cookies по URL https://dolphin-anty-api.com/browser_profiles/596558573/cookies: Request failed with status code 404
+[2025-04-12 14:45:13] [31merror[39m: Status: 404
+[2025-04-12 14:45:13] [31merror[39m: Data: {"success":false,"error":""}
+[2025-04-12 14:45:13] [31merror[39m: Ошибка импорта cookies по URL https://dolphin-anty-api.com/cookies/import: Request failed with status code 404
+[2025-04-12 14:45:13] [31merror[39m: Status: 404
+[2025-04-12 14:45:13] [31merror[39m: Data: {"success":false,"error":""}

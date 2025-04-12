@@ -29,6 +29,7 @@ exports.createAccountSchema = z.object({
     name: z.string().min(1, 'Название аккаунта обязательно'),
     cookies: cookiesSchema,
     proxy: z.string().optional(),
+    proxyType: z.enum(['http', 'socks5']).optional().default('http'),
     status: z.string().optional().default('неизвестно'),
     meta: z.record(z.any()).optional()
   })
@@ -42,6 +43,7 @@ exports.updateAccountSchema = z.object({
     name: z.string().optional(),
     cookies: cookiesSchema.optional(),
     proxy: z.string().optional(),
+    proxyType: z.enum(['http', 'socks5']).optional(),
     status: z.string().optional(),
     meta: z.record(z.any()).optional()
   })

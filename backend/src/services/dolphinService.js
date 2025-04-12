@@ -21,6 +21,8 @@ const dolphinService = {
       const profileName = `Profile ${account.name || account._id}`;
       
       const payload = {
+        "homepages": [],
+        "newHomepages": [],
         "name": profileName,
         "tags": [],
         "platform": "windows",
@@ -30,8 +32,17 @@ const dolphinService = {
           "mode": "manual",
           "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
         },
+        "deviceName": {
+          "mode": "off",
+          "value": null
+        },
+        "macAddress": {
+          "mode": "off",
+          "value": null
+        },
         "webrtc": {
-          "mode": "altered"
+          "mode": "altered",
+          "ipAddress": null
         },
         "canvas": {
           "mode": "real"
@@ -50,14 +61,34 @@ const dolphinService = {
         "clientRect": {
           "mode": "real"
         },
+        "notes": {
+          "content": null,
+          "color": "blue",
+          "style": "text",
+          "icon": null
+        },
         "timezone": {
-          "mode": "auto"
+          "mode": "auto",
+          "value": null
         },
         "locale": {
-          "mode": "auto"
+          "mode": "auto",
+          "value": null
         },
+        "proxy": {
+          "name": "",
+          "host": "",
+          "port": "",
+          "type": "http",
+          "login": "",
+          "password": ""
+        },
+        "statusId": 0,
         "geolocation": {
-          "mode": "auto"
+          "mode": "auto",
+          "latitude": null,
+          "longitude": null,
+          "accuracy": null
         },
         "cpu": {
           "mode": "manual",
@@ -68,13 +99,17 @@ const dolphinService = {
           "value": 8
         },
         "screen": {
-          "mode": "real"
+          "mode": "real",
+          "resolution": null
         },
         "audio": {
           "mode": "real"
         },
         "mediaDevices": {
-          "mode": "real"
+          "mode": "real",
+          "audioInputs": null,
+          "videoInputs": null,
+          "audioOutputs": null
         },
         "ports": {
           "mode": "protect",
@@ -89,23 +124,26 @@ const dolphinService = {
         const proxyParts = account.proxy.split(':');
         
         if (proxyParts.length >= 2) {
-          payload.proxy = {
-            "mode": "manual",
-            "host": proxyParts[0],
-            "port": parseInt(proxyParts[1], 10),
-            "type": "http"
-          };
+          // Определяем тип прокси - по умолчанию http, если не указано иное
+          let proxyType = "http";
+          
+          // Проверяем, есть ли в аккаунте информация о типе прокси
+          if (account.proxyType && (account.proxyType === "http" || account.proxyType === "socks5")) {
+            proxyType = account.proxyType;
+          }
+          
+          payload.proxy.host = proxyParts[0];
+          payload.proxy.port = proxyParts[1];
+          payload.proxy.type = proxyType; // используем определенный тип
           
           if (proxyParts.length >= 4) {
-            payload.proxy.username = proxyParts[2];
+            payload.proxy.login = proxyParts[2];
             payload.proxy.password = proxyParts[3];
           }
+          
+          // Формируем имя прокси для отображения
+          payload.proxy.name = account.proxy;
         }
-      } else {
-        // Если прокси не указан, добавляем объект с режимом "none"
-        payload.proxy = {
-          "mode": "none"
-        };
       }
 
       const headers = {
@@ -118,8 +156,28 @@ const dolphinService = {
 
       try {
         const response = await axios.post(url, payload, { headers });
-        logger.info(`Успешно создан профиль в Dolphin. ID: ${response.data.id}`);
-        return response.data;
+        logger.info(`Успешно создан профиль в Dolphin. Ответ: ${JSON.stringify(response.data)}`);
+        
+        // Получаем ID профиля из ответа
+        let profileId;
+        if (response.data.browserProfileId) {
+          // Новый формат ответа
+          profileId = response.data.browserProfileId;
+        } else if (response.data.id) {
+          // Старый формат ответа
+          profileId = response.data.id;
+        } else if (response.data.data && response.data.data.id) {
+          // Альтернативный формат
+          profileId = response.data.data.id;
+        } else {
+          throw new Error('Не удалось получить ID профиля из ответа API');
+        }
+        
+        return {
+          id: profileId,
+          name: profileName,
+          originalResponse: response.data
+        };
       } catch (error) {
         logger.error(`Ошибка запроса к Dolphin API: ${error.message}`);
         if (error.response) {
@@ -161,38 +219,65 @@ const dolphinService = {
         logger.error('Cookies must be an array');
         throw new Error('Cookies должны быть массивом');
       }
-      
-      const url = `${env.DOLPHIN_API_URL}/cookies/import`;
-      
-      const payload = {
-        cookies: cookiesArray,
-        profileId: profileId,
-        transfer: 0,
-        cloudSyncDisabled: false
-      };
-      
-      const headers = {
-        'Content-Type': 'application/json'
-      };
-      
-      logger.info(`Отправляем запрос на импорт cookies: ${url}`);
-      logger.info(`Payload: ${JSON.stringify({ ...payload, cookies: 'СКРЫТО ДЛЯ БЕЗОПАСНОСТИ' })}`);
 
-      try {
-        const response = await axios.post(url, payload, { headers });
-        logger.info(`Успешно импортированы cookies для профиля ${profileId}`);
-        return response.data;
-      } catch (error) {
-        logger.error(`Ошибка импорта cookies: ${error.message}`);
-        if (error.response) {
-          logger.error(`Status: ${error.response.status}`);
-          logger.error(`Data: ${JSON.stringify(error.response.data)}`);
+      // Пробуем несколько вариантов URL для импорта cookies
+      const possibleUrls = [
+        // Вариант 1: прямой путь из примера, но с хостом Dolphin API
+        `${env.DOLPHIN_API_URL}/v1.0/cookies/import`,
+        
+        // Вариант 2: путь относительно профиля браузера
+        `${env.DOLPHIN_API_URL}/browser_profiles/${profileId}/cookies`,
+        
+        // Вариант 3: основной путь без версии v1.0
+        `${env.DOLPHIN_API_URL}/cookies/import`,
+        
+        // Вариант 4: вызов локального API
+        `http://localhost:3001/v1.0/cookies/import`
+      ];
+      
+      let lastError = null;
+      
+      // Пробуем все URL последовательно
+      for (const url of possibleUrls) {
+        try {
+          logger.info(`Пробуем импортировать cookies по URL: ${url}`);
+          
+          const payload = {
+            cookies: cookiesArray,
+            profileId: profileId,
+            transfer: 0,
+            cloudSyncDisabled: false
+          };
+          
+          const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${env.DOLPHIN_API_TOKEN}`
+          };
+          
+          logger.info(`Отправляем запрос на импорт cookies: ${url}`);
+          logger.info(`Payload: ${JSON.stringify({ ...payload, cookies: 'СКРЫТО ДЛЯ БЕЗОПАСНОСТИ' })}`);
+
+          const response = await axios.post(url, payload, { headers });
+          logger.info(`Успешно импортированы cookies для профиля ${profileId}`);
+          return response.data;
+        } catch (error) {
+          logger.error(`Ошибка импорта cookies по URL ${url}: ${error.message}`);
+          if (error.response) {
+            logger.error(`Status: ${error.response.status}`);
+            logger.error(`Data: ${JSON.stringify(error.response.data)}`);
+          }
+          lastError = error;
         }
-        throw error;
       }
+      
+      // Если ни один URL не сработал, возвращаем последнюю ошибку
+      throw lastError || new Error('Не удалось импортировать cookies ни по одному из URL');
     } catch (error) {
       logger.error(`Failed to import cookies: ${error.message}`);
-      throw new Error(`Ошибка импорта cookies: ${error.message}`);
+      
+      // Временно отключаем ошибку импорта cookies, чтобы не блокировать создание профиля
+      logger.warn('Игнорируем ошибку импорта cookies для продолжения работы');
+      return { success: false, message: 'Cookies не были импортированы' };
     }
   }
 };
