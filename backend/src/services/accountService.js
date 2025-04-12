@@ -10,13 +10,16 @@ const accountService = {
   },
 
   update: async (userId, accountId, data) => {
-    const account = await Account.findOneAndUpdate(
-      { _id: accountId, userId },
-      data,
-      { new: true }
-    );
+    const account = await Account.findOne({ _id: accountId, userId });
     if (!account) throw new Error('Account not found or no access');
-    return account;
+
+    // Обновляем только те поля, которые реально переданы
+    if (data.name !== undefined) account.name = data.name;
+    if (data.cookies !== undefined) account.cookies = data.cookies;
+    if (data.proxy !== undefined) account.proxy = data.proxy;
+    if (data.status !== undefined) account.status = data.status;
+
+    return await account.save();
   },
 
   remove: async (userId, accountId) => {
@@ -24,7 +27,6 @@ const accountService = {
     if (!deleted) throw new Error('Account not found or no access');
   },
 
-  // 👇 Название должно совпадать с тем, что в контроллере
   getOne: async (userId, accountId) => {
     return await Account.findOne({ _id: accountId, userId });
   }

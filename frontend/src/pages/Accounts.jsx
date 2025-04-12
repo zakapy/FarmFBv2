@@ -53,7 +53,7 @@ const Accounts = () => {
 
   const submitForm = (data) => {
     if (editData) {
-      dispatch(editAccount({ id: editData.id, data }));
+      dispatch(editAccount({ id: editData._id || editData.id, data }));
     } else {
       dispatch(addAccount(data));
     }

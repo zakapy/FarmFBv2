@@ -11,16 +11,14 @@ const {
 
 router.use(auth);
 
+// Статические маршруты должны быть перед маршрутами с параметрами
 router.get('/', accountController.list);
+router.post('/check-proxy', accountController.checkProxy);
 router.post('/create', validate(createAccountSchema), accountController.create);
 
-// ✅ Заменили PATCH на PUT (чтобы совпадало с фронтом)
+// Маршруты с параметрами
 router.put('/:id/update', validate(updateAccountSchema), accountController.update);
-
 router.delete('/:id/delete', validate(deleteAccountSchema), accountController.remove);
-
 router.post('/:id/check', accountController.checkStatus);
-
-
 
 module.exports = router;

@@ -1,64 +1,54 @@
 const { z } = require('zod');
 
-// Универсальный и безопасный парсер cookies — поддерживает массивы, строки, объекты
+// Схема для одной куки
+const cookieSchema = z.object({
+  name: z.string(),
+  value: z.string(),
+  domain: z.string().optional(),
+  path: z.string().optional(),
+  httpOnly: z.boolean().optional(),
+  secure: z.boolean().optional(),
+  expirationDate: z.number().optional()
+});
+
+// Универсальная схема для cookies
 const cookiesSchema = z.union([
-  // ✅ Массив объектов cookies
-  z.array(
-    z.object({
-      name: z.string(),
-      value: z.string(),
-      domain: z.string().optional(),
-      path: z.string().optional(),
-      httpOnly: z.boolean().optional(),
-      secure: z.boolean().optional(),
-      expirationDate: z.number().optional()
-    })
-  ),
-
-  // ✅ Объект (fallback, если вдруг что-то другое)
-  z.record(z.any()),
-
-  // ✅ Строка, которую можно распарсить в объект
-  z.string().refine((val) => {
-    try {
-      const parsed = JSON.parse(val);
-      return typeof parsed === 'object' && parsed !== null;
-    } catch {
-      return false;
-    }
-  }, {
-    message: 'Invalid JSON string for cookies'
-  }),
-
-  // ✅ null (не обязательно)
-  z.null()
-]).optional();
+  // Массив объектов cookies
+  z.array(cookieSchema),
+  
+  // Строка JSON
+  z.string(),
+  
+  // Null или undefined
+  z.null(),
+  z.undefined()
+]);
 
 exports.createAccountSchema = z.object({
   body: z.object({
-    name: z.string().min(1, 'Name is required'),
+    name: z.string().min(1, 'Название аккаунта обязательно'),
     cookies: cookiesSchema,
-    token: z.string().optional(),
-    platform: z.string().optional(),
+    proxy: z.string().optional(),
+    status: z.string().optional().default('неизвестно'),
     meta: z.record(z.any()).optional()
   })
 });
 
 exports.updateAccountSchema = z.object({
   params: z.object({
-    id: z.string().length(24, 'Invalid account ID')
+    id: z.string().min(1, 'ID аккаунта обязателен')
   }),
   body: z.object({
     name: z.string().optional(),
-    cookies: cookiesSchema,
-    token: z.string().optional(),
-    platform: z.string().optional(),
+    cookies: cookiesSchema.optional(),
+    proxy: z.string().optional(),
+    status: z.string().optional(),
     meta: z.record(z.any()).optional()
   })
 });
 
 exports.deleteAccountSchema = z.object({
   params: z.object({
-    id: z.string().length(24, 'Invalid account ID')
+    id: z.string().min(1, 'ID аккаунта обязателен')
   })
 });

@@ -65,12 +65,15 @@ const accountsSlice = createSlice({
       })
 
       .addCase(editAccount.fulfilled, (state, action) => {
-        const index = state.list.findIndex(acc => acc.id === action.payload.id);
-        if (index !== -1) state.list[index] = action.payload;
+        const updatedId = action.payload._id || action.payload.id;
+        const index = state.list.findIndex(acc => acc._id === updatedId || acc.id === updatedId);
+        if (index !== -1) {
+          state.list[index] = action.payload;
+        }
       })
 
       .addCase(removeAccount.fulfilled, (state, action) => {
-        state.list = state.list.filter(acc => acc.id !== action.payload);
+        state.list = state.list.filter(acc => acc._id !== action.payload);
       });
   }
 });

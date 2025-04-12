@@ -11,6 +11,9 @@ const errorHandler = require('./middlewares/errorHandler');
 
 const app = express();
 
+// Настройка доверия прокси
+app.set('trust proxy', 1);
+
 // 🔍 Логирование в dev-режиме
 app.use(morgan('dev'));
 
@@ -55,5 +58,6 @@ console.log(' - POST   /api/v1/accounts/create');
 console.log(' - PUT    /api/v1/accounts/:id/update');
 console.log(' - DELETE /api/v1/accounts/:id/delete');
 console.log(' - POST   /api/v1/accounts/:id/check');
+console.log(' - POST   /api/v1/accounts/check-proxy');
 
 module.exports = app;

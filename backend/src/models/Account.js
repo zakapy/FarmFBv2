@@ -13,7 +13,8 @@ const accountSchema = new mongoose.Schema(
     platform: { type: String },
     meta: { type: Object },
 
-    // ✅ Новый статус
+    proxy: { type: String, default: '' }, // ✅ добавлено поле
+
     status: {
       type: String,
       enum: ['активен', 'неактивен', 'неизвестно'],

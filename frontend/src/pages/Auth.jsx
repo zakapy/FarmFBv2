@@ -5,12 +5,13 @@ import Button from '../components/Button';
 import Loader from '../components/Loader';
 import { loginUser, registerUser, fetchUserProfile } from '../features/auth/authSlice';
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import validator from 'validator';
 
 const Auth = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const { loading, isAuthenticated } = useSelector((state) => state.auth);
 
   const [form, setForm] = useState({ email: '', password: '', confirm: '' });
@@ -33,7 +34,7 @@ const Auth = () => {
       if (loginUser.fulfilled.match(res)) {
         await dispatch(fetchUserProfile());
         toast.success('Успешный вход!');
-        // navigate теперь НЕ здесь
+        // редирект будет в useEffect
       } else {
         toast.error(res.payload || 'Ошибка входа');
       }
@@ -60,12 +61,13 @@ const Auth = () => {
     }
   };
 
-  // 🧠 Редирект после авторизации
+  // 🧠 Редирект после авторизации на предыдущее местоположение или /dashboard
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/dashboard');
+      const redirectTo = location.state?.from?.pathname || '/dashboard';
+      navigate(redirectTo, { replace: true });
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, navigate, location]);
 
   return (
     <div className="auth-wrapper">
