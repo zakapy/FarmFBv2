@@ -125,3 +125,35 @@
 [2025-04-12 14:45:13] [31merror[39m: Ошибка импорта cookies по URL https://dolphin-anty-api.com/cookies/import: Request failed with status code 404
 [2025-04-12 14:45:13] [31merror[39m: Status: 404
 [2025-04-12 14:45:13] [31merror[39m: Data: {"success":false,"error":""}
+[2025-04-12 20:47:18] [31merror[39m: Скрипт фарминга не найден: C:\Users\Administrator\Desktop\CODDING\FARMMAIN\backend\src\scripts\farmingScript.js
+[2025-04-12 20:48:49] [31merror[39m: [Farm 67faa781a025a1bd29882623] Error: node:internal/modules/cjs/loader:1228
+  throw err;
+  ^
+
+Error: Cannot find module 'minimist'
+Require stack:
+- C:\Users\Administrator\Desktop\CODDING\FARMMAIN\backend\src\scripts\farmingScript.js
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1225:15)
+    at Function._load (node:internal/modules/cjs/loader:1055:27)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:220:24)
+    at Module.require (node:internal/modules/cjs/loader:1311:12)
+    at require (node:internal/modules/helpers:136:16)
+    at Object.<anonymous> (C:\Users\Administrator\Desktop\CODDING\FARMMAIN\backend\src\scripts\farmingScript.js:6:14)
+    at Module._compile (node:internal/modules/cjs/loader:1554:14)
+    at Object..js (node:internal/modules/cjs/loader:1706:10)
+    at Module.load (node:internal/modules/cjs/loader:1289:32) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\Administrator\\Desktop\\CODDING\\FARMMAIN\\backend\\src\\scripts\\farmingScript.js'
+  ]
+}
+
+Node.js v22.14.0
+[2025-04-12 20:49:26] [31merror[39m: [Farm 67faa79d123972b7a22641e0] Error: ❌ Ошибка фарминга: Аккаунт не авторизован в Facebook
+[2025-04-12 20:52:35] [31merror[39m: [Farm 67faa843123972b7a22641f3] Error: ❌ Ошибка фарминга: page.goto: Timeout 30000ms exceeded.
+Call log:
+[2m  - navigating to "https://www.facebook.com/", waiting until "networkidle"[22m
+[2025-04-12 20:53:32] [31merror[39m: [Farm 67faa87b123972b7a22641fc] Error: ❌ Ошибка фарминга: page.goto: Timeout 30000ms exceeded.
+Call log:
+[2m  - navigating to "https://www.facebook.com/", waiting until "networkidle"[22m

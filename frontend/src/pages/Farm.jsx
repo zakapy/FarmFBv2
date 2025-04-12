@@ -29,7 +29,7 @@ const Farm = () => {
   // Получаем историю фарминга при монтировании
   useEffect(() => {
     getHistory();
-  }, [getHistory]);
+  }, []);
   
   // Запуск фарминга
   const handleStartFarm = async () => {
