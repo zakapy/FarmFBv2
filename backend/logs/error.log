@@ -42,3 +42,39 @@
     at exports.handleRefreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\services\authService.js:70:11)
     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
     at async exports.refreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\controllers\authController.js:47:20)
+[2025-04-12 13:21:33] [31merror[39m: MongooseError: Operation `users.findOne()` buffering timed out after 10000ms
+    at Timeout.<anonymous> (C:\Users\Administrator\Desktop\CODDING\FarmFBv2\backend\node_modules\mongoose\lib\drivers\node-mongodb-native\collection.js:185:23)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+[2025-04-12 13:21:35] [31merror[39m: ❌ MongoDB connection error:
+[2025-04-12 13:24:35] [31merror[39m: MongooseError: Operation `users.findOne()` buffering timed out after 10000ms
+    at Timeout.<anonymous> (C:\Users\Administrator\Desktop\CODDING\FarmFBv2\backend\node_modules\mongoose\lib\drivers\node-mongodb-native\collection.js:185:23)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+[2025-04-12 13:25:37] [31merror[39m: MongooseError: Operation `users.findOne()` buffering timed out after 10000ms
+    at Timeout.<anonymous> (C:\Users\Administrator\Desktop\CODDING\FarmFBv2\backend\node_modules\mongoose\lib\drivers\node-mongodb-native\collection.js:185:23)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+[2025-04-12 13:25:44] [31merror[39m: ❌ MongoDB connection error:
+[2025-04-12 13:27:31] [31merror[39m: ❌ MongoDB connection error:
+[2025-04-12 14:09:25] [31merror[39m: Failed to create Dolphin profile: Request failed with status code 422
+[2025-04-12 14:10:30] [31merror[39m: Ошибка запроса к Dolphin API: Request failed with status code 422
+[2025-04-12 14:10:30] [31merror[39m: Status: 422
+[2025-04-12 14:10:30] [31merror[39m: Data: {"success":false,"error":{"type":"E_PROXY","code":"E_PROXY_EMPTY","text":"Required proxy fields missing: type, host"}}
+[2025-04-12 14:10:30] [31merror[39m: Failed to create Dolphin profile: Request failed with status code 422
+[2025-04-12 14:18:03] [31merror[39m: Ошибка запроса к Dolphin API: Request failed with status code 422
+[2025-04-12 14:18:03] [31merror[39m: Status: 422
+[2025-04-12 14:18:03] [31merror[39m: Data: {"success":false,"error":{"type":"E_PROXY","code":"E_PROXY_EMPTY","text":"Required proxy fields missing: type, host"}}
+[2025-04-12 14:18:03] [31merror[39m: Failed to create Dolphin profile: Request failed with status code 422
+[2025-04-12 14:19:05] [31merror[39m: Ошибка запроса к Dolphin API: Request failed with status code 422
+[2025-04-12 14:19:05] [31merror[39m: Status: 422
+[2025-04-12 14:19:05] [31merror[39m: Data: {"success":false,"error":{"type":"E_PROXY","code":"E_PROXY_EMPTY","text":"Required proxy fields missing: type, host"}}
+[2025-04-12 14:19:05] [31merror[39m: Failed to create Dolphin profile: Request failed with status code 422
+[2025-04-12 14:20:15] [31merror[39m: Ошибка импорта cookies: Request failed with status code 401
+[2025-04-12 14:20:15] [31merror[39m: Status: 401
+[2025-04-12 14:20:15] [31merror[39m: Data: "Unauthorized."
+[2025-04-12 14:20:15] [31merror[39m: Failed to import cookies: Request failed with status code 401
+[2025-04-12 14:20:27] [31merror[39m: Ошибка импорта cookies: Request failed with status code 401
+[2025-04-12 14:20:27] [31merror[39m: Status: 401
+[2025-04-12 14:20:27] [31merror[39m: Data: "Unauthorized."
+[2025-04-12 14:20:27] [31merror[39m: Failed to import cookies: Request failed with status code 401

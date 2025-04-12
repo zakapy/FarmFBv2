@@ -38,3 +38,58 @@
     min-width: 160px;
   }
   
+  .account-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    box-shadow: 0 1px 3px var(--shadow);
+    transition: box-shadow 0.3s ease;
+  }
+  
+  .account-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-end;
+    min-width: 160px;
+  }
+  
+  .action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+  }
+  
+  .btn-row {
+    display: flex;
+    gap: 5px;
+    justify-content: flex-end;
+  }
+  
+  /* Стили для информации о Dolphin Anty */
+  .dolphin-badge {
+    background-color: #e0f7fa;
+    border: 1px solid #80deea;
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-size: 12px;
+    color: #0277bd;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: 5px;
+  }
+  
+  .dolphin-icon {
+    font-size: 14px;
+  }

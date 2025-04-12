@@ -1,5 +1,7 @@
 const accountService = require('../services/accountService');
 const { checkFacebookCookies } = require('../utils/facebook');
+const env = require('../config/env');
+const dolphinService = require('../services/dolphinService');
 
 exports.list = async (req, res) => {
   const data = await accountService.list(req.user.id);
@@ -63,7 +65,6 @@ exports.remove = async (req, res) => {
   res.status(204).send();
 };
 
-// ✅ ЕДИНСТВЕННАЯ checkStatus функция
 exports.checkStatus = async (req, res) => {
   const { id } = req.params;
 
@@ -135,6 +136,49 @@ exports.checkProxy = async (req, res) => {
     console.error('Ошибка при проверке прокси:', error);
     res.status(500).json({ 
       error: 'Внутренняя ошибка сервера при проверке прокси',
+      details: error.message
+    });
+  }
+};
+
+exports.syncWithDolphin = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const account = await accountService.getOne(req.user.id, id);
+    
+    if (!account) {
+      return res.status(404).json({ error: 'Аккаунт не найден' });
+    }
+    
+    if (!env.DOLPHIN_ENABLED || !env.DOLPHIN_API_TOKEN) {
+      return res.status(400).json({ error: 'Интеграция с Dolphin Anty не настроена' });
+    }
+    
+    // Создаем профиль в Dolphin Anty
+    const dolphinProfile = await dolphinService.createProfile(account);
+    
+    // Если переданы cookies, импортируем их в профиль
+    if (account.cookies && (Array.isArray(account.cookies) || typeof account.cookies === 'string')) {
+      await dolphinService.importCookies(account.cookies, dolphinProfile.id);
+    }
+    
+    // Обновляем аккаунт с информацией о профиле
+    account.dolphin = {
+      profileId: dolphinProfile.id,
+      syncedAt: new Date()
+    };
+    
+    await account.save();
+    
+    res.json({
+      success: true,
+      message: `Аккаунт успешно синхронизирован с Dolphin Anty (профиль #${dolphinProfile.id})`,
+      dolphinProfileId: dolphinProfile.id
+    });
+  } catch (error) {
+    console.error('Ошибка при синхронизации с Dolphin Anty:', error);
+    res.status(500).json({ 
+      error: 'Ошибка при синхронизации с Dolphin Anty',
       details: error.message
     });
   }

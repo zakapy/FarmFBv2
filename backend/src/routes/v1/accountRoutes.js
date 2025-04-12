@@ -21,4 +21,7 @@ router.put('/:id/update', validate(updateAccountSchema), accountController.updat
 router.delete('/:id/delete', validate(deleteAccountSchema), accountController.remove);
 router.post('/:id/check', accountController.checkStatus);
 
+// Новый маршрут для синхронизации с Dolphin Anty
+router.post('/:id/sync-dolphin', accountController.syncWithDolphin);
+
 module.exports = router;
