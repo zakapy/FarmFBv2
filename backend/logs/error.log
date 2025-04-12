@@ -157,3 +157,35 @@ Call log:
 [2025-04-12 20:53:32] [31merror[39m: [Farm 67faa87b123972b7a22641fc] Error: ❌ Ошибка фарминга: page.goto: Timeout 30000ms exceeded.
 Call log:
 [2m  - navigating to "https://www.facebook.com/", waiting until "networkidle"[22m
+[2025-04-12 20:57:36] [31merror[39m: [Farm 67faa98f3ffbe61f3225a591] Error: Ошибка при запуске профиля: Request failed with status code 500
+[2025-04-12 21:02:40] [31merror[39m: [Farm 67faaa803b9e986db8a40de4] Error: Ошибка при вступлении в группу 1: elementHandle.click: Timeout 30000ms exceeded.
+Call log:
+[2m  - attempting click action[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not visible[22m
+[2m    - retrying click action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not visible[22m
+[2m    - retrying click action[22m
+[2m      - waiting 100ms[22m
+[2m    59 × waiting for element to be visible, enabled and stable[22m
+[2m       - element is not visible[22m
+[2m     - retrying click action[22m
+[2m       - waiting 500ms[22m
+[2025-04-12 21:02:41] [31merror[39m: [Farm 67faaa803b9e986db8a40de4] Error: Ошибка при вступлении в группу 2: elementHandle.click: Element is not attached to the DOM
+Call log:
+[2m  - attempting click action[22m
+[2m    - waiting for element to be visible, enabled and stable[22m
+[2025-04-12 21:02:43] [31merror[39m: [Farm 67faaa803b9e986db8a40de4] Error: Ошибка при вступлении в группу 3: elementHandle.click: Element is not attached to the DOM
+Call log:
+[2m  - attempting click action[22m
+[2m    - waiting for element to be visible, enabled and stable[22m
+[2025-04-12 21:02:45] [31merror[39m: [Farm 67faaa803b9e986db8a40de4] Error: Ошибка при вступлении в группу 4: elementHandle.click: Element is not attached to the DOM
+Call log:
+[2m  - attempting click action[22m
+[2m    - waiting for element to be visible, enabled and stable[22m
+[2025-04-12 21:02:46] [31merror[39m: [Farm 67faaa803b9e986db8a40de4] Error: Ошибка при вступлении в группу 5: elementHandle.click: Element is not attached to the DOM
+Call log:
+[2m  - attempting click action[22m
+[2m    - waiting for element to be visible, enabled and stable[22m
