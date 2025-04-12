@@ -152,42 +152,36 @@ const dolphinService = {
       };
 
       logger.info(`Отправляем запрос на Dolphin API: ${url}`);
-      logger.info(`Payload: ${JSON.stringify(payload, null, 2)}`);
-
-      try {
-        const response = await axios.post(url, payload, { headers });
-        logger.info(`Успешно создан профиль в Dolphin. Ответ: ${JSON.stringify(response.data)}`);
-        
-        // Получаем ID профиля из ответа
-        let profileId;
-        if (response.data.browserProfileId) {
-          // Новый формат ответа
-          profileId = response.data.browserProfileId;
-        } else if (response.data.id) {
-          // Старый формат ответа
-          profileId = response.data.id;
-        } else if (response.data.data && response.data.data.id) {
-          // Альтернативный формат
-          profileId = response.data.data.id;
-        } else {
-          throw new Error('Не удалось получить ID профиля из ответа API');
-        }
-        
-        return {
-          id: profileId,
-          name: profileName,
-          originalResponse: response.data
-        };
-      } catch (error) {
-        logger.error(`Ошибка запроса к Dolphin API: ${error.message}`);
-        if (error.response) {
-          logger.error(`Status: ${error.response.status}`);
-          logger.error(`Data: ${JSON.stringify(error.response.data)}`);
-        }
-        throw error;
+      
+      const response = await axios.post(url, payload, { headers });
+      logger.info(`Успешно создан профиль в Dolphin. Ответ: ${JSON.stringify(response.data)}`);
+      
+      // Получаем ID профиля из ответа
+      let profileId;
+      if (response.data.browserProfileId) {
+        // Новый формат ответа
+        profileId = response.data.browserProfileId;
+      } else if (response.data.id) {
+        // Старый формат ответа
+        profileId = response.data.id;
+      } else if (response.data.data && response.data.data.id) {
+        // Альтернативный формат
+        profileId = response.data.data.id;
+      } else {
+        throw new Error('Не удалось получить ID профиля из ответа API');
       }
+      
+      return {
+        id: profileId,
+        name: profileName,
+        originalResponse: response.data
+      };
     } catch (error) {
       logger.error(`Failed to create Dolphin profile: ${error.message}`);
+      if (error.response) {
+        logger.error(`Status: ${error.response.status}`);
+        logger.error(`Data: ${JSON.stringify(error.response.data)}`);
+      }
       throw new Error(`Ошибка создания профиля Dolphin: ${error.message}`);
     }
   },
@@ -220,64 +214,39 @@ const dolphinService = {
         throw new Error('Cookies должны быть массивом');
       }
 
-      // Пробуем несколько вариантов URL для импорта cookies
-      const possibleUrls = [
-        // Вариант 1: прямой путь из примера, но с хостом Dolphin API
-        `${env.DOLPHIN_API_URL}/v1.0/cookies/import`,
-        
-        // Вариант 2: путь относительно профиля браузера
-        `${env.DOLPHIN_API_URL}/browser_profiles/${profileId}/cookies`,
-        
-        // Вариант 3: основной путь без версии v1.0
-        `${env.DOLPHIN_API_URL}/cookies/import`,
-        
-        // Вариант 4: вызов локального API
-        `http://localhost:3001/v1.0/cookies/import`
-      ];
+      // Используем URL локального API, который работает
+      const url = 'http://localhost:3001/v1.0/cookies/import';
       
-      let lastError = null;
+      const payload = {
+        cookies: cookiesArray,
+        profileId: profileId,
+        transfer: 0,
+        cloudSyncDisabled: false
+      };
       
-      // Пробуем все URL последовательно
-      for (const url of possibleUrls) {
-        try {
-          logger.info(`Пробуем импортировать cookies по URL: ${url}`);
-          
-          const payload = {
-            cookies: cookiesArray,
-            profileId: profileId,
-            transfer: 0,
-            cloudSyncDisabled: false
-          };
-          
-          const headers = {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${env.DOLPHIN_API_TOKEN}`
-          };
-          
-          logger.info(`Отправляем запрос на импорт cookies: ${url}`);
-          logger.info(`Payload: ${JSON.stringify({ ...payload, cookies: 'СКРЫТО ДЛЯ БЕЗОПАСНОСТИ' })}`);
-
-          const response = await axios.post(url, payload, { headers });
-          logger.info(`Успешно импортированы cookies для профиля ${profileId}`);
-          return response.data;
-        } catch (error) {
-          logger.error(`Ошибка импорта cookies по URL ${url}: ${error.message}`);
-          if (error.response) {
-            logger.error(`Status: ${error.response.status}`);
-            logger.error(`Data: ${JSON.stringify(error.response.data)}`);
-          }
-          lastError = error;
-        }
-      }
+      const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${env.DOLPHIN_API_TOKEN}`
+      };
       
-      // Если ни один URL не сработал, возвращаем последнюю ошибку
-      throw lastError || new Error('Не удалось импортировать cookies ни по одному из URL');
+      logger.info(`Отправляем запрос на импорт cookies: ${url}`);
+      
+      const response = await axios.post(url, payload, { headers });
+      logger.info(`Успешно импортированы cookies для профиля ${profileId}`);
+      return response.data;
     } catch (error) {
       logger.error(`Failed to import cookies: ${error.message}`);
+      if (error.response) {
+        logger.error(`Status: ${error.response.status}`);
+        logger.error(`Data: ${JSON.stringify(error.response.data)}`);
+      }
       
-      // Временно отключаем ошибку импорта cookies, чтобы не блокировать создание профиля
-      logger.warn('Игнорируем ошибку импорта cookies для продолжения работы');
-      return { success: false, message: 'Cookies не были импортированы' };
+      // Возвращаем информацию об ошибке, но не прерываем процесс
+      return { 
+        success: false, 
+        message: 'Cookies не были импортированы', 
+        error: error.message 
+      };
     }
   }
 };
