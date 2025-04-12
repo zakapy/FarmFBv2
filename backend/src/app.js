@@ -7,6 +7,7 @@ const rateLimit = require('express-rate-limit');
 
 const authRoutes = require('./routes/v1/authRoutes');
 const accountRoutes = require('./routes/v1/accountRoutes');
+const farmRoutes = require('./routes/v1/farmRoutes');
 const errorHandler = require('./middlewares/errorHandler');
 
 const app = express();
@@ -37,9 +38,13 @@ app.use(cors({
   credentials: true,
 }));
 
+// Статические файлы для скриншотов
+app.use('/screenshots', express.static('screenshots'));
+
 // ✅ Основные маршруты
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/accounts', accountRoutes);
+app.use('/api/v1/farm', farmRoutes);
 
 // ❌ Обработка несуществующих маршрутов
 app.use((req, res) => {
@@ -59,5 +64,11 @@ console.log(' - PUT    /api/v1/accounts/:id/update');
 console.log(' - DELETE /api/v1/accounts/:id/delete');
 console.log(' - POST   /api/v1/accounts/:id/check');
 console.log(' - POST   /api/v1/accounts/check-proxy');
+console.log(' - POST   /api/v1/accounts/:id/sync-dolphin');
+console.log(' - POST   /api/v1/farm/start');
+console.log(' - GET    /api/v1/farm/status/:accountId');
+console.log(' - POST   /api/v1/farm/stop/:farmId');
+console.log(' - GET    /api/v1/farm/history');
+console.log(' - GET    /api/v1/farm/details/:farmId');
 
 module.exports = app;

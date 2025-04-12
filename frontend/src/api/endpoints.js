@@ -1,4 +1,4 @@
-const BASE = '/'; // убираем api/v1 из базового пути
+const BASE = '/'; // определяем BASE здесь
 
 export const API = {
   AUTH: {
@@ -16,8 +16,12 @@ export const API = {
     SYNC_DOLPHIN: (id) => `${BASE}api/v1/accounts/${id}/sync-dolphin`,
   },
   FARMING: {
+    BASE: `${BASE}api/v1/farm`,
     START: `${BASE}api/v1/farm/start`,
     STATUS: (accountId) => `${BASE}api/v1/farm/status/${accountId}`,
+    STOP: (farmId) => `${BASE}api/v1/farm/stop/${farmId}`,
+    HISTORY: `${BASE}api/v1/farm/history`,
+    DETAILS: (farmId) => `${BASE}api/v1/farm/details/${farmId}`,
   },
   PROXY: {
     LIST: `${BASE}api/v1/proxy`,

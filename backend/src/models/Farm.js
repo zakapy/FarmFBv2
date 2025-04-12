@@ -15,11 +15,16 @@ const farmSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ['idle', 'running', 'error', 'completed'],
-      default: 'idle'
+      enum: ['pending', 'running', 'completed', 'error', 'stopped'],
+      default: 'pending'
     },
     config: {
-      type: Object
+      type: mongoose.Schema.Types.Mixed,
+      default: {}
+    },
+    results: {
+      type: mongoose.Schema.Types.Mixed,
+      default: {}
     }
   },
   { timestamps: true }

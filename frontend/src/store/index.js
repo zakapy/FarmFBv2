@@ -3,15 +3,14 @@ import { configureStore } from '@reduxjs/toolkit';
 // Reducers
 import authReducer from '../features/auth/authSlice';
 import accountsReducer from '../features/accounts/accountsSlice';
-
-// Можно подключать другие позже: farmReducer, settingsReducer и т.д.
+import farmReducer from '../features/farm/farmSlice';
 
 const store = configureStore({
   reducer: {
     auth: authReducer,
     accounts: accountsReducer,
-    // farm: farmReducer,
-    // settings: settingsReducer,
+    farm: farmReducer,
+    // settings: settingsReducer, // можно добавить в будущем
   },
   devTools: process.env.NODE_ENV !== 'production',
   middleware: (getDefaultMiddleware) =>
