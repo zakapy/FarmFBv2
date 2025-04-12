@@ -13,6 +13,7 @@ export const API = {
     UPDATE: (id) => `${BASE}api/v1/accounts/${id}/update`,
     DELETE: (id) => `${BASE}api/v1/accounts/${id}/delete`,
     CHECK_PROXY: `${BASE}api/v1/accounts/check-proxy`,
+    SYNC_DOLPHIN: (id) => `${BASE}api/v1/accounts/${id}/sync-dolphin`,
   },
   FARMING: {
     START: `${BASE}api/v1/farm/start`,

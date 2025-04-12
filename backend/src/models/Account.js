@@ -13,7 +13,14 @@ const accountSchema = new mongoose.Schema(
     platform: { type: String },
     meta: { type: Object },
 
-    proxy: { type: String, default: '' }, // ✅ добавлено поле
+    proxy: { type: String, default: '' },
+    proxyType: { type: String, enum: ['http', 'socks5'], default: 'http' }, // Добавлено поле типа прокси
+    
+    // Информация о профиле Dolphin Anty
+    dolphin: {
+      profileId: { type: Number },
+      syncedAt: { type: Date }
+    },
 
     status: {
       type: String,

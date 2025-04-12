@@ -1,5 +1,7 @@
 const accountService = require('../services/accountService');
 const { checkFacebookCookies } = require('../utils/facebook');
+const env = require('../config/env');
+const dolphinService = require('../services/dolphinService');
 
 exports.list = async (req, res) => {
   const data = await accountService.list(req.user.id);
@@ -8,7 +10,7 @@ exports.list = async (req, res) => {
 
 exports.create = async (req, res) => {
   try {
-    let { cookies, ...rest } = req.body;
+    let { cookies, proxyType, ...rest } = req.body;
 
     // Обработка cookies
     if (typeof cookies === 'string') {
@@ -25,10 +27,22 @@ exports.create = async (req, res) => {
       }
     }
 
+    // Проверяем тип прокси
+    if (proxyType && !['http', 'socks5'].includes(proxyType)) {
+      return res.status(400).json({
+        error: 'Validation failed',
+        details: [{
+          field: 'body.proxyType',
+          message: 'Proxy type must be "http" or "socks5"'
+        }]
+      });
+    }
+
     // Создаем аккаунт
     const accountData = {
       ...rest,
       cookies,
+      proxyType: proxyType || 'http', // По умолчанию http, если не указано
       status: 'неизвестно'
     };
 
@@ -47,15 +61,33 @@ exports.create = async (req, res) => {
 };
 
 exports.update = async (req, res) => {
-  if (req.body.cookies) {
-    const isValid = await checkFacebookCookies(req.body.cookies);
-    if (!isValid) {
-      return res.status(400).json({ error: 'Некорректные куки или неавторизованы в Facebook' });
+  try {
+    const { cookies, proxyType } = req.body;
+    
+    // Проверяем тип прокси
+    if (proxyType && !['http', 'socks5'].includes(proxyType)) {
+      return res.status(400).json({
+        error: 'Validation failed',
+        details: [{
+          field: 'body.proxyType',
+          message: 'Proxy type must be "http" or "socks5"'
+        }]
+      });
     }
-  }
+    
+    if (cookies) {
+      const isValid = await checkFacebookCookies(cookies);
+      if (!isValid) {
+        return res.status(400).json({ error: 'Некорректные куки или неавторизованы в Facebook' });
+      }
+    }
 
-  const updated = await accountService.update(req.user.id, req.params.id, req.body);
-  res.json(updated);
+    const updated = await accountService.update(req.user.id, req.params.id, req.body);
+    res.json(updated);
+  } catch (error) {
+    console.error('Ошибка при обновлении аккаунта:', error);
+    res.status(400).json({ error: error.message });
+  }
 };
 
 exports.remove = async (req, res) => {
@@ -63,7 +95,6 @@ exports.remove = async (req, res) => {
   res.status(204).send();
 };
 
-// ✅ ЕДИНСТВЕННАЯ checkStatus функция
 exports.checkStatus = async (req, res) => {
   const { id } = req.params;
 
@@ -135,6 +166,70 @@ exports.checkProxy = async (req, res) => {
     console.error('Ошибка при проверке прокси:', error);
     res.status(500).json({ 
       error: 'Внутренняя ошибка сервера при проверке прокси',
+      details: error.message
+    });
+  }
+};
+
+exports.syncWithDolphin = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const account = await accountService.getOne(req.user.id, id);
+    
+    if (!account) {
+      return res.status(404).json({ error: 'Аккаунт не найден' });
+    }
+    
+    if (!env.DOLPHIN_ENABLED || !env.DOLPHIN_API_TOKEN) {
+      return res.status(400).json({ error: 'Интеграция с Dolphin Anty не настроена' });
+    }
+    
+    // Проверяем, не создан ли уже профиль
+    if (account.dolphin && account.dolphin.profileId) {
+      return res.status(400).json({ 
+        error: 'Профиль уже создан', 
+        message: `Аккаунт уже связан с профилем Dolphin Anty (ID: ${account.dolphin.profileId})` 
+      });
+    }
+    
+    // Создаем профиль в Dolphin Anty
+    const dolphinProfile = await dolphinService.createProfile(account);
+    
+    // Сразу обновляем аккаунт с информацией о профиле
+    account.dolphin = {
+      profileId: dolphinProfile.id,
+      syncedAt: new Date()
+    };
+    
+    await account.save();
+    
+    let cookiesImported = false;
+    let cookieError = null;
+    
+    // Если переданы cookies, пробуем их импортировать
+    if (account.cookies && (Array.isArray(account.cookies) || typeof account.cookies === 'string')) {
+      try {
+        await dolphinService.importCookies(account.cookies, dolphinProfile.id);
+        cookiesImported = true;
+      } catch (error) {
+        console.error('Ошибка при импорте cookies:', error);
+        cookieError = error.message;
+        // Продолжаем выполнение - не прерываем процесс из-за ошибки импорта cookies
+      }
+    }
+    
+    // Отвечаем пользователю
+    res.json({
+      success: true,
+      message: `Аккаунт успешно синхронизирован с Dolphin Anty (профиль #${dolphinProfile.id})`,
+      dolphinProfileId: dolphinProfile.id,
+      cookiesImported: cookiesImported,
+      cookieError: cookieError
+    });
+  } catch (error) {
+    console.error('Ошибка при синхронизации с Dolphin Anty:', error);
+    res.status(500).json({ 
+      error: 'Ошибка при синхронизации с Dolphin Anty',
       details: error.message
     });
   }

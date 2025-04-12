@@ -15,7 +15,7 @@ const AccountForm = ({ initialData, onClose, onSubmit }) => {
     proxyPort: '',
     proxyLogin: '',
     proxyPassword: '',
-    proxyType: 'http',
+    proxyType: 'http', // Новое поле для типа прокси
   });
 
   const [error, setError] = useState(null);
@@ -47,6 +47,7 @@ const AccountForm = ({ initialData, onClose, onSubmit }) => {
         proxyPort: port,
         proxyLogin: login,
         proxyPassword: pass,
+        proxyType: initialData.proxyType || 'http', // Загружаем тип прокси из данных аккаунта
       }));
     }
   }, [initialData]);
@@ -159,6 +160,7 @@ IP: ${data.ip}
         name: form.name.trim(),
         cookies: parsedCookies,
         proxy: proxy || undefined,
+        proxyType: form.proxyType, // Добавляем тип прокси в отправляемые данные
         status: 'неизвестно'
       });
     } catch (err) {
