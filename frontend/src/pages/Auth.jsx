@@ -1,17 +1,18 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Input from '../components/Input';
 import Button from '../components/Button';
 import Loader from '../components/Loader';
-import { loginUser, registerUser, fetchProfile } from '../features/auth/authSlice';
+import { loginUser, registerUser, fetchUserProfile } from '../features/auth/authSlice';
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import validator from 'validator';
 
 const Auth = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loading, error } = useSelector((state) => state.auth);
+  const location = useLocation();
+  const { loading, isAuthenticated } = useSelector((state) => state.auth);
 
   const [form, setForm] = useState({ email: '', password: '', confirm: '' });
   const [mode, setMode] = useState('login'); // login | register | forgot
@@ -31,9 +32,9 @@ const Auth = () => {
     if (mode === 'login') {
       const res = await dispatch(loginUser(form));
       if (loginUser.fulfilled.match(res)) {
-        await dispatch(fetchProfile());
+        await dispatch(fetchUserProfile());
         toast.success('Успешный вход!');
-        navigate('/dashboard');
+        // редирект будет в useEffect
       } else {
         toast.error(res.payload || 'Ошибка входа');
       }
@@ -59,6 +60,14 @@ const Auth = () => {
       setMode('login');
     }
   };
+
+  // 🧠 Редирект после авторизации на предыдущее местоположение или /dashboard
+  useEffect(() => {
+    if (isAuthenticated) {
+      const redirectTo = location.state?.from?.pathname || '/dashboard';
+      navigate(redirectTo, { replace: true });
+    }
+  }, [isAuthenticated, navigate, location]);
 
   return (
     <div className="auth-wrapper">

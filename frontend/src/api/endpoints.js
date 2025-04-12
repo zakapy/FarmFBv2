@@ -1,24 +1,25 @@
-const BASE = '/'; // можно оставить пустым если API идет с корня
+const BASE = '/'; // убираем api/v1 из базового пути
 
 export const API = {
   AUTH: {
-    LOGIN: `${BASE}auth/login`,
-    REGISTER: `${BASE}auth/register`,
-    PROFILE: `${BASE}auth/profile`,
-    LOGOUT: `${BASE}auth/logout`,
+    LOGIN: `${BASE}api/v1/auth/login`,
+    REGISTER: `${BASE}api/v1/auth/register`,
+    PROFILE: `${BASE}api/v1/auth/profile`,
+    LOGOUT: `${BASE}api/v1/auth/logout`,
   },
   ACCOUNTS: {
-    LIST: `${BASE}accounts`,
-    CREATE: `${BASE}accounts/create`,
-    UPDATE: (id) => `${BASE}accounts/${id}/update`,
-    DELETE: (id) => `${BASE}accounts/${id}/delete`,
+    LIST: `${BASE}api/v1/accounts`,
+    CREATE: `${BASE}api/v1/accounts/create`,
+    UPDATE: (id) => `${BASE}api/v1/accounts/${id}/update`,
+    DELETE: (id) => `${BASE}api/v1/accounts/${id}/delete`,
+    CHECK_PROXY: `${BASE}api/v1/accounts/check-proxy`,
   },
   FARMING: {
-    START: `${BASE}farm/start`,
-    STATUS: (accountId) => `${BASE}farm/status/${accountId}`,
+    START: `${BASE}api/v1/farm/start`,
+    STATUS: (accountId) => `${BASE}api/v1/farm/status/${accountId}`,
   },
   PROXY: {
-    LIST: `${BASE}proxy`,
-    ASSIGN: (accountId) => `${BASE}proxy/${accountId}/assign`,
+    LIST: `${BASE}api/v1/proxy`,
+    ASSIGN: (accountId) => `${BASE}api/v1/proxy/${accountId}/assign`,
   },
 };

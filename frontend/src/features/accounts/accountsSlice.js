@@ -14,9 +14,11 @@ export const addAccount = createAsyncThunk('accounts/add', async (data, thunkAPI
   try {
     return await accountsAPI.createAccount(data);
   } catch (err) {
-    return thunkAPI.rejectWithValue('Ошибка при создании аккаунта');
+    const errorMessage = err.response?.data?.error || 'Ошибка при создании аккаунта';
+    return thunkAPI.rejectWithValue(errorMessage);
   }
 });
+
 
 export const editAccount = createAsyncThunk('accounts/update', async ({ id, data }, thunkAPI) => {
   try {
@@ -63,12 +65,15 @@ const accountsSlice = createSlice({
       })
 
       .addCase(editAccount.fulfilled, (state, action) => {
-        const index = state.list.findIndex(acc => acc.id === action.payload.id);
-        if (index !== -1) state.list[index] = action.payload;
+        const updatedId = action.payload._id || action.payload.id;
+        const index = state.list.findIndex(acc => acc._id === updatedId || acc.id === updatedId);
+        if (index !== -1) {
+          state.list[index] = action.payload;
+        }
       })
 
       .addCase(removeAccount.fulfilled, (state, action) => {
-        state.list = state.list.filter(acc => acc.id !== action.payload);
+        state.list = state.list.filter(acc => acc._id !== action.payload);
       });
   }
 });

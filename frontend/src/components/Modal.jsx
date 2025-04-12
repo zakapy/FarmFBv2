@@ -1,9 +1,7 @@
 import React from 'react';
 import './Modal.css';
 
-const Modal = ({ title, children, isOpen, onClose }) => {
-  if (!isOpen) return null;
-
+const Modal = ({ title, children, onClose }) => {
   return (
     <div className="modal-backdrop">
       <div className="modal-window">
