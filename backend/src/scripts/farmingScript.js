@@ -164,10 +164,17 @@ class FacebookFarmer {
   async checkAuthentication() {
     try {
       // Проверяем, есть ли элементы, указывающие на то, что мы не авторизованы
-      const loginForm = await this.page.$('form[action*="login"]');
-      const createAccountButton = await this.page.$('a[data-testid="open-registration-form-button"]');
+      const loginFormSelector = 'form[action*="login"]';
+      const createAccountButtonSelector = 'a[data-testid="open-registration-form-button"]';
       
-      if (loginForm || createAccountButton) {
+      const loginForm = await this.page.$(loginFormSelector);
+      const createAccountButton = await this.page.$(createAccountButtonSelector);
+      
+      // Проверяем также наличие основных элементов авторизованного пользователя
+      const userMenuSelector = '[aria-label="Your profile"], [aria-label="Ваш профиль"], [aria-label="Твій профіль"]';
+      const userMenu = await this.page.$(userMenuSelector);
+      
+      if ((loginForm || createAccountButton) && !userMenu) {
         console.log('❌ Аккаунт не авторизован в Facebook');
         await this.takeScreenshot('not_authenticated');
         
@@ -198,13 +205,41 @@ class FacebookFarmer {
     try {
       console.log('Переходим в раздел Группы...');
       
-      // Пробуем несколько способов перехода в раздел групп
+      // Пробуем разные способы перехода в раздел групп
       try {
-        // Сначала пробуем найти кнопку в меню слева
-        const groupsButton = await this.page.$('a[href*="/groups/"]');
-        if (groupsButton) {
-          await groupsButton.click();
-          console.log('Нажали на кнопку Группы в меню');
+        // Проверяем если мы уже на странице групп
+        const currentUrl = this.page.url();
+        if (currentUrl.includes('/groups/')) {
+          console.log('Уже находимся на странице групп');
+          return true;
+        }
+        
+        // Пытаемся найти элемент "Группы" в меню слева
+        // Используем различные селекторы, которые могут соответствовать элементу "Группы"
+        const groupsLinkSelectors = [
+          'a[href*="/groups/"]',
+          'span:has-text("Groups")',
+          'span:has-text("Группы")',
+          'span:has-text("Групи")'
+        ];
+        
+        let groupsElement = null;
+        for (const selector of groupsLinkSelectors) {
+          try {
+            groupsElement = await this.page.$(selector);
+            if (groupsElement) {
+              console.log(`Найден элемент "Группы" по селектору: ${selector}`);
+              break;
+            }
+          } catch (e) {
+            continue;
+          }
+        }
+        
+        if (groupsElement) {
+          await groupsElement.click();
+          console.log('Нажали на кнопку "Группы" в меню');
+          await this.page.waitForTimeout(3000);
         } else {
           // Если не нашли, переходим по прямой ссылке
           await this.page.goto('https://www.facebook.com/groups/feed/', { waitUntil: 'networkidle' });
@@ -250,15 +285,41 @@ class FacebookFarmer {
       
       // Переходим на страницу поиска групп
       try {
-        // Пробуем найти кнопку "Найти группы"
-        const findGroupsButton = await this.page.$('a[href*="/groups/discover"]');
-        if (findGroupsButton) {
-          await findGroupsButton.click();
-          console.log('Нажали на кнопку "Найти группы"');
+        // Проверяем, если мы уже на странице поиска групп
+        const currentUrl = this.page.url();
+        if (currentUrl.includes('/groups/discover')) {
+          console.log('Уже находимся на странице поиска групп');
         } else {
-          // Если не нашли, переходим по прямой ссылке
-          await this.page.goto('https://www.facebook.com/groups/discover', { waitUntil: 'networkidle' });
-          console.log('Перешли на страницу поиска групп по прямой ссылке');
+          // Пробуем найти кнопку "Найти группы" или эквивалент
+          const discoverGroupsSelectors = [
+            'a[href*="/groups/discover"]',
+            'span:has-text("Discover")',
+            'span:has-text("Найти группы")',
+            'span:has-text("Знайти групи")'
+          ];
+          
+          let discoverElement = null;
+          for (const selector of discoverGroupsSelectors) {
+            try {
+              discoverElement = await this.page.$(selector);
+              if (discoverElement) {
+                console.log(`Найден элемент "Найти группы" по селектору: ${selector}`);
+                break;
+              }
+            } catch (e) {
+              continue;
+            }
+          }
+          
+          if (discoverElement) {
+            await discoverElement.click();
+            console.log('Нажали на кнопку "Найти группы"');
+            await this.page.waitForTimeout(3000);
+          } else {
+            // Если не нашли, переходим по прямой ссылке
+            await this.page.goto('https://www.facebook.com/groups/discover', { waitUntil: 'networkidle' });
+            console.log('Перешли на страницу поиска групп по прямой ссылке');
+          }
         }
       } catch (error) {
         console.log(`Не смогли найти кнопку "Найти группы": ${error.message}`);
@@ -273,8 +334,32 @@ class FacebookFarmer {
       // Делаем скриншот страницы поиска групп
       await this.takeScreenshot('discover_groups');
       
-      // Ищем кнопки "Вступить"
-      const joinButtons = await this.page.$$('div[aria-label="Вступить"]');
+      // Ищем кнопки "Вступить" с помощью классов, предоставленных пользователем
+      // Класс для кнопки присоединения к группе из примера: "x1lliihq x6ikm8r x10wlt62 x1n2onr6 xlyipyv xuxw1ft"
+      const joinButtonsSelectors = [
+        'div[aria-label="Вступить"]', 
+        'div[aria-label="Join"]',
+        'div[aria-label="Приєднатися"]',
+        'div[aria-label="Приєднатись"]',
+        'span.x1lliihq.x6ikm8r.x10wlt62.x1n2onr6.xlyipyv.xuxw1ft',
+        'button:has-text("Join")',
+        'button:has-text("Вступить")',
+        'button:has-text("Приєднатися")'
+      ];
+      
+      let joinButtons = [];
+      for (const selector of joinButtonsSelectors) {
+        try {
+          const buttons = await this.page.$$(selector);
+          if (buttons.length > 0) {
+            console.log(`Найдены кнопки "Вступить" по селектору: ${selector}`);
+            joinButtons = buttons;
+            break;
+          }
+        } catch (e) {
+          continue;
+        }
+      }
       
       if (!joinButtons.length) {
         console.log('Не найдены кнопки "Вступить" в группы');
@@ -293,6 +378,10 @@ class FacebookFarmer {
       
       for (let i = 0; i < maxGroups; i++) {
         try {
+          // Прокручиваем до кнопки
+          await joinButtons[i].scrollIntoViewIfNeeded();
+          await this.page.waitForTimeout(1000);
+          
           await joinButtons[i].click();
           console.log(`Нажали кнопку "Вступить" для группы ${i + 1}`);
           
@@ -303,10 +392,23 @@ class FacebookFarmer {
           
           // Иногда после вступления появляются дополнительные диалоги, пробуем их закрыть
           try {
-            const closeButton = await this.page.$('div[aria-label="Закрыть"]');
-            if (closeButton) {
-              await closeButton.click();
-              console.log('Закрыли дополнительный диалог');
+            // Ищем кнопку закрытия по различным селекторам
+            const closeButtonSelectors = [
+              'div[aria-label="Закрыть"]',
+              'div[aria-label="Close"]',
+              'div[aria-label="Закрити"]',
+              '[aria-label="Close"] svg',
+              '[aria-label="Закрыть"] svg',
+              '[aria-label="Закрити"] svg'
+            ];
+            
+            for (const selector of closeButtonSelectors) {
+              const closeButton = await this.page.$(selector);
+              if (closeButton) {
+                await closeButton.click();
+                console.log('Закрыли дополнительный диалог');
+                break;
+              }
             }
           } catch (dialogError) {
             console.log('Не было дополнительного диалога или не смогли его закрыть');
@@ -353,8 +455,37 @@ class FacebookFarmer {
       // Делаем скриншот ленты
       await this.takeScreenshot('news_feed');
       
-      // Ищем кнопки лайков
-      const likeButtons = await this.page.$$('div[aria-label="Нравится"]');
+      // Ищем кнопки лайков по разным селекторам
+      const likeButtonSelectors = [
+        'div[aria-label="Нравится"]',
+        'div[aria-label="Like"]',
+        'div[aria-label="Подобається"]',
+        // CSS-селектор с классом иконки лайка
+        'i.x1b0d499.x1d69dk1',
+        // XPath для поиска иконки лайка по background-image
+        '//i[@data-visualcompletion="css-img" and contains(@style, "background-position: 0px -798px")]',
+        // Ищем родительский div с ролью кнопки
+        'div[role="button"]:has(i.x1b0d499.x1d69dk1)'
+      ];
+      
+      let likeButtons = [];
+      for (const selector of likeButtonSelectors) {
+        try {
+          // Для XPath используем специальный метод
+          if (selector.startsWith('//')) {
+            likeButtons = await this.page.$x(selector);
+          } else {
+            likeButtons = await this.page.$$(selector);
+          }
+          
+          if (likeButtons.length > 0) {
+            console.log(`Найдены кнопки лайков по селектору: ${selector}`);
+            break;
+          }
+        } catch (e) {
+          continue;
+        }
+      }
       
       if (!likeButtons.length) {
         console.log('Не найдены кнопки "Нравится" в ленте');
@@ -369,10 +500,25 @@ class FacebookFarmer {
       for (let i = 0; i < maxLikes; i++) {
         try {
           // Прокручиваем до кнопки, чтобы она была видима
-          await likeButtons[i].scrollIntoViewIfNeeded();
+          if (likeButtons[i].scrollIntoViewIfNeeded) {
+            await likeButtons[i].scrollIntoViewIfNeeded();
+          } else {
+            // Для XPath элементов используем другой подход
+            await this.page.evaluate(element => {
+              element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, likeButtons[i]);
+          }
+          
           await this.page.waitForTimeout(1000);
           
-          await likeButtons[i].click();
+          // Кликаем на кнопку лайка
+          if (likeButtons[i].click) {
+            await likeButtons[i].click();
+          } else {
+            // Для XPath элементов
+            await likeButtons[i].click();
+          }
+          
           console.log(`Поставили лайк ${i + 1}`);
           
           // Делаем паузу между лайками
@@ -411,9 +557,40 @@ class FacebookFarmer {
     console.log(`Запускаем добавление друзей (количество: ${friendsToAdd})...`);
     
     try {
-      // Переходим на страницу рекомендаций друзей
-      await this.page.goto('https://www.facebook.com/friends/suggestions', { waitUntil: 'networkidle' });
-      console.log('Перешли на страницу рекомендаций друзей');
+      // Выполняем поиск и клик по элементу "Друзья" в меню
+      const friendsMenuSelectors = [
+        // Селектор с украинским текстом "Друзі"
+        '#«rah» span',
+        // Другие варианты
+        'a[href*="/friends/"]',
+        'span:has-text("Friends")',
+        'span:has-text("Друзья")',
+        'span:has-text("Друзі")'
+      ];
+      
+      let isFriendsPageNavigated = false;
+      
+      for (const selector of friendsMenuSelectors) {
+        try {
+          const friendsLink = await this.page.$(selector);
+          if (friendsLink) {
+            await friendsLink.click();
+            console.log(`Нажали на элемент "Друзья" по селектору: ${selector}`);
+            await this.page.waitForTimeout(3000);
+            isFriendsPageNavigated = true;
+            break;
+          }
+        } catch (e) {
+          continue;
+        }
+      }
+      
+      // Если не удалось найти элемент, переходим напрямую по URL
+      if (!isFriendsPageNavigated) {
+        // Переходим на страницу рекомендаций друзей
+        await this.page.goto('https://www.facebook.com/friends/suggestions', { waitUntil: 'networkidle' });
+        console.log('Перешли на страницу рекомендаций друзей по прямой ссылке');
+      }
       
       // Ждем загрузки страницы
       await this.page.waitForTimeout(3000);
@@ -421,8 +598,37 @@ class FacebookFarmer {
       // Делаем скриншот страницы рекомендаций
       await this.takeScreenshot('friend_suggestions');
       
-      // Ищем кнопки "Добавить в друзья"
-      const addFriendButtons = await this.page.$$('div[aria-label="Добавить в друзья"]');
+      // Ищем кнопки "Добавить в друзья" с использованием различных селекторов
+      const addFriendButtonSelectors = [
+        // По классу из примера
+        'span.x1lliihq.x6ikm8r.x10wlt62.x1n2onr6.xlyipyv.xuxw1ft:has-text("Add friend")',
+        'span.x1lliihq.x6ikm8r.x10wlt62.x1n2onr6.xlyipyv.xuxw1ft:has-text("Добавить в друзья")',
+        'span.x1lliihq.x6ikm8r.x10wlt62.x1n2onr6.xlyipyv.xuxw1ft:has-text("Додати до друзів")',
+        
+        // По атрибуту aria-label
+        'div[aria-label="Добавить в друзья"]',
+        'div[aria-label="Add friend"]',
+        'div[aria-label="Додати до друзів"]',
+        
+        // Более общий селектор
+        'div[role="button"]:has(span:has-text("Add friend"))',
+        'div[role="button"]:has(span:has-text("Добавить в друзья"))',
+        'div[role="button"]:has(span:has-text("Додати до друзів"))'
+      ];
+      
+      let addFriendButtons = [];
+      for (const selector of addFriendButtonSelectors) {
+        try {
+          const buttons = await this.page.$$(selector);
+          if (buttons.length > 0) {
+            console.log(`Найдены кнопки "Добавить в друзья" по селектору: ${selector}`);
+            addFriendButtons = buttons;
+            break;
+          }
+        } catch (e) {
+          continue;
+        }
+      }
       
       if (!addFriendButtons.length) {
         console.log('Не найдены кнопки "Добавить в друзья"');
@@ -489,8 +695,28 @@ class FacebookFarmer {
       // Делаем скриншот ленты
       await this.takeScreenshot('content_feed');
       
-      // Ищем посты
-      const posts = await this.page.$$('div[data-pagelet^="FeedUnit"]');
+      // Ищем посты - используем разные селекторы для поиска постов в ленте
+      const postSelectors = [
+        // Более общие селекторы для постов
+        'div[role="article"]',
+        'div[data-pagelet^="FeedUnit"]',
+        // Другие возможные селекторы постов в ленте
+        'div.x1lliihq.x1n2onr6',
+        'div.x78zum5.xdt5ytf.x1iyjqo2'
+      ];
+      
+      let posts = [];
+      for (const selector of postSelectors) {
+        try {
+          posts = await this.page.$(selector);
+          if (posts.length > 0) {
+            console.log(`Найдены посты по селектору: ${selector}`);
+            break;
+          }
+        } catch (e) {
+          continue;
+        }
+      }
       
       if (!posts.length) {
         console.log('Не найдены посты в ленте');
@@ -509,23 +735,46 @@ class FacebookFarmer {
           
           console.log(`Просматриваем пост ${i + 1}`);
           
-          // Ждем некоторое время, имитируя чтение
+          // Имитируем чтение поста с разным временем для каждого поста
           await this.page.waitForTimeout(3000 + Math.random() * 2000);
           
-          // Пробуем развернуть пост, если он свернут
+          // Пробуем найти и нажать кнопку "Читать далее" или "See more", если пост свернут
           try {
-            const expandButton = await posts[i].$('div[aria-label="Посмотреть больше"]');
-            if (expandButton) {
-              await expandButton.click();
-              console.log(`Развернули пост ${i + 1}`);
-              await this.page.waitForTimeout(1000);
+            const expandButtonSelectors = [
+              'div[aria-label="Посмотреть больше"]',
+              'div[role="button"]:has-text("See more")',
+              'div[role="button"]:has-text("Читать далее")',
+              'div[role="button"]:has-text("Переглянути більше")',
+              'span:has-text("See more")',
+              'span:has-text("Читать далее")',
+              'span:has-text("Переглянути більше")'
+            ];
+            
+            for (const selector of expandButtonSelectors) {
+              const expandButton = await posts[i].$(selector);
+              if (expandButton) {
+                await expandButton.click();
+                console.log(`Развернули пост ${i + 1}`);
+                await this.page.waitForTimeout(1000);
+                break;
+              }
             }
           } catch (expandError) {
             // Ничего страшного, если не нашли кнопку или не смогли развернуть
           }
           
-          // Продолжаем просмотр
-          await this.page.waitForTimeout(2000);
+          // Имитируем чтение развернутого поста
+          await this.page.waitForTimeout(2000 + Math.random() * 1500);
+          
+          // Пробуем прокрутить немного вниз внутри поста (если это длинный пост)
+          try {
+            await this.page.evaluate(post => {
+              post.scrollBy(0, 100);
+            }, posts[i]);
+            await this.page.waitForTimeout(1500);
+          } catch (e) {
+            // Игнорируем ошибку
+          }
           
           this.results.contentViewed++;
         } catch (viewError) {
