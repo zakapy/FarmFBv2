@@ -39,7 +39,8 @@ async function takeScreenshot(page, name, screenshotsDir) {
  */
 async function safeScrollToElement(page, index, selectors) {
   try {
-    await page.evaluate((idx, sels) => {
+    // ИСПРАВЛЕНО: Передаем аргументы в виде объекта
+    await page.evaluate(({ idx, sels }) => {
       // Находим все элементы по массиву селекторов
       let allElements = [];
       sels.forEach(selector => {
@@ -58,7 +59,7 @@ async function safeScrollToElement(page, index, selectors) {
         return true;
       }
       return false;
-    }, index, selectors);
+    }, { idx: index, sels: selectors });
     
     // Даем время на прокрутку
     await page.waitForTimeout(1500);
@@ -78,8 +79,9 @@ async function safeScrollToElement(page, index, selectors) {
  */
 async function safeClick(page, index, selectors) {
   try {
+    // ИСПРАВЛЕНО: Передаем аргументы в виде объекта
     // Стратегия 1: JavaScript click с созданием события
-    const clickResult = await page.evaluate((idx, sels) => {
+    const clickResult = await page.evaluate(({ idx, sels }) => {
       // Находим все элементы по массиву селекторов
       let allElements = [];
       sels.forEach(selector => {
@@ -115,7 +117,7 @@ async function safeClick(page, index, selectors) {
         }
       }
       return false;
-    }, index, selectors);
+    }, { idx: index, sels: selectors });
     
     if (clickResult) {
       console.log(`Успешно кликнули JavaScript событием (индекс ${index})`);

@@ -60,7 +60,8 @@ export const getFarmDetails = createAsyncThunk(
   'farm/getDetails',
   async (farmId, { rejectWithValue }) => {
     try {
-      return await farmAPI.getFarmDetails(farmId);
+      const result = await farmAPI.getFarmDetails(farmId);
+      return result;
     } catch (error) {
       return rejectWithValue(error.response?.data?.error || 'Не удалось получить детали фарминга');
     }

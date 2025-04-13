@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import Modal from '../components/Modal';
 import Button from '../components/Button';
@@ -7,15 +7,22 @@ import Loader from '../components/Loader';
 import './FarmDetailsModal.css';
 
 const FarmDetailsModal = ({ farmId, onClose }) => {
-  const dispatch = useDispatch();
   const { getDetails, farmDetails, loading } = useFarm();
   const [activeTab, setActiveTab] = useState('overview');
+  const [isInitialFetchDone, setIsInitialFetchDone] = useState(false);
   
-  useEffect(() => {
-    if (farmId) {
-      dispatch(getDetails(farmId));
+  // Use useCallback to prevent recreation of this function on each render
+  const fetchDetails = useCallback(() => {
+    if (farmId && !isInitialFetchDone) {
+      getDetails(farmId);
+      setIsInitialFetchDone(true);
     }
-  }, [dispatch, farmId, getDetails]);
+  }, [farmId, getDetails, isInitialFetchDone]);
+  
+  // Load details only once when component mounts
+  useEffect(() => {
+    fetchDetails();
+  }, [fetchDetails]);
   
   // Форматирование даты
   const formatDate = (dateString) => {
@@ -279,10 +286,19 @@ const FarmDetailsModal = ({ farmId, onClose }) => {
     }
   };
   
+  // Function to handle modal close and cleanup
+  const handleClose = () => {
+    // Reset states
+    setIsInitialFetchDone(false);
+    
+    // Call the parent's onClose
+    onClose();
+  };
+  
   return (
-    <Modal title={`Детали фарминга: ${farmDetails?.name || 'Загрузка...'}`} onClose={onClose}>
+    <Modal title={`Детали фарминга: ${farmDetails?.name || 'Загрузка...'}`} onClose={handleClose}>
       <div className="farm-details-container">
-        {loading ? (
+        {loading && !farmDetails ? (
           <div className="details-loader">
             <Loader />
             <p>Загрузка данных...</p>
@@ -290,7 +306,7 @@ const FarmDetailsModal = ({ farmId, onClose }) => {
         ) : !farmDetails ? (
           <div className="details-error">
             <p>Не удалось загрузить данные о фарминге</p>
-            <Button onClick={onClose}>Закрыть</Button>
+            <Button onClick={handleClose}>Закрыть</Button>
           </div>
         ) : (
           <>
@@ -326,7 +342,7 @@ const FarmDetailsModal = ({ farmId, onClose }) => {
             </div>
             
             <div className="details-actions">
-              <Button variant="secondary" onClick={onClose}>Закрыть</Button>
+              <Button variant="secondary" onClick={handleClose}>Закрыть</Button>
             </div>
           </>
         )}

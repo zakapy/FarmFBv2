@@ -366,3 +366,7 @@ Node.js v22.14.0
 [2025-04-13 04:09:37] [31merror[39m: [Farm 67fb0e8f2f6864c417d98661] Error: Ошибка при клике: Too many arguments. If you need to pass more than 1 argument to the function wrap them in an object.
 [2025-04-13 04:09:40] [31merror[39m: [Farm 67fb0e8f2f6864c417d98661] Error: Ошибка при клике: Too many arguments. If you need to pass more than 1 argument to the function wrap them in an object.
 [2025-04-13 04:09:44] [31merror[39m: [Farm 67fb0e8f2f6864c417d98661] Error: Ошибка при клике: Too many arguments. If you need to pass more than 1 argument to the function wrap them in an object.
+[2025-04-13 04:22:11] [31merror[39m: Error: Invalid or expired refresh token
+    at exports.handleRefreshToken (C:\Users\Administrator\Desktop\CODDING\FARMMAIN\backend\src\services\authService.js:70:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async exports.refreshToken (C:\Users\Administrator\Desktop\CODDING\FARMMAIN\backend\src\controllers\authController.js:47:20)

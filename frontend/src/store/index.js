@@ -16,7 +16,11 @@ const store = configureStore({
       serializableCheck: {
         // Игнорируем некоторые пути, которые могут содержать не сериализуемые значения
         ignoredActions: ['farm/getDetails/fulfilled'],
-        ignoredPaths: ['farm.farmDetails.results.screenshots'],
+        ignoredPaths: [
+          'farm.farmDetails.results.screenshots',
+          'payload.screenshots',
+          'meta.arg'
+        ],
       },
     }),
   devTools: process.env.NODE_ENV !== 'production',
