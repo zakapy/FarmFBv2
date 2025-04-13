@@ -207,3 +207,130 @@ Call log:
     at async exports.refreshToken (C:\Users\Administrator\Desktop\CODDING\FARMMAIN\backend\src\controllers\authController.js:47:20)
 [2025-04-12 21:33:13] [31merror[39m: [Farm 67fab1e8a1574fc3b3c267c9] Error: Ошибка при запуске профиля: Request failed with status code 500
 [2025-04-12 21:33:13] [31merror[39m: [Farm 67fab1e8a1574fc3b3c267c9] Error: ❌ Ошибка фарминга: Не удалось запустить браузерный профиль
+[2025-04-12 23:08:02] [31merror[39m: [Farm 67fac7e8a6eed35c4bed7ebe] Error: Ошибка при вступлении в группу 1: elementHandle.scrollIntoViewIfNeeded: Timeout 30000ms exceeded.
+Call log:
+[2m  - attempting scroll into view action[22m
+[2m    2 × waiting for element to be stable[22m
+[2m      - element is not visible[22m
+[2m    - retrying scroll into view action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be stable[22m
+[2m      - element is not visible[22m
+[2m    - retrying scroll into view action[22m
+[2m      - waiting 100ms[22m
+[2m    59 × waiting for element to be stable[22m
+[2m       - element is not visible[22m
+[2m     - retrying scroll into view action[22m
+[2m       - waiting 500ms[22m
+[2025-04-12 23:08:32] [31merror[39m: [Farm 67fac7e8a6eed35c4bed7ebe] Error: Ошибка при вступлении в группу 2: elementHandle.scrollIntoViewIfNeeded: Timeout 30000ms exceeded.
+Call log:
+[2m  - attempting scroll into view action[22m
+[2m    2 × waiting for element to be stable[22m
+[2m      - element is not visible[22m
+[2m    - retrying scroll into view action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be stable[22m
+[2m      - element is not visible[22m
+[2m    - retrying scroll into view action[22m
+[2m      - waiting 100ms[22m
+[2m    59 × waiting for element to be stable[22m
+[2m       - element is not visible[22m
+[2m     - retrying scroll into view action[22m
+[2m       - waiting 500ms[22m
+[2025-04-12 23:09:02] [31merror[39m: [Farm 67fac7e8a6eed35c4bed7ebe] Error: Ошибка при вступлении в группу 3: elementHandle.scrollIntoViewIfNeeded: Timeout 30000ms exceeded.
+Call log:
+[2m  - attempting scroll into view action[22m
+[2m    2 × waiting for element to be stable[22m
+[2m      - element is not visible[22m
+[2m    - retrying scroll into view action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be stable[22m
+[2m      - element is not visible[22m
+[2m    - retrying scroll into view action[22m
+[2m      - waiting 100ms[22m
+[2m    59 × waiting for element to be stable[22m
+[2m       - element is not visible[22m
+[2m     - retrying scroll into view action[22m
+[2m       - waiting 500ms[22m
+[2025-04-12 23:09:32] [31merror[39m: [Farm 67fac7e8a6eed35c4bed7ebe] Error: Ошибка при вступлении в группу 4: elementHandle.scrollIntoViewIfNeeded: Timeout 30000ms exceeded.
+Call log:
+[2m  - attempting scroll into view action[22m
+[2m    2 × waiting for element to be stable[22m
+[2m      - element is not visible[22m
+[2m    - retrying scroll into view action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be stable[22m
+[2m      - element is not visible[22m
+[2m    - retrying scroll into view action[22m
+[2m      - waiting 100ms[22m
+[2m    59 × waiting for element to be stable[22m
+[2m       - element is not visible[22m
+[2m     - retrying scroll into view action[22m
+[2m       - waiting 500ms[22m
+[2025-04-12 23:10:02] [31merror[39m: [Farm 67fac7e8a6eed35c4bed7ebe] Error: Ошибка при вступлении в группу 5: elementHandle.scrollIntoViewIfNeeded: Timeout 30000ms exceeded.
+Call log:
+[2m  - attempting scroll into view action[22m
+[2m    2 × waiting for element to be stable[22m
+[2m      - element is not visible[22m
+[2m    - retrying scroll into view action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be stable[22m
+[2m      - element is not visible[22m
+[2m    - retrying scroll into view action[22m
+[2m      - waiting 100ms[22m
+[2m    59 × waiting for element to be stable[22m
+[2m       - element is not visible[22m
+[2m     - retrying scroll into view action[22m
+[2m       - waiting 500ms[22m
+[2025-04-12 23:10:40] [31merror[39m: [Farm 67fac7e8a6eed35c4bed7ebe] Error: Ошибка при добавлении друга 1: elementHandle.scrollIntoViewIfNeeded: Element is not attached to the DOM
+Call log:
+[2m  - attempting scroll into view action[22m
+[2m    2 × waiting for element to be stable[22m
+[2m      - element is not visible[22m
+[2m    - retrying scroll into view action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be stable[22m
+[2m      - element is not visible[22m
+[2m    - retrying scroll into view action[22m
+[2m      - waiting 100ms[22m
+[2m    27 × waiting for element to be stable[22m
+[2m       - element is not visible[22m
+[2m     - retrying scroll into view action[22m
+[2m       - waiting 500ms[22m
+[2m    - waiting for element to be stable[22m
+[2025-04-12 23:10:40] [31merror[39m: [Farm 67fac7e8a6eed35c4bed7ebe] Error: Ошибка при добавлении друга 2: elementHandle.scrollIntoViewIfNeeded: Element is not attached to the DOM
+Call log:
+[2m  - attempting scroll into view action[22m
+[2m    - waiting for element to be stable[22m
+[2025-04-12 23:10:40] [31merror[39m: [Farm 67fac7e8a6eed35c4bed7ebe] Error: Ошибка при добавлении друга 3: elementHandle.scrollIntoViewIfNeeded: Element is not attached to the DOM
+Call log:
+[2m  - attempting scroll into view action[22m
+[2m    - waiting for element to be stable[22m
+[2025-04-13 03:42:01] [31merror[39m: Error: Invalid or expired refresh token
+    at exports.handleRefreshToken (C:\Users\Administrator\Desktop\CODDING\FARMMAIN\backend\src\services\authService.js:70:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async exports.refreshToken (C:\Users\Administrator\Desktop\CODDING\FARMMAIN\backend\src\controllers\authController.js:47:20)
+[2025-04-13 03:42:58] [31merror[39m: [Farm 67fb08718a188c7c6611ecd1] Error: ❌ Ошибка фарминга: page.goto: Timeout 30000ms exceeded.
+Call log:
+[2m  - navigating to "https://www.facebook.com/", waiting until "networkidle"[22m
+[2025-04-13 03:44:29] [31merror[39m: [Farm 67fb08b18a188c7c6611ecdd] Error: Ошибка при вступлении в группу 1: elementHandle.scrollIntoViewIfNeeded: Timeout 30000ms exceeded.
+Call log:
+[2m  - attempting scroll into view action[22m
+[2m    2 × waiting for element to be stable[22m
+[2m      - element is not visible[22m
+[2m    - retrying scroll into view action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be stable[22m
+[2m      - element is not visible[22m
+[2m    - retrying scroll into view action[22m
+[2m      - waiting 100ms[22m
+[2m    58 × waiting for element to be stable[22m
+[2m       - element is not visible[22m
+[2m     - retrying scroll into view action[22m
+[2m       - waiting 500ms[22m
+[2025-04-13 03:48:00] [31merror[39m: [Farm 67fb099ea57361b02c31641d] Error: ❌ Ошибка фарминга: page.goto: Timeout 30000ms exceeded.
+Call log:
+[2m  - navigating to "https://www.facebook.com/", waiting until "networkidle"[22m
+[2025-04-13 03:50:55] [31merror[39m: [Farm 67fb0a4e2d8f655d6650e600] Error: ❌ Ошибка фарминга: page.goto: Timeout 30000ms exceeded.
+Call log:
+[2m  - navigating to "https://www.facebook.com/", waiting until "networkidle"[22m

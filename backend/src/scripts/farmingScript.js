@@ -57,7 +57,62 @@ class FacebookFarmer {
       }
     };
   }
-
+ // Улучшенная функция навигации на сайт Facebook
+ async navigateToFacebook() {
+  console.log('Открываем Facebook...');
+  
+  try {
+    // Пробуем сначала с более строгим ожиданием, но с меньшим таймаутом
+    await this.page.goto('https://www.facebook.com', { 
+      waitUntil: 'networkidle',
+      timeout: 20000 // уменьшаем таймаут до 20 секунд
+    });
+    console.log('Facebook успешно загружен (networkidle)');
+    return true;
+  } catch (error) {
+    console.log(`Не удалось загрузить Facebook с ожиданием networkidle: ${error.message}`);
+    
+    try {
+      // Пробуем с более мягким ожиданием
+      await this.page.goto('https://www.facebook.com', { 
+        waitUntil: 'load', // ждем только событие load
+        timeout: 30000
+      });
+      console.log('Facebook загружен (load event)');
+      
+      // Дополнительно ждем несколько секунд для завершения AJAX запросов
+      await this.page.waitForTimeout(5000);
+      
+      // Проверяем, загрузилась ли страница успешно
+      const title = await this.page.title();
+      if (title && (title.includes('Facebook') || title.includes('Meta'))) {
+        console.log(`Страница Facebook загружена, титул: ${title}`);
+        return true;
+      } else {
+        console.log(`Страница загружена, но титул не содержит 'Facebook': ${title}`);
+        return true; // всё равно продолжаем, возможно потом распознаем по другим признакам
+      }
+    } catch (secondError) {
+      console.log(`Не удалось загрузить Facebook и со вторым методом: ${secondError.message}`);
+      
+      try {
+        // Последняя попытка с ожиданием только домашнего URL
+        await this.page.goto('https://www.facebook.com', { 
+          waitUntil: 'domcontentloaded', // ждем только загрузки DOM
+          timeout: 30000
+        });
+        console.log('Facebook частично загружен (domcontentloaded)');
+        
+        // Дополнительное ожидание для загрузки данных
+        await this.page.waitForTimeout(10000);
+        
+        return true; // продолжаем попытку фарминга
+      } catch (thirdError) {
+        throw new Error(`Не удалось загрузить Facebook после трех попыток: ${thirdError.message}`);
+      }
+    }
+  }
+}
   // Метод для подключения к базе данных и загрузки конфигурации
   async connectAndLoadConfig() {
     try {
@@ -271,168 +326,227 @@ class FacebookFarmer {
   }
 
   // Метод для вступления в группы
-  async joinGroups() {
-    if (!this.config.functions.joinGroups?.enabled) {
-      console.log('Функция вступления в группы отключена, пропускаем...');
-      return true;
-    }
+  // Updated joinGroups function to handle visibility issues
+async joinGroups() {
+  if (!this.config.functions.joinGroups?.enabled) {
+    console.log('Функция вступления в группы отключена, пропускаем...');
+    return true;
+  }
+  
+  const groupsToJoin = this.config.functions.joinGroups.count || 5;
+  console.log(`Запускаем вступление в группы (количество: ${groupsToJoin})...`);
+  
+  try {
+    console.log('Ищем группы для вступления...');
     
-    const groupsToJoin = this.config.functions.joinGroups.count || 5;
-    console.log(`Запускаем вступление в группы (количество: ${groupsToJoin})...`);
-    
+    // Переходим на страницу поиска групп
     try {
-      console.log('Ищем группы для вступления...');
-      
-      // Переходим на страницу поиска групп
-      try {
-        // Проверяем, если мы уже на странице поиска групп
-        const currentUrl = this.page.url();
-        if (currentUrl.includes('/groups/discover')) {
-          console.log('Уже находимся на странице поиска групп');
-        } else {
-          // Пробуем найти кнопку "Найти группы" или эквивалент
-          const discoverGroupsSelectors = [
-            'a[href*="/groups/discover"]',
-            'span:has-text("Discover")',
-            'span:has-text("Найти группы")',
-            'span:has-text("Знайти групи")'
-          ];
-          
-          let discoverElement = null;
-          for (const selector of discoverGroupsSelectors) {
-            try {
-              discoverElement = await this.page.$(selector);
-              if (discoverElement) {
-                console.log(`Найден элемент "Найти группы" по селектору: ${selector}`);
-                break;
-              }
-            } catch (e) {
-              continue;
-            }
-          }
-          
-          if (discoverElement) {
-            await discoverElement.click();
-            console.log('Нажали на кнопку "Найти группы"');
-            await this.page.waitForTimeout(3000);
-          } else {
-            // Если не нашли, переходим по прямой ссылке
-            await this.page.goto('https://www.facebook.com/groups/discover', { waitUntil: 'networkidle' });
-            console.log('Перешли на страницу поиска групп по прямой ссылке');
-          }
-        }
-      } catch (error) {
-        console.log(`Не смогли найти кнопку "Найти группы": ${error.message}`);
-        // Переходим по прямой ссылке
+      // Проверяем, если мы уже на странице поиска групп
+      const currentUrl = this.page.url();
+      if (currentUrl.includes('/groups/discover')) {
+        console.log('Уже находимся на странице поиска групп');
+      } else {
+        // Переходим по прямой ссылке для более стабильного результата
         await this.page.goto('https://www.facebook.com/groups/discover', { waitUntil: 'networkidle' });
         console.log('Перешли на страницу поиска групп по прямой ссылке');
       }
-      
-      // Ждем загрузки страницы
-      await this.page.waitForTimeout(3000);
-      
-      // Делаем скриншот страницы поиска групп
-      await this.takeScreenshot('discover_groups');
-      
-      // Ищем кнопки "Вступить" с помощью классов, предоставленных пользователем
-      // Класс для кнопки присоединения к группе из примера: "x1lliihq x6ikm8r x10wlt62 x1n2onr6 xlyipyv xuxw1ft"
-      const joinButtonsSelectors = [
-        'div[aria-label="Вступить"]', 
-        'div[aria-label="Join"]',
-        'div[aria-label="Приєднатися"]',
-        'div[aria-label="Приєднатись"]',
-        'span.x1lliihq.x6ikm8r.x10wlt62.x1n2onr6.xlyipyv.xuxw1ft',
-        'button:has-text("Join")',
-        'button:has-text("Вступить")',
-        'button:has-text("Приєднатися")'
-      ];
-      
-      let joinButtons = [];
-      for (const selector of joinButtonsSelectors) {
-        try {
-          const buttons = await this.page.$$(selector);
-          if (buttons.length > 0) {
-            console.log(`Найдены кнопки "Вступить" по селектору: ${selector}`);
-            joinButtons = buttons;
-            break;
-          }
-        } catch (e) {
-          continue;
-        }
-      }
-      
-      if (!joinButtons.length) {
-        console.log('Не найдены кнопки "Вступить" в группы');
-        this.results.errors.push({
-          stage: 'join_groups',
-          message: 'Не найдены кнопки "Вступить" в группы',
-          timestamp: new Date()
-        });
-        return false;
-      }
-      
-      console.log(`Найдено ${joinButtons.length} групп для вступления`);
-      
-      // Вступаем в группы (не более указанного количества за один запуск)
-      const maxGroups = Math.min(joinButtons.length, groupsToJoin);
-      
-      for (let i = 0; i < maxGroups; i++) {
-        try {
-          // Прокручиваем до кнопки
-          await joinButtons[i].scrollIntoViewIfNeeded();
-          await this.page.waitForTimeout(1000);
-          
-          await joinButtons[i].click();
-          console.log(`Нажали кнопку "Вступить" для группы ${i + 1}`);
-          
-          // Делаем небольшую паузу между действиями
-          await this.page.waitForTimeout(2000);
-          
-          this.results.groupsJoined++;
-          
-          // Иногда после вступления появляются дополнительные диалоги, пробуем их закрыть
-          try {
-            // Ищем кнопку закрытия по различным селекторам
-            const closeButtonSelectors = [
-              'div[aria-label="Закрыть"]',
-              'div[aria-label="Close"]',
-              'div[aria-label="Закрити"]',
-              '[aria-label="Close"] svg',
-              '[aria-label="Закрыть"] svg',
-              '[aria-label="Закрити"] svg'
-            ];
-            
-            for (const selector of closeButtonSelectors) {
-              const closeButton = await this.page.$(selector);
-              if (closeButton) {
-                await closeButton.click();
-                console.log('Закрыли дополнительный диалог');
-                break;
-              }
-            }
-          } catch (dialogError) {
-            console.log('Не было дополнительного диалога или не смогли его закрыть');
-          }
-        } catch (joinError) {
-          console.error(`Ошибка при вступлении в группу ${i + 1}: ${joinError.message}`);
-        }
-      }
-      
-      // Делаем скриншот после вступления в группы
-      await this.takeScreenshot('after_joining_groups');
-      
-      console.log(`Успешно вступили в ${this.results.groupsJoined} групп`);
-      return true;
     } catch (error) {
-      console.error(`Ошибка при вступлении в группы: ${error.message}`);
+      console.log(`Не смогли найти кнопку "Найти группы": ${error.message}`);
+      // Переходим по прямой ссылке
+      await this.page.goto('https://www.facebook.com/groups/discover', { waitUntil: 'networkidle' });
+      console.log('Перешли на страницу поиска групп по прямой ссылке');
+    }
+    
+    // Ждем загрузки страницы
+    await this.page.waitForTimeout(3000);
+    
+    // Прокручиваем страницу для загрузки групп
+    await this.page.evaluate(() => {
+      window.scrollBy(0, 500);
+    });
+    
+    await this.page.waitForTimeout(2000);
+    
+    // Делаем скриншот страницы поиска групп
+    await this.takeScreenshot('discover_groups');
+    
+    // Ищем кнопки "Вступить" с помощью классов, предоставленных пользователем
+    // Класс для кнопки присоединения к группе из примера: "x1lliihq x6ikm8r x10wlt62 x1n2onr6 xlyipyv xuxw1ft"
+    const joinButtonsSelectors = [
+      'div[aria-label="Вступить"]', 
+      'div[aria-label="Join"]',
+      'div[aria-label="Приєднатися"]',
+      'div[aria-label="Приєднатись"]',
+      'span.x1lliihq.x6ikm8r.x10wlt62.x1n2onr6.xlyipyv.xuxw1ft',
+      'button:has-text("Join")',
+      'button:has-text("Вступить")',
+      'button:has-text("Приєднатися")'
+    ];
+    
+    let joinButtons = [];
+    for (const selector of joinButtonsSelectors) {
+      try {
+        const buttons = await this.page.$$(selector);
+        if (buttons.length > 0) {
+          console.log(`Найдены кнопки "Вступить" по селектору: ${selector}`);
+          joinButtons = buttons;
+          break;
+        }
+      } catch (e) {
+        continue;
+      }
+    }
+    
+    if (!joinButtons.length) {
+      console.log('Не найдены кнопки "Вступить" в группы');
       this.results.errors.push({
         stage: 'join_groups',
-        message: error.message,
+        message: 'Не найдены кнопки "Вступить" в группы',
         timestamp: new Date()
       });
       return false;
     }
+    
+    console.log(`Найдено ${joinButtons.length} групп для вступления`);
+    
+    // Вступаем в группы (не более указанного количества за один запуск)
+    const maxGroups = Math.min(joinButtons.length, groupsToJoin);
+    
+    for (let i = 0; i < maxGroups; i++) {
+      try {
+        // ИСПРАВЛЕНО: Используем более надежный способ прокрутки и клика
+        // Вместо scrollIntoViewIfNeeded используем JavaScript scrollIntoView
+        await this.page.evaluate((index) => {
+          // Находим все кнопки с классом или атрибутом
+          const buttons = [
+            ...document.querySelectorAll('div[aria-label="Вступить"]'),
+            ...document.querySelectorAll('div[aria-label="Join"]'),
+            ...document.querySelectorAll('div[aria-label="Приєднатися"]'),
+            ...document.querySelectorAll('div[aria-label="Приєднатись"]'),
+            ...document.querySelectorAll('span.x1lliihq.x6ikm8r.x10wlt62.x1n2onr6.xlyipyv.xuxw1ft'),
+            ...document.querySelectorAll('button:has-text("Join")'),
+            ...document.querySelectorAll('button:has-text("Вступить")'),
+            ...document.querySelectorAll('button:has-text("Приєднатися")')
+          ];
+          
+          // Проверяем, что у нас есть нужная кнопка
+          if (buttons.length > index) {
+            // Плавно прокручиваем к кнопке
+            buttons[index].scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        }, i);
+        
+        // Ждем, чтобы страница прокрутилась
+        await this.page.waitForTimeout(1500);
+        
+        // ИСПРАВЛЕНИЕ: Вместо клика по элементу из списка, найдем видимую кнопку заново
+        const visibleJoinButtonSelectors = [
+          'div[aria-label="Вступить"]:visible', 
+          'div[aria-label="Join"]:visible',
+          'div[aria-label="Приєднатися"]:visible',
+          'div[aria-label="Приєднатись"]:visible',
+          'span.x1lliihq.x6ikm8r.x10wlt62.x1n2onr6.xlyipyv.xuxw1ft:visible'
+        ];
+        
+        // Пробуем клик по кнопке с ожиданием видимости
+        let buttonClicked = false;
+        for (const selector of visibleJoinButtonSelectors) {
+          try {
+            // Используем waitForSelector с опцией visible: true
+            const visibleButton = await this.page.waitForSelector(selector, { 
+              visible: true, 
+              timeout: 3000 
+            });
+            
+            if (visibleButton) {
+              await visibleButton.click();
+              console.log(`Нажали кнопку "Вступить" для группы ${i + 1}`);
+              buttonClicked = true;
+              break;
+            }
+          } catch (err) {
+            // Продолжаем, если не нашли по одному из селекторов
+            continue;
+          }
+        }
+        
+        // Если ни один из селекторов не сработал, пробуем клик через evaluate
+        if (!buttonClicked) {
+          console.log(`Используем JavaScript клик для группы ${i + 1}`);
+          
+          await this.page.evaluate((index) => {
+            const buttons = [
+              ...document.querySelectorAll('div[aria-label="Вступить"]'),
+              ...document.querySelectorAll('div[aria-label="Join"]'),
+              ...document.querySelectorAll('div[aria-label="Приєднатися"]'),
+              ...document.querySelectorAll('div[aria-label="Приєднатись"]'),
+              ...document.querySelectorAll('span.x1lliihq.x6ikm8r.x10wlt62.x1n2onr6.xlyipyv.xuxw1ft')
+            ];
+            
+            if (buttons.length > index) {
+              // Вызываем клик через JavaScript
+              buttons[index].click();
+            }
+          }, i);
+        }
+        
+        // Делаем небольшую паузу между действиями
+        await this.page.waitForTimeout(2000);
+        
+        this.results.groupsJoined++;
+        
+        // Иногда после вступления появляются дополнительные диалоги, пробуем их закрыть
+        try {
+          // Ищем кнопку закрытия по различным селекторам
+          const closeButtonSelectors = [
+            'div[aria-label="Закрыть"]',
+            'div[aria-label="Close"]',
+            'div[aria-label="Закрити"]',
+            '[aria-label="Close"] svg',
+            '[aria-label="Закрыть"] svg',
+            '[aria-label="Закрити"] svg'
+          ];
+          
+          for (const selector of closeButtonSelectors) {
+            const closeButton = await this.page.$(selector);
+            if (closeButton) {
+              await closeButton.click();
+              console.log('Закрыли дополнительный диалог');
+              break;
+            }
+          }
+        } catch (dialogError) {
+          console.log('Не было дополнительного диалога или не смогли его закрыть');
+        }
+      } catch (joinError) {
+        console.error(`Ошибка при вступлении в группу ${i + 1}: ${joinError.message}`);
+      }
+      
+      // После каждой обработанной группы делаем небольшую прокрутку вниз
+      // чтобы загрузить новые группы, если существующие закончились
+      if (i % 3 === 2) { // Каждые 3 группы
+        await this.page.evaluate(() => {
+          window.scrollBy(0, 300); // Прокручиваем немного вниз
+        });
+        await this.page.waitForTimeout(1500);
+      }
+    }
+    
+    // Делаем скриншот после вступления в группы
+    await this.takeScreenshot('after_joining_groups');
+    
+    console.log(`Успешно вступили в ${this.results.groupsJoined} групп`);
+    return true;
+  } catch (error) {
+    console.error(`Ошибка при вступлении в группы: ${error.message}`);
+    this.results.errors.push({
+      stage: 'join_groups',
+      message: error.message,
+      timestamp: new Date()
+    });
+    return false;
   }
+}
 
   // Метод для лайков контента
   async likeContent() {
