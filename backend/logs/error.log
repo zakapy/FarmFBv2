@@ -334,3 +334,35 @@ Call log:
 [2025-04-13 03:50:55] [31merror[39m: [Farm 67fb0a4e2d8f655d6650e600] Error: ❌ Ошибка фарминга: page.goto: Timeout 30000ms exceeded.
 Call log:
 [2m  - navigating to "https://www.facebook.com/", waiting until "networkidle"[22m
+[2025-04-13 04:06:57] [31merror[39m: [Farm 67fb0e3119eabdbb96950bb3] Error: node:internal/modules/cjs/loader:1228
+  throw err;
+  ^
+
+Error: Cannot find module './modules/browserControl'
+Require stack:
+- C:\Users\Administrator\Desktop\CODDING\FARMMAIN\backend\src\scripts\farmingScript.js
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1225:15)
+    at Function._load (node:internal/modules/cjs/loader:1055:27)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:220:24)
+    at Module.require (node:internal/modules/cjs/loader:1311:12)
+    at require (node:internal/modules/helpers:136:16)
+    at Object.<anonymous> (C:\Users\Administrator\Desktop\CODDING\FARMMAIN\backend\src\scripts\farmingScript.js:15:74)
+    at Module._compile (node:internal/modules/cjs/loader:1554:14)
+    at Object..js (node:internal/modules/cjs/loader:1706:10)
+    at Module.load (node:internal/modules/cjs/loader:1289:32) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\Administrator\\Desktop\\CODDING\\FARMMAIN\\backend\\src\\scripts\\farmingScript.js'
+  ]
+}
+
+Node.js v22.14.0
+[2025-04-13 04:09:14] [31merror[39m: [Farm 67fb0e8f2f6864c417d98661] Error: Ошибка при клике: Too many arguments. If you need to pass more than 1 argument to the function wrap them in an object.
+[2025-04-13 04:09:16] [31merror[39m: [Farm 67fb0e8f2f6864c417d98661] Error: Ошибка при клике: Too many arguments. If you need to pass more than 1 argument to the function wrap them in an object.
+[2025-04-13 04:09:18] [31merror[39m: [Farm 67fb0e8f2f6864c417d98661] Error: Ошибка при клике: Too many arguments. If you need to pass more than 1 argument to the function wrap them in an object.
+[2025-04-13 04:09:22] [31merror[39m: [Farm 67fb0e8f2f6864c417d98661] Error: Ошибка при клике: Too many arguments. If you need to pass more than 1 argument to the function wrap them in an object.
+[2025-04-13 04:09:24] [31merror[39m: [Farm 67fb0e8f2f6864c417d98661] Error: Ошибка при клике: Too many arguments. If you need to pass more than 1 argument to the function wrap them in an object.
+[2025-04-13 04:09:37] [31merror[39m: [Farm 67fb0e8f2f6864c417d98661] Error: Ошибка при клике: Too many arguments. If you need to pass more than 1 argument to the function wrap them in an object.
+[2025-04-13 04:09:40] [31merror[39m: [Farm 67fb0e8f2f6864c417d98661] Error: Ошибка при клике: Too many arguments. If you need to pass more than 1 argument to the function wrap them in an object.
+[2025-04-13 04:09:44] [31merror[39m: [Farm 67fb0e8f2f6864c417d98661] Error: Ошибка при клике: Too many arguments. If you need to pass more than 1 argument to the function wrap them in an object.
