@@ -407,3 +407,91 @@ Call log:
 [2025-04-14 17:23:06] [31merror[39m: Не удалось импортировать cookies: env is not defined
 [2025-04-14 17:23:14] [31merror[39m: Ошибка при остановке профиля Dolphin Anty: env is not defined
 [2025-04-14 17:23:14] [31merror[39m: Не удалось импортировать cookies: env is not defined
+[2025-04-14 19:26:28] [31merror[39m: Ошибка при запуске профиля: browserContext.newPage: Protocol error (Target.createTarget): Failed to open a new tab
+[2025-04-14 19:26:28] [31merror[39m: Не удалось запустить профиль Dolphin: browserContext.newPage: Protocol error (Target.createTarget): Failed to open a new tab
+[2025-04-14 19:26:46] [31merror[39m: Не удалось импортировать cookies: env is not defined
+[2025-04-14 19:32:41] [31merror[39m: Ошибка при проверке прокси: HttpsProxyAgent is not a constructor
+[2025-04-14 19:44:37] [31merror[39m: Ошибка при проверке прокси: HttpsProxyAgent is not a constructor
+[2025-04-14 19:44:40] [31merror[39m: Ошибка при проверке прокси: HttpsProxyAgent is not a constructor
+[2025-04-14 19:44:46] [31merror[39m: Ошибка при проверке прокси: HttpsProxyAgent is not a constructor
+[2025-04-14 19:44:48] [31merror[39m: Ошибка при проверке прокси: HttpsProxyAgent is not a constructor
+[2025-04-14 19:45:23] [31merror[39m: Ошибка при проверке прокси: Прокси не работает или недоступен
+[2025-04-14 19:45:23] [31merror[39m: Ошибка при проверке прокси: Прокси не работает или недоступен
+[2025-04-14 19:45:26] [31merror[39m: Ошибка при проверке прокси: Прокси не работает или недоступен
+[2025-04-14 19:46:40] [31merror[39m: Ошибка при проверке прокси: Прокси не работает или недоступен
+[2025-04-14 19:47:52] [31merror[39m: Ошибка при проверке прокси: Прокси не работает или недоступен
+[2025-04-14 19:47:53] [31merror[39m: Ошибка при проверке прокси: Прокси не работает или недоступен
+[2025-04-14 19:50:19] [31merror[39m: Ошибка при проверке прокси: Прокси не работает или недоступен: Все сервисы проверки недоступны через данный прокси
+[2025-04-14 19:50:35] [31merror[39m: Ошибка при проверке прокси: Прокси не работает или недоступен: Все сервисы проверки недоступны через данный прокси
+[2025-04-14 19:52:56] [31merror[39m: Ошибка при проверке прокси: Прокси не работает или недоступен: Все сервисы проверки недоступны через данный прокси
+[2025-04-14 20:09:15] [31merror[39m: Error: Invalid or expired refresh token
+    at exports.handleRefreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\services\authService.js:70:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async exports.refreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\controllers\authController.js:47:20)
+[2025-04-14 20:23:34] [31merror[39m: Ошибка при проверке прокси: Прокси не работает или недоступен: HttpProxyAgent is not a constructor
+[2025-04-14 20:56:53] [31merror[39m: Error: Invalid or expired refresh token
+    at exports.handleRefreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\services\authService.js:70:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async exports.refreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\controllers\authController.js:47:20)
+[2025-04-14 20:59:10] [31merror[39m: Не удалось импортировать cookies: env is not defined
+[2025-04-14 20:59:20] [31merror[39m: Ошибка при остановке профиля Dolphin Anty: env is not defined
+[2025-04-14 20:59:20] [31merror[39m: Не удалось импортировать cookies: env is not defined
+[2025-04-14 21:13:20] [31merror[39m: Не удалось импортировать cookies: env is not defined
+[2025-04-14 21:13:29] [31merror[39m: Ошибка при остановке профиля Dolphin Anty: env is not defined
+[2025-04-14 21:13:29] [31merror[39m: Не удалось импортировать cookies: env is not defined
+[2025-04-14 21:14:15] [31merror[39m: Не удалось создать профиль Dolphin: Request failed with status code 422
+[2025-04-14 21:14:15] [31merror[39m: Статус: 422
+[2025-04-14 21:14:15] [31merror[39m: Данные: {"success":false,"error":{"type":"E_PROXY","code":"E_PROXY_EMPTY","text":"Required proxy fields missing: type, host"}}
+[2025-04-14 21:14:15] [31merror[39m: Error linking account with Dolphin: Ошибка создания профиля Dolphin: Request failed with status code 422
+[2025-04-14 21:15:47] [31merror[39m: Не удалось создать профиль Dolphin: Request failed with status code 422
+[2025-04-14 21:15:47] [31merror[39m: Статус: 422
+[2025-04-14 21:15:47] [31merror[39m: Данные: {"success":false,"error":{"type":"E_PROXY","code":"E_PROXY_EMPTY","text":"Required proxy fields missing: type, host"}}
+[2025-04-14 21:16:13] [31merror[39m: Не удалось создать профиль Dolphin: Request failed with status code 422
+[2025-04-14 21:16:13] [31merror[39m: Статус: 422
+[2025-04-14 21:16:13] [31merror[39m: Данные: {"success":false,"error":{"type":"E_PROXY","code":"E_PROXY_EMPTY","text":"Required proxy fields missing: type, host"}}
+[2025-04-14 21:16:13] [31merror[39m: Error linking account with Dolphin: Ошибка создания профиля Dolphin: Request failed with status code 422
+[2025-04-14 21:18:31] [31merror[39m: Не удалось создать профиль Dolphin: Request failed with status code 422
+[2025-04-14 21:18:31] [31merror[39m: Статус: 422
+[2025-04-14 21:18:31] [31merror[39m: Данные: {"success":false,"error":{"type":"E_PROXY","code":"E_PROXY_EMPTY","text":"Required proxy fields missing: type, host"}}
+[2025-04-14 21:18:31] [31merror[39m: Error linking account with Dolphin: Ошибка создания профиля Dolphin: Request failed with status code 422
+[2025-04-14 21:23:38] [31merror[39m: Не удалось создать профиль Dolphin: Request failed with status code 422
+[2025-04-14 21:23:38] [31merror[39m: Статус: 422
+[2025-04-14 21:23:38] [31merror[39m: Данные: {"success":false,"error":{"type":"E_PROXY","code":"E_PROXY_EMPTY","text":"Required proxy fields missing: type, host"}}
+[2025-04-14 21:23:38] [31merror[39m: Error linking account with Dolphin: Ошибка создания профиля Dolphin: Request failed with status code 422
+[2025-04-14 21:23:38] [31merror[39m: Не удалось создать профиль Dolphin: Request failed with status code 422
+[2025-04-14 21:23:38] [31merror[39m: Статус: 422
+[2025-04-14 21:23:38] [31merror[39m: Данные: {"success":false,"error":{"type":"E_PROXY","code":"E_PROXY_EMPTY","text":"Required proxy fields missing: type, host"}}
+[2025-04-14 21:25:28] [31merror[39m: Не удалось импортировать cookies: Request failed with status code 404
+[2025-04-14 21:25:28] [31merror[39m: Статус: 404
+[2025-04-14 21:25:28] [31merror[39m: Данные: "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot POST /v1.0/browser_profiles/597170146/cookies</pre>\n</body>\n</html>\n"
+[2025-04-14 21:27:13] [31merror[39m: Не удалось импортировать cookies: Request failed with status code 404
+[2025-04-14 21:27:13] [31merror[39m: Статус: 404
+[2025-04-14 21:27:13] [31merror[39m: Данные: "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot POST /v1.0/browser_profiles/597170438/cookies</pre>\n</body>\n</html>\n"
+[2025-04-14 21:31:21] [31merror[39m: Не удалось создать профиль Dolphin: Request failed with status code 422
+[2025-04-14 21:31:21] [31merror[39m: Статус: 422
+[2025-04-14 21:31:21] [31merror[39m: Данные: {"success":false,"error":{"type":"E_PROXY","code":"E_PROXY_EMPTY","text":"Required proxy fields missing: type, host"}}
+[2025-04-14 21:31:21] [31merror[39m: Error linking account with Dolphin: Ошибка создания профиля Dolphin: Request failed with status code 422
+[2025-04-14 21:31:21] [31merror[39m: Не удалось создать профиль Dolphin: Request failed with status code 422
+[2025-04-14 21:31:21] [31merror[39m: Статус: 422
+[2025-04-14 21:31:21] [31merror[39m: Данные: {"success":false,"error":{"type":"E_PROXY","code":"E_PROXY_EMPTY","text":"Required proxy fields missing: type, host"}}
+[2025-04-14 21:32:29] [31merror[39m: Не удалось импортировать cookies: Request failed with status code 404
+[2025-04-14 21:32:29] [31merror[39m: Статус: 404
+[2025-04-14 21:32:29] [31merror[39m: Данные: "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot POST /v1.0/browser_profiles/597171295/cookies</pre>\n</body>\n</html>\n"
+[2025-04-14 21:33:25] [31merror[39m: [Farm 67fd54d15415e16760d56582] Error: ❌ Ошибка фарминга: Аккаунт не авторизован в Facebook
+[2025-04-14 21:34:31] [31merror[39m: Не удалось импортировать cookies: Request failed with status code 404
+[2025-04-14 21:34:31] [31merror[39m: Статус: 404
+[2025-04-14 21:34:31] [31merror[39m: Данные: "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot POST /v1.0/browser_profiles/597171295/cookies</pre>\n</body>\n</html>\n"
+[2025-04-14 21:34:45] [31merror[39m: Не удалось импортировать cookies: Request failed with status code 404
+[2025-04-14 21:34:45] [31merror[39m: Статус: 404
+[2025-04-14 21:34:45] [31merror[39m: Данные: "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot POST /v1.0/browser_profiles/597171295/cookies</pre>\n</body>\n</html>\n"
+[2025-04-14 21:38:27] [31merror[39m: Ошибка при проверке статуса профиля: Request failed with status code 404
+[2025-04-14 21:38:27] [31merror[39m: Ошибка при запуске профиля: Request failed with status code 404
+[2025-04-14 21:38:27] [31merror[39m: Статус: 404
+[2025-04-14 21:38:27] [31merror[39m: Данные: "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /browser_profiles/597171295/start</pre>\n</body>\n</html>\n"
+[2025-04-14 21:38:27] [31merror[39m: Не удалось запустить профиль Dolphin: Request failed with status code 404
+[2025-04-14 21:38:40] [31merror[39m: Ошибка API при импорте cookies: 404
+[2025-04-14 21:38:40] [31merror[39m: Данные ответа: "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot POST /browser_profiles/597171295/cookies</pre>\n</body>\n</html>\n"
+[2025-04-14 21:43:31] [31merror[39m: Error: Invalid or expired refresh token
+    at exports.handleRefreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\services\authService.js:70:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async exports.refreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\controllers\authController.js:47:20)

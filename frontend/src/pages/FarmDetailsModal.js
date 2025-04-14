@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { useDispatch } from 'react-redux';
 import Modal from '../components/Modal';
 import Button from '../components/Button';
 import useFarm from '../hooks/useFarm';

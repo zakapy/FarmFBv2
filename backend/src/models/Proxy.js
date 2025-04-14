@@ -1,20 +1,47 @@
 const mongoose = require('mongoose');
 
-const proxySchema = new mongoose.Schema(
-  {
-    address: {
-      type: String,
-      required: true
-    },
-    assignedTo: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Account',
-      default: null
-    },
-    country: { type: String },
-    type: { type: String } // http, socks5 и т.п.
+const proxySchema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: 'User'
   },
-  { timestamps: true }
-);
+  name: {
+    type: String,
+    trim: true
+  },
+  host: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  port: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  type: {
+    type: String,
+    enum: ['http', 'socks5'],
+    default: 'http'
+  },
+  username: {
+    type: String,
+    trim: true
+  },
+  password: {
+    type: String
+  },
+  active: {
+    type: Boolean,
+    default: null
+  },
+  lastChecked: {
+    type: Date,
+    default: null
+  }
+}, {
+  timestamps: true
+});
 
 module.exports = mongoose.model('Proxy', proxySchema);

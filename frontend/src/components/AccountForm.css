@@ -1,0 +1,252 @@
+/* AccountForm Styles */
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 15px;
+}
+
+.form-label {
+  font-size: 14px;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form-hint {
+  display: block;
+  margin-top: 5px;
+  color: #666;
+  font-size: 12px;
+}
+
+.form-select {
+  padding: 8px 12px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  font-size: 14px;
+  width: 100%;
+  margin-bottom: 10px;
+  cursor: pointer;
+  outline: none;
+}
+
+.auth-toggle-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #eee;
+  padding-top: 10px;
+  margin-bottom: 15px;
+}
+
+.auth-toggle-label {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.toggle-button {
+  background: none;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.auth-fields-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background-color: #f9f9f9;
+  padding: 12px;
+  border-radius: 5px;
+  margin-top: -8px;
+  margin-bottom: 15px;
+}
+
+.twofa-container {
+  border: 1px solid #4dabf7;
+  border-radius: 5px;
+  padding: 12px;
+  background-color: #e7f5ff;
+  margin-top: 5px;
+}
+
+.twofa-title {
+  margin: 0 0 10px 0;
+  color: #1971c2;
+}
+
+.input-with-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 15px;
+}
+
+.verify-button {
+  background: #4dabf7;
+  border: none;
+  border-radius: 5px;
+  padding: 0 15px;
+  color: white;
+  cursor: pointer;
+}
+
+.verify-button:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.proxy-mode-container {
+  display: flex;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  overflow: hidden;
+  margin-bottom: 15px;
+}
+
+.proxy-mode-btn {
+  flex: 1;
+  padding: 8px 10px;
+  border: none;
+  background: #f5f5f5;
+  color: #333;
+  cursor: pointer;
+  font-weight: normal;
+  transition: all 0.2s ease;
+}
+
+.proxy-mode-btn:hover {
+  background-color: #e0e0e0;
+}
+
+.proxy-mode-btn.active {
+  background: #1976d2;
+  color: white;
+  font-weight: 500;
+}
+
+.advanced-proxy-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 15px;
+}
+
+.proxy-row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.proxy-status {
+  font-size: 14px;
+  padding: 8px;
+  border-radius: 4px;
+  margin-top: 4px;
+  white-space: pre-line;
+  margin-bottom: 15px;
+}
+
+.proxy-status.success {
+  color: #2ecc71;
+  background-color: #eafaf1;
+}
+
+.proxy-status.error {
+  color: #1976d2;
+  background-color: rgba(25, 118, 210, 0.15);
+}
+
+.error-message {
+  color: #1976d2;
+  font-size: 14px;
+  padding: 8px;
+  border-radius: 4px;
+  background-color: rgba(25, 118, 210, 0.15);
+  margin-bottom: 15px;
+}
+
+.loading-text {
+  color: #666;
+  font-size: 14px;
+}
+
+.proxy-select-container {
+  margin-bottom: 15px;
+}
+
+.no-proxies-container {
+  padding: 15px;
+  background: #f9f9f9;
+  border-radius: 5px;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.no-proxies-text {
+  margin: 0 0 10px 0;
+  color: #666;
+}
+
+.add-proxy-link {
+  display: inline-block;
+  padding: 6px 12px;
+  background: #1976d2;
+  color: white;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.add-proxy-link:hover {
+  background: #1565c0;
+  text-decoration: none;
+}
+
+/* Proxy status indicators */
+.proxy-status-indicator {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 12px;
+  padding: 2px 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-left: 5px;
+}
+
+.proxy-status-active {
+  background-color: rgba(46, 204, 113, 0.15);
+  color: #27ae60;
+}
+
+.proxy-status-inactive {
+  background-color: rgba(25, 118, 210, 0.15);
+  color: #1976d2;
+}
+
+.proxy-status-checking {
+  background-color: rgba(52, 152, 219, 0.15);
+  color: #3498db;
+  animation: pulse 1.5s infinite;
+}
+
+.proxy-status-unknown {
+  background-color: rgba(189, 195, 199, 0.15);
+  color: #7f8c8d;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.6;
+  }
+} 

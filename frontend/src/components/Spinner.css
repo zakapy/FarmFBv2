@@ -46,7 +46,11 @@
   }
   
   .btn.error {
-    background-color: #f44336;
+    background-color: #1e88e5;
     color: white;
+  }
+  
+  .btn.error:hover {
+    background-color: #1976d2;
   }
   

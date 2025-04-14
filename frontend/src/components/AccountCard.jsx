@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './AccountCard.css';
 import './Button.css';
 import './Spinner.css';
 import API from '../api/axios';
-import { API as ENDPOINTS } from '../api/endpoints';
 import { toast } from 'react-toastify';
-import Button from './Button';
 import AccountForm from './AccountForm';
 
 const AccountCard = ({ account, onEdit, onDelete, refreshAccounts }) => {
@@ -158,6 +156,16 @@ const AccountCard = ({ account, onEdit, onDelete, refreshAccounts }) => {
       setTimeout(() => setSyncState('idle'), 2000);
     }
   };
+
+  // Автоматическое создание профиля в Dolphin при рендере, если его нет
+  useEffect(() => {
+    // Если аккаунт без профиля Dolphin и есть куки
+    if (!hasDolphinProfile && cookiesOk) {
+      // Автоматически вызываем создание профиля
+      handleSyncDolphin();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Запускаем только при первом рендере
 
   const renderDolphinInfo = () => {
     if (hasDolphinProfile) {

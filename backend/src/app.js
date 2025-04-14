@@ -8,6 +8,7 @@ const rateLimit = require('express-rate-limit');
 const authRoutes = require('./routes/v1/authRoutes');
 const accountRoutes = require('./routes/v1/accountRoutes');
 const farmRoutes = require('./routes/v1/farmRoutes');
+const proxyRoutes = require('./routes/v1/proxyRoutes');
 const errorHandler = require('./middlewares/errorHandler');
 
 const app = express();
@@ -34,8 +35,18 @@ app.use(express.json());
 
 // 🌍 CORS с поддержкой credentials
 app.use(cors({
-  origin: 'http://localhost:3000',
-  credentials: true,
+  origin: function(origin, callback) {
+    // Разрешаем запросы без origin (например, с Postman или curl)
+    if (!origin) return callback(null, true);
+    
+    // Разрешаем запросы с локального хоста
+    if (origin.startsWith('http://localhost:')) {
+      return callback(null, true);
+    }
+    
+    callback(new Error('Не разрешено политикой CORS'));
+  },
+  credentials: true
 }));
 
 // Статические файлы для скриншотов
@@ -45,6 +56,7 @@ app.use('/screenshots', express.static('screenshots'));
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/accounts', accountRoutes);
 app.use('/api/v1/farm', farmRoutes);
+app.use('/api/v1/proxies', proxyRoutes);
 
 // ❌ Обработка несуществующих маршрутов
 app.use((req, res) => {
@@ -65,6 +77,10 @@ console.log(' - DELETE /api/v1/accounts/:id/delete');
 console.log(' - POST   /api/v1/accounts/:id/check');
 console.log(' - POST   /api/v1/accounts/check-proxy');
 console.log(' - POST   /api/v1/accounts/:id/sync-dolphin');
+console.log(' - GET    /api/v1/proxies');
+console.log(' - POST   /api/v1/proxies');
+console.log(' - DELETE /api/v1/proxies/:id');
+console.log(' - POST   /api/v1/proxies/:id/check');
 console.log(' - POST   /api/v1/farm/start');
 console.log(' - GET    /api/v1/farm/status/:accountId');
 console.log(' - POST   /api/v1/farm/stop/:farmId');

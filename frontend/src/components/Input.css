@@ -11,5 +11,5 @@
 
 .logout-button:hover {
   text-decoration: underline;
-  color: #d9534f; /* мягкий красный при наведении */
+  color: #1976d2; /* Изменено с #d9534f (красный) на #1976d2 (синий) */
 }

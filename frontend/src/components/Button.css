@@ -30,12 +30,24 @@
 .btn-secondary:hover {
   background-color: var(--secondary-dark);
 }
+
+/* Заменяем красный цвет на синий для danger */
+.btn-danger, .btn.danger {
+  background-color: #1976d2; /* Синий цвет */
+  color: white;
+  border-color: #1976d2;
+}
+.btn-danger:hover, .btn.danger:hover {
+  background-color: #1565c0; /* Темно-синий при наведении */
+  border-color: #1565c0;
+}
+
 .btn.default {
-  background: rgba(0, 0, 0, 0.1); /* вместо белого */
-  color: #333;
+  background-color: #1976d2; /* Синий вместо белого */
+  color: white;
 }
 .btn.default:hover {
-  background-color: #0044ff;
+  background-color: #1565c0;
 }
 
 /* ==== Компактные кнопки (иконки) ==== */
@@ -118,4 +130,13 @@
     transform: translate(-50%, -50%) scale(2.5);
     opacity: 0;
   }
+}
+
+/* Заменяем красный цвет на синий для кнопки error */
+.btn.error {
+  background-color: #1976d2; /* Синий цвет */
+  color: white;
+}
+.btn.error:hover {
+  background-color: #1565c0; /* Темно-синий при наведении */
 }

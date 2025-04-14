@@ -10,6 +10,7 @@ const Auth = lazy(() => import('../pages/Auth'));
 const Dashboard = lazy(() => import('../pages/Dashboard'));
 const Accounts = lazy(() => import('../pages/Accounts'));
 const Farm = lazy(() => import('../pages/Farm'));
+const Proxies = lazy(() => import('../pages/Proxies'));
 const AdminPage = lazy(() => import('../pages/AdminPage')); // если добавим
 
 export const AppRoutes = () => (
@@ -45,6 +46,16 @@ export const AppRoutes = () => (
           <PrivateRoute>
             <MainLayout>
               <Farm />
+            </MainLayout>
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/proxies"
+        element={
+          <PrivateRoute>
+            <MainLayout>
+              <Proxies />
             </MainLayout>
           </PrivateRoute>
         }

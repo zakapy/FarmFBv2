@@ -49,6 +49,7 @@ const Farm = () => {
   useEffect(() => {
     dispatch(fetchAccounts());
     loadHistory();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
   
   // Загружаем историю с учетом пагинации

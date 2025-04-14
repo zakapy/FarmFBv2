@@ -81,8 +81,8 @@
   }
   
   .status-badge.error {
-    background-color: #fee2e2;
-    color: #b91c1c;
+    background-color: rgba(25, 118, 210, 0.15);
+    color: #1976d2;
   }
   
   .status-badge.stopped {
@@ -245,8 +245,8 @@
   }
   
   .status-badge.error {
-    background-color: #fee2e2;
-    color: #b91c1c;
+    background-color: rgba(25, 118, 210, 0.15);
+    color: #1976d2;
   }
   
   .status-badge.stopped {

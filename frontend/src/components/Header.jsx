@@ -21,6 +21,7 @@ const Header = () => {
         <Link to="/dashboard">Кабинет</Link>
         <Link to="/accounts">Аккаунты</Link>
         <Link to="/farm">Фарм</Link>
+        <Link to="/proxies">Прокси</Link>
         <button className="logout-button" onClick={handleLogout}>Выйти</button>
       </nav>
     </header>

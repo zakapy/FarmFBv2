@@ -21,7 +21,59 @@ const accountService = {
           
           // Если переданы cookies, импортируем их в профиль
           if (account.cookies && (Array.isArray(account.cookies) || typeof account.cookies === 'string')) {
-            await dolphinService.importCookies(account.cookies, dolphinProfile.id);
+            logger.info(`Пробуем импортировать cookies для нового профиля ${dolphinProfile.id}`);
+            
+            // Подготовка cookies для импорта
+            let cookiesData = account.cookies;
+            if (typeof account.cookies === 'string') {
+              try {
+                cookiesData = JSON.parse(account.cookies);
+                logger.info('Cookies преобразованы из строки в объект');
+              } catch (parseError) {
+                logger.error(`Ошибка парсинга cookies строки: ${parseError.message}`);
+              }
+            }
+            
+            // Убедимся, что cookies - массив
+            if (!Array.isArray(cookiesData)) {
+              if (typeof cookiesData === 'object') {
+                cookiesData = [cookiesData];
+                logger.info('Cookies преобразованы из объекта в массив');
+              } else {
+                logger.error('Cookies не является массивом или объектом, импорт невозможен');
+                throw new Error('Неверный формат cookies');
+              }
+            }
+            
+            // Проверяем обязательные поля
+            let isValid = true;
+            const requiredFields = ['name', 'value', 'domain'];
+            
+            for (const cookie of cookiesData) {
+              for (const field of requiredFields) {
+                if (!cookie[field]) {
+                  logger.error(`Cookie не содержит обязательное поле: ${field}`);
+                  isValid = false;
+                  break;
+                }
+              }
+              if (!isValid) break;
+            }
+            
+            if (isValid) {
+              logger.info(`Импортируем ${cookiesData.length} cookies в профиль ${dolphinProfile.id}`);
+              const importResult = await dolphinService.importCookies(cookiesData, dolphinProfile.id);
+              
+              if (!importResult.success) {
+                logger.error(`Ошибка при импорте cookies: ${importResult.error || 'Неизвестная ошибка'}`);
+              } else {
+                logger.info('Cookies успешно импортированы');
+              }
+            } else {
+              logger.error('Cookies не прошли валидацию, импорт отменен');
+            }
+          } else {
+            logger.warn('Аккаунт создан без cookies, импорт не требуется');
           }
           
           // Обновляем аккаунт с информацией о профиле
@@ -53,7 +105,9 @@ const accountService = {
     if (data.name !== undefined) account.name = data.name;
     if (data.cookies !== undefined) account.cookies = data.cookies;
     if (data.proxy !== undefined) account.proxy = data.proxy;
+    if (data.proxyId !== undefined) account.proxyId = data.proxyId;
     if (data.status !== undefined) account.status = data.status;
+    if (data.meta !== undefined) account.meta = data.meta;
     
     // Сохраняем обновленный аккаунт
     const updatedAccount = await account.save();
@@ -63,14 +117,55 @@ const accountService = {
         account.dolphin && account.dolphin.profileId && 
         data.cookies !== undefined) {
       try {
-        // Обновляем cookies в профиле Dolphin
-        await dolphinService.importCookies(account.cookies, account.dolphin.profileId);
+        logger.info(`Обновляем cookies для профиля Dolphin ${account.dolphin.profileId}`);
         
-        // Обновляем время синхронизации
-        updatedAccount.dolphin.syncedAt = new Date();
-        await updatedAccount.save();
+        // Подготовка cookies для импорта
+        let cookiesData = account.cookies;
         
-        logger.info(`Updated cookies for Dolphin profile ${account.dolphin.profileId}`);
+        // Если cookies - строка, конвертируем в объект
+        if (typeof account.cookies === 'string') {
+          try {
+            cookiesData = JSON.parse(account.cookies);
+            logger.info('Cookies преобразованы из строки в объект');
+          } catch (parseError) {
+            logger.error(`Ошибка парсинга cookies строки: ${parseError.message}`);
+            throw new Error('Неверный формат cookies');
+          }
+        }
+        
+        // Убедимся, что cookies - массив
+        if (!Array.isArray(cookiesData)) {
+          if (typeof cookiesData === 'object') {
+            cookiesData = [cookiesData];
+            logger.info('Cookies преобразованы из объекта в массив');
+          } else {
+            logger.error('Cookies не является массивом или объектом, импорт невозможен');
+            throw new Error('Неверный формат cookies');
+          }
+        }
+        
+        // Проверяем обязательные поля
+        const requiredFields = ['name', 'value', 'domain'];
+        for (const cookie of cookiesData) {
+          for (const field of requiredFields) {
+            if (!cookie[field]) {
+              logger.error(`Cookie не содержит обязательное поле: ${field}`);
+              throw new Error(`Cookie не содержит обязательное поле: ${field}`);
+            }
+          }
+        }
+        
+        logger.info(`Импортируем ${cookiesData.length} cookies в профиль ${account.dolphin.profileId}`);
+        const importResult = await dolphinService.importCookies(cookiesData, account.dolphin.profileId);
+        
+        if (!importResult.success) {
+          logger.error(`Ошибка при импорте cookies: ${importResult.error || 'Неизвестная ошибка'}`);
+        } else {
+          // Обновляем время синхронизации
+          updatedAccount.dolphin.syncedAt = new Date();
+          await updatedAccount.save();
+          logger.info(`Cookies успешно обновлены для профиля ${account.dolphin.profileId}`);
+        }
       } catch (error) {
         logger.error(`Error updating Dolphin cookies: ${error.message}`);
         // Не выбрасываем ошибку, чтобы не прерывать обновление аккаунта

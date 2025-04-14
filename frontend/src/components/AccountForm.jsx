@@ -5,18 +5,20 @@ import Modal from './Modal';
 import API from '../api/axios';
 import { API as ENDPOINTS } from '../api/endpoints';
 import { toast } from 'react-toastify';
+import './AccountForm.css';
 
 const AccountForm = ({ initialData, onClose, onSubmit }) => {
   const [form, setForm] = useState({
     name: '',
     cookies: '',
-    proxyMode: 'basic',
+    proxyMode: 'simple',
     proxyString: '',
     proxyIP: '',
     proxyPort: '',
     proxyLogin: '',
     proxyPassword: '',
     proxyType: 'http',
+    proxyId: '', // ID выбранного прокси
     // Поля для авторизации
     email: '',
     password: '',
@@ -29,8 +31,13 @@ const AccountForm = ({ initialData, onClose, onSubmit }) => {
   const [proxyStatus, setProxyStatus] = useState(null);
   const [requires2FA, setRequires2FA] = useState(false);
   const [isCheckingTwoFactor, setIsCheckingTwoFactor] = useState(false);
+  const [availableProxies, setAvailableProxies] = useState([]);
+  const [loadingProxies, setLoadingProxies] = useState(false);
 
   useEffect(() => {
+    // Загружаем список прокси при монтировании компонента
+    loadProxies();
+    
     if (initialData) {
       const proxyString = typeof initialData.proxy === 'string'
         ? initialData.proxy
@@ -54,13 +61,14 @@ const AccountForm = ({ initialData, onClose, onSubmit }) => {
         cookies: Array.isArray(initialData.cookies)
           ? JSON.stringify(initialData.cookies, null, 2)
           : initialData.cookies || '',
-        proxyMode: parts.length === 4 ? 'auth' : 'basic',
+        proxyMode: initialData.proxyId ? 'list' : (parts.length === 4 ? 'advanced' : 'simple'),
         proxyString,
         proxyIP: ip,
         proxyPort: port,
         proxyLogin: login,
         proxyPassword: pass,
         proxyType: initialData.proxyType || 'http',
+        proxyId: initialData.proxyId || '',
         email: meta.email || '',
         twoFactorSecret: meta.twoFactorSecret || '',
         showAuthFields
@@ -70,6 +78,19 @@ const AccountForm = ({ initialData, onClose, onSubmit }) => {
       setRequires2FA(meta.requires2FA || false);
     }
   }, [initialData]);
+
+  const loadProxies = async () => {
+    setLoadingProxies(true);
+    try {
+      const response = await API.get('/api/v1/proxies');
+      setAvailableProxies(response.data);
+    } catch (error) {
+      toast.error('Ошибка при загрузке списка прокси');
+      console.error('Ошибка загрузки прокси:', error);
+    } finally {
+      setLoadingProxies(false);
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -86,6 +107,19 @@ const AccountForm = ({ initialData, onClose, onSubmit }) => {
   const checkProxy = async () => {
     setProxyStatus('Проверка...');
 
+    // Если выбран прокси из списка
+    if (form.proxyMode === 'list' && form.proxyId) {
+      try {
+        const response = await API.post(`/api/v1/proxies/${form.proxyId}/check`);
+        setProxyStatus(`✅ ${response.data.message || 'Прокси работает корректно'}`);
+        return;
+      } catch (error) {
+        setProxyStatus('❌ Прокси не работает или недоступен');
+        return;
+      }
+    }
+
+    // Стандартная проверка для ручного ввода
     let proxy = '';
     if (form.proxyMode !== 'fields') {
       proxy = form.proxyString.trim();
@@ -192,115 +226,86 @@ IP: ${data.ip}
     e.preventDefault();
     setError(null);
 
-    if (!form.name.trim()) {
-      setError('Название аккаунта обязательно');
-      return;
-    }
-    
-    // Проверяем, что куки указаны, если не используются учетные данные
-    if (!form.cookies.trim() && !form.showAuthFields) {
-      setError('Необходимо указать либо куки, либо учетные данные для входа');
-      return;
-    }
-
-    // Если показаны поля авторизации, проверяем их
-    if (form.showAuthFields && !form.email && !form.cookies.trim()) {
-      setError('Необходимо указать email для входа');
-      return;
-    }
-
-    let parsedCookies;
-    if (form.cookies.trim()) {
-      try {
-        // Пробуем распарсить cookies как JSON
-        parsedCookies = JSON.parse(form.cookies);
-        
-        // Если это строка, пробуем распарсить её как массив объектов
-        if (typeof parsedCookies === 'string') {
-          try {
-            parsedCookies = JSON.parse(parsedCookies);
-          } catch {
-            // Если не получилось распарсить как JSON, оставляем как строку
-            parsedCookies = form.cookies;
-          }
-        }
-        
-        // Если это не массив и не строка, выдаём ошибку
-        if (!Array.isArray(parsedCookies) && typeof parsedCookies !== 'string') {
-          throw new Error();
-        }
-      } catch {
-        setError('Невалидный формат cookies — нужен JSON-массив или строка!');
-        return;
-      }
-    }
-
-    let proxy = '';
-    if (form.proxyMode !== 'fields') {
-      proxy = form.proxyString.trim();
-      if (proxy && proxy.split(':').length !== 2 && proxy.split(':').length !== 4) {
-        setError('Формат прокси должен быть ip:port или ip:port:login:pass');
-        return;
-      }
-    } else {
-      const { proxyIP, proxyPort, proxyLogin, proxyPassword } = form;
-      if ((proxyIP || proxyPort) && (!proxyIP || !proxyPort)) {
-        setError('Если указываете прокси, то IP и порт обязательны');
-        return;
-      }
-      if (proxyIP && proxyPort) {
-        proxy = `${proxyIP}:${proxyPort}`;
-        if (proxyLogin || proxyPassword) {
-          proxy += `:${proxyLogin || ''}:${proxyPassword || ''}`;
-        }
-      }
-    }
-
-    const payload = {
-      _id: initialData?._id,
-      name: form.name.trim(),
-      proxy: proxy || undefined,
-      proxyType: form.proxyType,
-      status: 'неизвестно'
-    };
-
-    // Добавляем куки, если они есть
-    if (parsedCookies) {
-      payload.cookies = parsedCookies;
-    }
-
-    // Добавляем учетные данные, если они нужны
-    if (form.showAuthFields) {
-      if (form.email) payload.email = form.email;
-      if (form.password) payload.password = form.password;
-    }
-
-    // Добавляем код 2FA или секретный ключ, если указаны
-    if (requires2FA || form.twoFactorSecret) {
-      if (form.twoFactorSecret) {
-        payload.twoFactorSecret = form.twoFactorSecret;
-      }
-      if (form.twoFactorCode) {
-        payload.twoFactorCode = form.twoFactorCode;
-      }
-    }
-
     try {
-      const result = await onSubmit(payload);
+      // Проверяем и преобразуем куки
+      let parsedCookies = null;
       
-      // Проверяем, нужна ли 2FA
-      if (result?.requires2FA) {
-        setRequires2FA(true);
-        setError(result.message || 'Требуется верификация 2FA');
+      try {
+        if (form.cookies) {
+          const cookiesText = form.cookies.trim();
+          // Преобразуем текст в JSON
+          parsedCookies = JSON.parse(cookiesText);
+        }
+      } catch (cookieError) {
+        setError(`Ошибка формата cookies: ${cookieError.message}`);
+        return;
       }
-      
-    } catch (err) {
-      setError(err.message || 'Произошла ошибка при обработке аккаунта');
+
+      // Собираем данные для отправки
+      const accountData = {
+        name: form.name
+      };
+
+      // Добавляем данные о прокси в зависимости от режима
+      if (form.proxyMode === 'list' && form.proxyId) {
+        accountData.proxyId = form.proxyId;
+      } else if (form.proxyMode === 'simple' && form.proxyString) {
+        accountData.proxy = form.proxyString.trim();
+        accountData.proxyType = form.proxyType;
+      } else if (form.proxyMode === 'advanced') {
+        // Собираем прокси из отдельных полей
+        const { proxyIP, proxyPort, proxyLogin, proxyPassword } = form;
+        
+        if (proxyIP && proxyPort) {
+          if (proxyLogin || proxyPassword) {
+            accountData.proxy = `${proxyIP}:${proxyPort}:${proxyLogin || ''}:${proxyPassword || ''}`;
+          } else {
+            accountData.proxy = `${proxyIP}:${proxyPort}`;
+          }
+          accountData.proxyType = form.proxyType;
+        }
+      }
+
+      // Добавляем куки, если они есть
+      if (parsedCookies) {
+        accountData.cookies = parsedCookies;
+      }
+
+      // Добавляем учетные данные, если они нужны
+      if (form.showAuthFields) {
+        if (form.email) accountData.email = form.email;
+        if (form.password) accountData.password = form.password;
+      }
+
+      // Добавляем код 2FA или секретный ключ, если указаны
+      if (requires2FA || form.twoFactorSecret) {
+        if (form.twoFactorSecret) {
+          accountData.twoFactorSecret = form.twoFactorSecret;
+        }
+        if (form.twoFactorCode) {
+          accountData.twoFactorCode = form.twoFactorCode;
+        }
+      }
+
+      console.log('Отправка данных аккаунта:', accountData);
+
+      // Пробуем отправить данные
+      try {
+        if (onSubmit) {
+          await onSubmit(accountData);
+        }
+      } catch (error) {
+        console.error('Ошибка отправки формы:', error);
+        setError(error.response?.data?.error || 'Ошибка сохранения аккаунта');
+      }
+    } catch (error) {
+      console.error('Ошибка в обработке формы:', error);
+      setError(error.message || 'Произошла ошибка при обработке данных формы');
     }
   };
 
   const getProxyPlaceholder = () => {
-    if (form.proxyMode === 'basic') {
+    if (form.proxyMode === 'simple') {
       return 'Например: 192.168.1.1:8080';
     }
     return 'Например: 192.168.1.1:8080:username:password';
@@ -323,11 +328,8 @@ IP: ${data.ip}
           onChange={handleChange}
         />
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-          <label style={{ 
-            fontSize: '14px', 
-            fontWeight: '500'
-          }}>
+        <div className="form-group">
+          <label className="form-label">
             Cookies:
           </label>
           <textarea
@@ -347,44 +349,23 @@ IP: ${data.ip}
           />
         </div>
 
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          alignItems: 'center',
-          borderTop: '1px solid #eee',
-          paddingTop: '10px'
-        }}>
-          <span style={{ fontSize: '14px', fontWeight: '500' }}>
+        <div className="auth-toggle-container">
+          <span className="auth-toggle-label">
             {form.showAuthFields ? 'Скрыть данные для входа' : 'Указать данные для входа'}
           </span>
           <button 
             type="button" 
             onClick={toggleAuthFields}
-            style={{
-              background: 'none',
-              border: '1px solid #ccc',
-              borderRadius: '4px',
-              padding: '4px 8px',
-              fontSize: '14px',
-              cursor: 'pointer'
-            }}
+            className="toggle-button"
           >
             {form.showAuthFields ? '▲ Скрыть' : '▼ Показать'}
           </button>
         </div>
 
         {form.showAuthFields && (
-          <div style={{ 
-            display: 'flex', 
-            flexDirection: 'column', 
-            gap: '1rem',
-            backgroundColor: '#f9f9f9',
-            padding: '12px',
-            borderRadius: '5px',
-            marginTop: '-8px'
-          }}>
-            <div>
-              <label style={{ fontSize: '14px', fontWeight: '500', display: 'block', marginBottom: '5px' }}>
+          <div className="auth-fields-container">
+            <div className="form-group">
+              <label className="form-label">
                 Email для входа:
               </label>
               <Input
@@ -396,8 +377,8 @@ IP: ${data.ip}
               />
             </div>
             
-            <div>
-              <label style={{ fontSize: '14px', fontWeight: '500', display: 'block', marginBottom: '5px' }}>
+            <div className="form-group">
+              <label className="form-label">
                 Пароль:
               </label>
               <Input
@@ -407,25 +388,19 @@ IP: ${data.ip}
                 value={form.password}
                 onChange={handleChange}
               />
-              <small style={{ display: 'block', marginTop: '5px', color: '#666' }}>
+              <small className="form-hint">
                 Пароль не хранится на сервере после авторизации
               </small>
             </div>
 
             {(requires2FA || form.twoFactorSecret) && (
-              <div style={{ 
-                border: '1px solid #4dabf7', 
-                borderRadius: '5px', 
-                padding: '12px',
-                backgroundColor: '#e7f5ff',
-                marginTop: '5px'
-              }}>
-                <h4 style={{ margin: '0 0 10px 0', color: '#1971c2' }}>
+              <div className="twofa-container">
+                <h4 className="twofa-title">
                   <span role="img" aria-label="2FA">🔐</span> Двухфакторная аутентификация
                 </h4>
                 
-                <div style={{ marginBottom: '10px' }}>
-                  <label style={{ fontSize: '14px', fontWeight: '500', display: 'block', marginBottom: '5px' }}>
+                <div className="form-group">
+                  <label className="form-label">
                     Секретный ключ 2FA API:
                   </label>
                   <Input
@@ -434,16 +409,16 @@ IP: ${data.ip}
                     value={form.twoFactorSecret}
                     onChange={handleChange}
                   />
-                  <small style={{ display: 'block', marginTop: '5px', color: '#666' }}>
+                  <small className="form-hint">
                     Будет использован для автоматического получения кода через API
                   </small>
                 </div>
 
-                <div>
-                  <label style={{ fontSize: '14px', fontWeight: '500', display: 'block', marginBottom: '5px' }}>
+                <div className="form-group">
+                  <label className="form-label">
                     Код 2FA:
                   </label>
-                  <div style={{ display: 'flex', gap: '10px' }}>
+                  <div className="input-with-button">
                     <Input
                       name="twoFactorCode"
                       placeholder="Код двухфакторной аутентификации"
@@ -454,19 +429,12 @@ IP: ${data.ip}
                       type="button" 
                       onClick={verify2FA}
                       disabled={isCheckingTwoFactor}
-                      style={{
-                        background: '#4dabf7',
-                        border: 'none',
-                        borderRadius: '5px',
-                        padding: '0 15px',
-                        color: 'white',
-                        cursor: isCheckingTwoFactor ? 'wait' : 'pointer'
-                      }}
+                      className="verify-button"
                     >
                       {isCheckingTwoFactor ? 'Проверка...' : 'Получить код'}
                     </button>
                   </div>
-                  <small style={{ display: 'block', marginTop: '5px', color: '#666' }}>
+                  <small className="form-hint">
                     Введите код вручную или получите его автоматически
                   </small>
                 </div>
@@ -475,73 +443,105 @@ IP: ${data.ip}
           </div>
         )}
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-          <label style={{ 
-            fontSize: '14px', 
-            fontWeight: '500',
-          }}>
+        <div className="form-group">
+          <label className="form-label">
             Тип прокси:
           </label>
           <select 
             name="proxyType" 
             value={form.proxyType} 
             onChange={handleChange}
-            style={{
-              padding: '8px 12px',
-              borderRadius: '5px',
-              border: '1px solid #ccc',
-              backgroundColor: '#fff',
-              fontSize: '14px',
-              width: '100%',
-              marginBottom: '10px',
-              cursor: 'pointer',
-              outline: 'none'
-            }}
+            className="form-select"
           >
             <option value="http">HTTP/HTTPS</option>
             <option value="socks5">SOCKS5</option>
           </select>
         </div>
 
-        <label style={{ 
-          fontSize: '14px', 
-          fontWeight: '500',
-          marginBottom: '-8px'
-        }}>
-          Формат прокси:
-        </label>
-        <select 
-          name="proxyMode" 
-          value={form.proxyMode} 
-          onChange={handleChange}
-          style={{
-            padding: '8px 12px',
-            borderRadius: '5px',
-            border: '1px solid #ccc',
-            backgroundColor: '#fff',
-            fontSize: '14px',
-            width: '100%',
-            marginBottom: '10px',
-            cursor: 'pointer',
-            outline: 'none'
-          }}
-        >
-          <option value="basic" style={{ padding: '8px' }}>
-            IP:PORT — Базовый формат (например: 192.168.1.1:8080)
-          </option>
-          <option value="auth" style={{ padding: '8px' }}>
-            IP:PORT:LOGIN:PASS — С авторизацией (например: 192.168.1.1:8080:user:pass)
-          </option>
-          <option value="fields" style={{ padding: '8px' }}>
-            Ввести данные прокси в отдельных полях
-          </option>
-        </select>
+        <div className="form-group">
+          <label className="form-label">
+            Режим ввода прокси:
+          </label>
+          <div className="proxy-mode-container">
+            <button 
+              type="button" 
+              className={`proxy-mode-btn ${form.proxyMode === 'simple' ? 'active' : ''}`}
+              onClick={() => handleChange({ target: { name: 'proxyMode', value: 'simple' } })}
+            >
+              Простой
+            </button>
+            <button 
+              type="button" 
+              className={`proxy-mode-btn ${form.proxyMode === 'list' ? 'active' : ''}`}
+              onClick={() => handleChange({ target: { name: 'proxyMode', value: 'list' } })}
+            >
+              Из списка
+            </button>
+            <button 
+              type="button" 
+              className={`proxy-mode-btn ${form.proxyMode === 'advanced' ? 'active' : ''}`}
+              onClick={() => handleChange({ target: { name: 'proxyMode', value: 'advanced' } })}
+            >
+              Расширенный
+            </button>
+          </div>
+        </div>
 
-        {form.proxyMode !== 'fields' ? (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        {form.proxyMode === 'list' && (
+          <div className="form-group">
+            <label className="form-label">
+              Выберите прокси из списка:
+            </label>
+            {loadingProxies ? (
+              <p className="loading-text">Загрузка списка прокси...</p>
+            ) : (
+              <>
+                {availableProxies.length > 0 ? (
+                  <div className="proxy-select-container">
+                    <select 
+                      name="proxyId" 
+                      value={form.proxyId} 
+                      onChange={handleChange}
+                      className="form-select"
+                    >
+                      <option value="">-- Выберите прокси --</option>
+                      {availableProxies.map(proxy => (
+                        <option key={proxy._id} value={proxy._id}>
+                          {proxy.name || `${proxy.host}:${proxy.port}`} 
+                          ({proxy.type.toUpperCase()}) 
+                          {proxy.active !== undefined ? (proxy.active ? ' ✓ Активен' : ' ✗ Неактивен') : ''}
+                        </option>
+                      ))}
+                    </select>
+                    <Button type="button" onClick={checkProxy}>
+                      Проверить
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="no-proxies-container">
+                    <p className="no-proxies-text">
+                      Нет доступных прокси. 
+                    </p>
+                    <a 
+                      href="/proxies" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="add-proxy-link"
+                    >
+                      Добавить прокси
+                    </a>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        )}
+
+        {form.proxyMode === 'simple' && (
+          <div className="input-with-button">
             <Input
               name="proxyString"
-              placeholder={getProxyPlaceholder()}
+              placeholder="Например: 192.168.1.1:8080"
               value={form.proxyString}
               onChange={handleChange}
             />
@@ -549,9 +549,11 @@ IP: ${data.ip}
               Проверить
             </Button>
           </div>
-        ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            <div style={{ display: 'flex', gap: '0.5rem' }}>
+        )}
+
+        {form.proxyMode === 'advanced' && (
+          <div className="advanced-proxy-container">
+            <div className="proxy-row">
               <Input 
                 name="proxyIP" 
                 placeholder="IP адрес" 
@@ -567,7 +569,7 @@ IP: ${data.ip}
                 style={{ flex: 1 }}
               />
             </div>
-            <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <div className="proxy-row">
               <Input 
                 name="proxyLogin" 
                 placeholder="Логин (необязательно)" 
@@ -589,27 +591,13 @@ IP: ${data.ip}
         )}
 
         {proxyStatus && (
-          <div style={{ 
-            fontSize: '14px', 
-            color: proxyStatus.includes('✅') ? '#2ecc71' : '#e74c3c',
-            padding: '8px',
-            borderRadius: '4px',
-            backgroundColor: proxyStatus.includes('✅') ? '#eafaf1' : '#fdeaea',
-            marginTop: '4px',
-            whiteSpace: 'pre-line'
-          }}>
+          <div className={`proxy-status ${proxyStatus.includes('✅') ? 'success' : 'error'}`}>
             {proxyStatus}
           </div>
         )}
 
         {error && (
-          <div style={{ 
-            color: '#e74c3c', 
-            fontSize: '14px',
-            padding: '8px',
-            borderRadius: '4px',
-            backgroundColor: '#fdeaea'
-          }}>
+          <div className="error-message">
             ⚠️ {error}
           </div>
         )}

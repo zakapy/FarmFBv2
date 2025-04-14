@@ -37,10 +37,10 @@
 }
 
 .logout-button {
-  color: #e74c3c;
+  color: #1976d2;
   font-weight: 600;
 }
 
 .logout-button:hover {
-  background: rgba(231, 76, 60, 0.1);
+  background: rgba(25, 118, 210, 0.1);
 }
