@@ -390,3 +390,20 @@ Call log:
 [2025-04-14 17:06:43] [31merror[39m: Ошибка при проверке через Dolphin: Не удалось запустить профиль Dolphin: Invalid URL
 [2025-04-14 17:11:55] [31merror[39m: Ошибка при запуске профиля: Invalid URL
 [2025-04-14 17:11:55] [31merror[39m: Не удалось запустить профиль Dolphin: Invalid URL
+[2025-04-14 17:15:59] [31merror[39m: Ошибка при запуске профиля: Invalid URL
+[2025-04-14 17:15:59] [31merror[39m: Не удалось запустить профиль Dolphin: Invalid URL
+[2025-04-14 17:17:59] [31merror[39m: Не удалось импортировать cookies: Invalid URL
+[2025-04-14 17:18:08] [31merror[39m: Ошибка при остановке профиля Dolphin Anty: Invalid URL
+[2025-04-14 17:18:08] [31merror[39m: Не удалось импортировать cookies: Invalid URL
+[2025-04-14 17:22:01] [31merror[39m: Error: Invalid or expired refresh token
+    at exports.handleRefreshToken (C:\Users\Administrator\Desktop\CODDING\FARMMAIN\backend\src\services\authService.js:70:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async exports.refreshToken (C:\Users\Administrator\Desktop\CODDING\FARMMAIN\backend\src\controllers\authController.js:47:20)
+[2025-04-14 17:22:09] [31merror[39m: Ошибка при запуске профиля: Request failed with status code 500
+[2025-04-14 17:22:09] [31merror[39m: Статус: 500
+[2025-04-14 17:22:09] [31merror[39m: Данные: {"error":"gct: Profile ID 596559042 already running","errorObject":{"name":"gct","text":"Profile ID 596559042 already running","code":"E_BROWSER_RUN_DUPLICATE"}}
+[2025-04-14 17:22:09] [31merror[39m: Не удалось запустить профиль Dolphin: Request failed with status code 500
+[2025-04-14 17:22:17] [31merror[39m: Не удалось импортировать cookies: env is not defined
+[2025-04-14 17:23:06] [31merror[39m: Не удалось импортировать cookies: env is not defined
+[2025-04-14 17:23:14] [31merror[39m: Ошибка при остановке профиля Dolphin Anty: env is not defined
+[2025-04-14 17:23:14] [31merror[39m: Не удалось импортировать cookies: env is not defined

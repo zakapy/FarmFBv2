@@ -404,7 +404,7 @@ exports.checkStatus = async (req, res) => {
     logger.info(`Запускаем профиль Dolphin #${account.dolphin.profileId} для проверки авторизации`);
     
     try {
-      // Запускаем браузерный профиль
+      // Используем тот же метод запуска профиля, что и в скрипте фарминга
       const browserResult = await dolphinService.startProfile(account.dolphin.profileId);
       
       if (!browserResult.success) {
@@ -472,8 +472,8 @@ exports.checkStatus = async (req, res) => {
       logger.error(`Ошибка при проверке через Dolphin: ${profileError.message}`);
       
       // Если не удалось проверить через Dolphin, пробуем стандартную проверку куки
-      const isAuthenticated = await checkFacebookCookies(account.cookies);
-      const status = isAuthenticated ? 'активен' : 'неактивен';
+      const cookieCheck = await facebookAuthService.verifyCookies(account.cookies);
+      const status = cookieCheck.isValid ? 'активен' : 'неактивен';
       
       // Обновляем статус в БД
       const updated = await accountService.update(req.user.id, id, { status });
@@ -481,7 +481,7 @@ exports.checkStatus = async (req, res) => {
       return res.json({ 
         success: true, 
         status,
-        requiresCredentials: !isAuthenticated && account.meta && account.meta.email,
+        requiresCredentials: !cookieCheck.isValid && account.meta && account.meta.email,
         message: 'Проверка выполнена без запуска профиля. Рекомендуется перезапустить Dolphin Anty.'
       });
     }
@@ -601,7 +601,7 @@ exports.reloginAccount = async (req, res) => {
     logger.info(`Запускаем профиль Dolphin #${account.dolphin.profileId} для авторизации`);
     
     try {
-      // Запускаем браузерный профиль
+      // Запускаем браузерный профиль используя улучшенный метод
       const browserResult = await dolphinService.startProfile(account.dolphin.profileId);
       
       if (!browserResult.success) {
