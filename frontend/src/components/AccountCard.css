@@ -1,95 +1,219 @@
 .account-card {
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 1rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 1rem;
-    box-shadow: 0 1px 3px var(--shadow);
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  box-shadow: 0 1px 3px var(--shadow);
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.account-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-end;
+  min-width: 160px;
+}
+
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.btn-row {
+  display: flex;
+  gap: 5px;
+  justify-content: flex-end;
+}
+
+/* Стили для информации о Dolphin Anty */
+.dolphin-badge {
+  background-color: #e0f7fa;
+  border: 1px solid #80deea;
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 12px;
+  color: #0277bd;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 5px;
+}
+
+.dolphin-icon {
+  font-size: 14px;
+}
+
+/* Стили для бейджа 2FA */
+.twofa-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 5px;
+  background-color: #fff3e0;
+  border: 1px solid #ffcc80;
+  border-radius: 4px;
+  padding: 5px 8px;
+  font-size: 13px;
+  color: #e65100;
+}
+
+.btn-small {
+  padding: 2px 6px;
+  background-color: #ff9800;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-small:hover {
+  background-color: #f57c00;
+}
+
+.auth-btn {
+  background-color: #2196f3;
+  color: white;
+}
+
+.auth-btn:hover {
+  background-color: #1976d2;
+}
+
+/* Стили для кнопок */
+.btn-icon {
+  padding: 4px;
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  border-radius: 6px;
+  font-size: 16px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 5px;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.btn-icon:hover {
+  transform: scale(1.05);
+}
+
+.btn-secondary {
+  background-color: #f0f0f0;
+  color: #444;
+}
+
+.btn-secondary:hover {
+  background-color: #e0e0e0;
+}
+
+.btn-primary {
+  background-color: #ffebee;
+  color: #d32f2f;
+}
+
+.btn-primary:hover {
+  background-color: #ffcdd2;
+}
+
+/* Стили для спиннера */
+.spinner.small {
+  width: 14px;
+  height: 14px;
+  border: 2px solid white;
+  border-top: 2px solid transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-right: 6px;
+}
+
+/* Анимация вращения для спиннера */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
-  
-  .actions {
-    display: flex;
-    gap: 0.5rem;
-    flex-shrink: 0;
-  }
-  .account-card {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1.2rem;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    transition: box-shadow 0.3s ease;
-  }
-  
-  .account-card:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
-  
-  .actions {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    justify-content: flex-end;
-    min-width: 160px;
-  }
-  
-  .account-card {
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 1.2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 1rem;
-    box-shadow: 0 1px 3px var(--shadow);
-    transition: box-shadow 0.3s ease;
-  }
-  
-  .account-card:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
-  
-  .actions {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    align-items: flex-end;
-    min-width: 160px;
-  }
-  
-  .action-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    width: 100%;
-  }
-  
-  .btn-row {
-    display: flex;
-    gap: 5px;
-    justify-content: flex-end;
-  }
-  
-  /* Стили для информации о Dolphin Anty */
-  .dolphin-badge {
-    background-color: #e0f7fa;
-    border: 1px solid #80deea;
-    border-radius: 4px;
-    padding: 2px 6px;
-    font-size: 12px;
-    color: #0277bd;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    margin-left: 5px;
-  }
-  
-  .dolphin-icon {
-    font-size: 14px;
-  }
+}
+
+/* Стили для кнопок разных статусов */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  font-size: 14px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.3s ease;
+  min-width: 130px;
+  height: 40px;
+}
+
+.btn.default {
+  background-color: #1976d2;
+  color: white;
+}
+
+.btn.default:hover {
+  background-color: #1565c0;
+}
+
+.btn.checking {
+  background-color: #9e9e9e;
+  color: white;
+  cursor: wait;
+}
+
+.btn.success {
+  background-color: #4caf50;
+  color: white;
+}
+
+.btn.error {
+  background-color: #f44336;
+  color: white;
+}
+
+.btn.secondary {
+  background-color: #ff9800;
+  color: white;
+}
+
+.btn.secondary:hover {
+  background-color: #f57c00;
+}
+
+/* Стили для информации об учетных данных */
+.credentials-info {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+}
+
+.credentials-info.has-credentials {
+  color: #2e7d32;
+}
+
+.credentials-info.no-credentials {
+  color: #757575;
+}

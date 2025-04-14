@@ -370,3 +370,23 @@ Node.js v22.14.0
     at exports.handleRefreshToken (C:\Users\Administrator\Desktop\CODDING\FARMMAIN\backend\src\services\authService.js:70:11)
     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
     at async exports.refreshToken (C:\Users\Administrator\Desktop\CODDING\FARMMAIN\backend\src\controllers\authController.js:47:20)
+[2025-04-14 16:50:15] [31merror[39m: Error: Invalid or expired refresh token
+    at exports.handleRefreshToken (C:\Users\Administrator\Desktop\CODDING\FARMMAIN\backend\src\services\authService.js:70:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async exports.refreshToken (C:\Users\Administrator\Desktop\CODDING\FARMMAIN\backend\src\controllers\authController.js:47:20)
+[2025-04-14 17:04:33] [31merror[39m: Ошибка при запуске профиля: Invalid URL
+[2025-04-14 17:04:33] [31merror[39m: Ошибка при проверке авторизации через Dolphin: Не удалось запустить профиль Dolphin: Invalid URL
+[2025-04-14 17:04:33] [31merror[39m: Ошибка при проверке через Dolphin: Не удалось запустить профиль Dolphin: Invalid URL
+[2025-04-14 17:05:25] [31merror[39m: [Farm 67fd161fe0d198c24c29867e] Error: ❌ Ошибка фарминга: Не удалось загрузить Facebook
+[2025-04-14 17:05:25] [31merror[39m: [Farm 67fd161fe0d198c24c29867e] Error: Ошибка при создании скриншота: page.screenshot: Target page, context or browser has been closed
+[2025-04-14 17:05:27] [31merror[39m: [Farm 67fd161fe0d198c24c298678] Error: ❌ Ошибка фарминга: Аккаунт не авторизован в Facebook
+[2025-04-14 17:05:27] [31merror[39m: [Farm 67fd161fe0d198c24c298678] Error: Ошибка при создании скриншота: page.screenshot: Target page, context or browser has been closed
+Call log:
+[2m  - taking page screenshot[22m
+[2m  - waiting for fonts to load...[22m
+[2m  - fonts loaded[22m
+[2025-04-14 17:06:43] [31merror[39m: Ошибка при запуске профиля: Invalid URL
+[2025-04-14 17:06:43] [31merror[39m: Ошибка при проверке авторизации через Dolphin: Не удалось запустить профиль Dolphin: Invalid URL
+[2025-04-14 17:06:43] [31merror[39m: Ошибка при проверке через Dolphin: Не удалось запустить профиль Dolphin: Invalid URL
+[2025-04-14 17:11:55] [31merror[39m: Ошибка при запуске профиля: Invalid URL
+[2025-04-14 17:11:55] [31merror[39m: Не удалось запустить профиль Dolphin: Invalid URL

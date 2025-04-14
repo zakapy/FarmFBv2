@@ -1,3 +1,4 @@
+
 const { z } = require('zod');
 
 // Схема для одной куки
@@ -31,6 +32,9 @@ exports.createAccountSchema = z.object({
     proxy: z.string().optional(),
     proxyType: z.enum(['http', 'socks5']).optional().default('http'),
     status: z.string().optional().default('неизвестно'),
+    email: z.string().email().optional(),
+    password: z.string().optional(),
+    twoFactorSecret: z.string().optional(),
     meta: z.record(z.any()).optional()
   })
 });
@@ -45,6 +49,10 @@ exports.updateAccountSchema = z.object({
     proxy: z.string().optional(),
     proxyType: z.enum(['http', 'socks5']).optional(),
     status: z.string().optional(),
+    email: z.string().email().optional(),
+    password: z.string().optional(),
+    twoFactorSecret: z.string().optional(),
+    twoFactorCode: z.string().optional(),
     meta: z.record(z.any()).optional()
   })
 });
@@ -52,5 +60,17 @@ exports.updateAccountSchema = z.object({
 exports.deleteAccountSchema = z.object({
   params: z.object({
     id: z.string().min(1, 'ID аккаунта обязателен')
+  })
+});
+
+exports.verify2FASchema = z.object({
+  params: z.object({
+    id: z.string().min(1, 'ID аккаунта обязателен')
+  }),
+  body: z.object({
+    twoFactorCode: z.string().optional(),
+    twoFactorSecret: z.string().optional()
+  }).refine(data => data.twoFactorCode || data.twoFactorSecret, {
+    message: 'Необходимо указать либо код 2FA, либо секретный ключ'
   })
 });

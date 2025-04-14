@@ -1,19 +1,20 @@
+/**
+ * Расширенный сервис Dolphin Anty с поддержкой автоматизации авторизации Facebook
+ */
 const axios = require('axios');
 const logger = require('../config/logger');
 const env = require('../config/env');
+const { chromium } = require('playwright');
 
-/**
- * Сервис для работы с Dolphin Anty API
- */
-const dolphinService = {
+class DolphinService {
   /**
    * Создает профиль в Dolphin Anty
    * @param {Object} account - Объект аккаунта из базы данных
    * @returns {Promise<Object>} - Созданный профиль в Dolphin Anty
    */
-  createProfile: async (account) => {
+  async createProfile(account) {
     try {
-      logger.info(`Creating Dolphin Anty profile for account: ${account.name || account._id}`);
+      logger.info(`Создание профиля Dolphin Anty для аккаунта: ${account.name || account._id}`);
 
       const url = `${env.DOLPHIN_API_URL}/browser_profiles`;
       
@@ -124,17 +125,16 @@ const dolphinService = {
         const proxyParts = account.proxy.split(':');
         
         if (proxyParts.length >= 2) {
-          // Определяем тип прокси - по умолчанию http, если не указано иное
+          // Определяем тип прокси
           let proxyType = "http";
           
-          // Проверяем, есть ли в аккаунте информация о типе прокси
           if (account.proxyType && (account.proxyType === "http" || account.proxyType === "socks5")) {
             proxyType = account.proxyType;
           }
           
           payload.proxy.host = proxyParts[0];
           payload.proxy.port = proxyParts[1];
-          payload.proxy.type = proxyType; // используем определенный тип
+          payload.proxy.type = proxyType;
           
           if (proxyParts.length >= 4) {
             payload.proxy.login = proxyParts[2];
@@ -177,14 +177,14 @@ const dolphinService = {
         originalResponse: response.data
       };
     } catch (error) {
-      logger.error(`Failed to create Dolphin profile: ${error.message}`);
+      logger.error(`Не удалось создать профиль Dolphin: ${error.message}`);
       if (error.response) {
-        logger.error(`Status: ${error.response.status}`);
-        logger.error(`Data: ${JSON.stringify(error.response.data)}`);
+        logger.error(`Статус: ${error.response.status}`);
+        logger.error(`Данные: ${JSON.stringify(error.response.data)}`);
       }
       throw new Error(`Ошибка создания профиля Dolphin: ${error.message}`);
     }
-  },
+  }
   
   /**
    * Импортирует cookies в профиль Dolphin Anty
@@ -192,9 +192,9 @@ const dolphinService = {
    * @param {Number} profileId - ID профиля в Dolphin Anty
    * @returns {Promise<Object>} - Результат импорта cookies
    */
-  importCookies: async (cookies, profileId) => {
+  async importCookies(cookies, profileId) {
     try {
-      logger.info(`Importing cookies for Dolphin profile: ${profileId}`);
+      logger.info(`Импортируем cookies для профиля Dolphin: ${profileId}`);
       
       let cookiesArray = cookies;
       
@@ -203,14 +203,14 @@ const dolphinService = {
         try {
           cookiesArray = JSON.parse(cookies);
         } catch (e) {
-          logger.error(`Invalid cookies format: ${e.message}`);
+          logger.error(`Неверный формат cookies: ${e.message}`);
           throw new Error('Неверный формат cookies');
         }
       }
       
       // Убедимся, что у нас массив
       if (!Array.isArray(cookiesArray)) {
-        logger.error('Cookies must be an array');
+        logger.error('Cookies должны быть массивом');
         throw new Error('Cookies должны быть массивом');
       }
 
@@ -235,13 +235,12 @@ const dolphinService = {
       logger.info(`Успешно импортированы cookies для профиля ${profileId}`);
       return response.data;
     } catch (error) {
-      logger.error(`Failed to import cookies: ${error.message}`);
+      logger.error(`Не удалось импортировать cookies: ${error.message}`);
       if (error.response) {
-        logger.error(`Status: ${error.response.status}`);
-        logger.error(`Data: ${JSON.stringify(error.response.data)}`);
+        logger.error(`Статус: ${error.response.status}`);
+        logger.error(`Данные: ${JSON.stringify(error.response.data)}`);
       }
       
-      // Возвращаем информацию об ошибке, но не прерываем процесс
       return { 
         success: false, 
         message: 'Cookies не были импортированы', 
@@ -249,6 +248,449 @@ const dolphinService = {
       };
     }
   }
-};
 
-module.exports = dolphinService;
+  /**
+   * Запускает профиль браузера Dolphin Anty
+   * @param {Number} profileId - ID профиля Dolphin Anty
+   * @returns {Promise<Object>} - Результат запуска {success, browser, page, error}
+   */
+  async startProfile(profileId) {
+    try {
+      logger.info(`Запускаем профиль Dolphin Anty с ID: ${profileId}`);
+
+      // Формируем URL для запуска профиля
+      const apiUrl = `${env.DOLPHIN_LOCAL_API_URL}/v1.0/browser_profiles/${profileId}/start?automation=1`;
+      
+      // Отправляем запрос на запуск
+      const response = await axios.get(apiUrl);
+      
+      if (!response.data.success) {
+        throw new Error(`Ошибка запуска профиля: ${response.data.error || 'Неизвестная ошибка'}`);
+      }
+      
+      // Получаем данные для подключения
+      const port = response.data.automation.port;
+      const wsEndpoint = response.data.automation.wsEndpoint;
+      const wsUrl = `ws://127.0.0.1:${port}${wsEndpoint}`;
+      
+      logger.info(`Профиль запущен успешно. WebSocket URL: ${wsUrl}`);
+      
+      // Подключаемся к браузеру через Playwright
+      const browser = await chromium.connectOverCDP(wsUrl);
+      
+      if (!browser.isConnected()) {
+        throw new Error('Браузер не подключен');
+      }
+
+      logger.info('Браузер подключен успешно');
+      
+      // Получаем существующий контекст (в Dolphin Anty он уже создан)
+      const contexts = browser.contexts();
+      if (!contexts.length) {
+        throw new Error('Нет доступных контекстов браузера');
+      }
+      
+      const context = contexts[0];
+      logger.info('Контекст браузера получен');
+      
+      // Создаем новую страницу
+      const page = await context.newPage();
+      logger.info('Новая страница создана');
+      
+      return {
+        success: true,
+        browser,
+        context,
+        page
+      };
+    } catch (error) {
+      logger.error(`Ошибка при запуске профиля: ${error.message}`);
+      return {
+        success: false,
+        error: error.message
+      };
+    }
+  }
+
+  /**
+   * Останавливает профиль браузера Dolphin Anty
+   * @param {Number} profileId - ID профиля Dolphin Anty
+   * @param {Object} browser - Объект браузера Playwright
+   * @returns {Promise<boolean>} - Успешность операции
+   */
+  async stopProfile(profileId, browser) {
+    try {
+      // Сначала закрываем браузер Playwright, если он открыт
+      if (browser && browser.isConnected()) {
+        await browser.close();
+        logger.info('Браузер Playwright закрыт');
+      }
+      
+      if (profileId) {
+        logger.info(`Останавливаем профиль Dolphin Anty с ID: ${profileId}`);
+        
+        // Формируем URL для остановки профиля
+        const apiUrl = `${env.DOLPHIN_LOCAL_API_URL}/v1.0/browser_profiles/${profileId}/stop`;
+        
+        // Отправляем запрос на остановку
+        const response = await axios.get(apiUrl);
+        
+        if (response.data && response.data.success) {
+          logger.info('Профиль Dolphin Anty успешно остановлен');
+          return true;
+        } else {
+          logger.warn('Получен неуспешный ответ от API при остановке профиля:', response.data);
+          return false;
+        }
+      } else {
+        logger.warn('ID профиля не задан, невозможно остановить');
+        return false;
+      }
+    } catch (error) {
+      logger.error(`Ошибка при остановке профиля Dolphin Anty: ${error.message}`);
+      if (error.response) {
+        logger.error('Статус ответа:', error.response.status);
+        logger.error('Данные ответа:', error.response.data);
+      }
+      return false;
+    }
+  }
+
+  /**
+   * Переходит на страницу Facebook
+   * @param {Object} page - Объект страницы Playwright
+   * @returns {Promise<boolean>} - Успешность операции
+   */
+  async navigateToFacebook(page) {
+    try {
+      logger.info('Переходим на Facebook...');
+      
+      // Пробуем сначала с более строгим ожиданием, но с меньшим таймаутом
+      try {
+        await page.goto('https://www.facebook.com', { 
+          waitUntil: 'networkidle',
+          timeout: 20000 // уменьшаем таймаут до 20 секунд
+        });
+        logger.info('Перешли на Facebook (networkidle)');
+        return true;
+      } catch (navError) {
+        logger.warn(`Не удалось загрузить Facebook с ожиданием networkidle: ${navError.message}`);
+        
+        try {
+          // Пробуем с более мягким ожиданием
+          await page.goto('https://www.facebook.com', { 
+            waitUntil: 'load', // ждем только событие load
+            timeout: 20000
+          });
+          logger.info('Перешли на Facebook (load event)');
+          
+          // Дополнительно ждем несколько секунд для завершения AJAX запросов
+          await page.waitForTimeout(5000);
+          return true;
+        } catch (secondError) {
+          logger.warn(`Не удалось загрузить Facebook и со вторым методом: ${secondError.message}`);
+          
+          try {
+            // Последняя попытка с ожиданием только домашнего URL
+            await page.goto('https://www.facebook.com', { 
+              waitUntil: 'domcontentloaded', // ждем только загрузки DOM
+              timeout: 30000
+            });
+            logger.info('Перешли на Facebook (domcontentloaded)');
+            
+            // Дополнительное ожидание для загрузки данных
+            await page.waitForTimeout(8000);
+            return true;
+          } catch (thirdError) {
+            logger.error(`Не удалось загрузить Facebook после трех попыток: ${thirdError.message}`);
+            return false;
+          }
+        }
+      }
+    } catch (error) {
+      logger.error(`Ошибка при навигации на Facebook: ${error.message}`);
+      return false;
+    }
+  }
+
+  /**
+   * Проверяет статус авторизации на Facebook
+   * @param {Object} page - Объект страницы Playwright
+   * @returns {Promise<Object>} - Результат проверки авторизации
+   */
+  async checkFacebookAuth(page) {
+    try {
+      logger.info('Проверка авторизации на Facebook...');
+      
+      // Ждем, пока страница загрузится
+      await page.waitForTimeout(3000);
+      
+      // Проверяем, есть ли элементы, указывающие на то, что мы не авторизованы
+      const loginForm = await page.$('form[action*="login"]');
+      const createAccountButton = await page.$('a[data-testid="open-registration-form-button"]');
+      
+      // Проверяем наличие элементов авторизованного пользователя
+      const userMenu = await page.$('[aria-label="Your profile"], [aria-label="Ваш профиль"], [aria-label="Твій профіль"]');
+      
+      // Делаем скриншот для анализа
+      await page.screenshot({ path: 'auth_check.png' });
+      
+      if ((loginForm || createAccountButton) && !userMenu) {
+        logger.info('❌ Аккаунт не авторизован в Facebook');
+        return {
+          isAuthenticated: false,
+          elements: {
+            loginForm: !!loginForm,
+            createAccountButton: !!createAccountButton,
+            userMenu: !!userMenu
+          }
+        };
+      }
+      
+      // Дополнительная проверка - пытаемся найти имя пользователя
+      let username = null;
+      try {
+        username = await page.evaluate(() => {
+          // Ищем имя профиля в разных местах интерфейса
+          const nameElement = document.querySelector('[aria-label="Your profile"] span, [aria-label="Ваш профиль"] span, [aria-label="Твій профіль"] span');
+          if (nameElement) return nameElement.innerText;
+          return null;
+        });
+      } catch (e) {
+        logger.warn('Не удалось получить имя пользователя:', e.message);
+      }
+      
+      logger.info(`✅ Аккаунт авторизован в Facebook${username ? ` (${username})` : ''}`);
+      return {
+        isAuthenticated: true,
+        username
+      };
+    } catch (error) {
+      logger.error(`Ошибка при проверке авторизации: ${error.message}`);
+      return {
+        isAuthenticated: false,
+        error: error.message
+      };
+    }
+  }
+
+  /**
+   * Авторизуется на Facebook с логином и паролем
+   * @param {Object} page - Объект страницы Playwright
+   * @param {string} email - Facebook email или телефон
+   * @param {string} password - Facebook пароль
+   * @returns {Promise<Object>} - Результат авторизации
+   */
+  async loginToFacebook(page, email, password) {
+    try {
+      logger.info(`Выполняем вход в Facebook с email: ${email}`);
+      
+      // Проверяем, что мы на странице входа
+      const currentUrl = page.url();
+      
+      if (!currentUrl.includes('facebook.com')) {
+        await this.navigateToFacebook(page);
+      }
+      
+      // Проверяем, авторизованы ли мы уже
+      const authStatus = await this.checkFacebookAuth(page);
+      if (authStatus.isAuthenticated) {
+        logger.info('Аккаунт уже авторизован');
+        return {
+          success: true,
+          message: 'Аккаунт уже авторизован'
+        };
+      }
+      
+      // Заполняем форму
+      logger.info('Заполняем форму авторизации...');
+      
+      try {
+        // Находим и заполняем поле email
+        await page.fill('input[name="email"]', email);
+        // Находим и заполняем поле пароля
+        await page.fill('input[name="pass"]', password);
+        
+        // Нажимаем кнопку входа
+        await page.click('button[name="login"]');
+        
+        // Ждем перенаправления или появления ошибки
+        await page.waitForTimeout(5000);
+        
+        // Делаем скриншот для анализа
+        await page.screenshot({ path: 'login_result.png' });
+        
+        // Проверяем наличие ошибки входа
+        const errorElement = await page.$('div[role="alert"]');
+        if (errorElement) {
+          const errorText = await errorElement.innerText();
+          logger.error(`Ошибка входа: ${errorText}`);
+          return {
+            success: false,
+            error: errorText
+          };
+        }
+        
+        // Проверяем, требуется ли двухфакторная аутентификация
+        const requires2FA = await page.$('input[name="approvals_code"]');
+        if (requires2FA) {
+          logger.info('Требуется двухфакторная аутентификация');
+          
+          // Получаем дополнительную информацию о методе 2FA
+          const twoFactorInfoText = await page.evaluate(() => {
+            const infoElement = document.querySelector('.login_form_container #approvals_code');
+            return infoElement ? infoElement.innerText : '';
+          });
+          
+          return {
+            success: true,
+            requiresTwoFactor: true,
+            twoFactorInfo: {
+              method: 'authenticator',
+              infoText: twoFactorInfoText
+            }
+          };
+        }
+        
+        // Проверяем успешность входа
+        const newAuthStatus = await this.checkFacebookAuth(page);
+        if (newAuthStatus.isAuthenticated) {
+          logger.info('Вход успешно выполнен');
+          return {
+            success: true
+          };
+        } else {
+          logger.warn('Вход не выполнен, но ошибки не обнаружены. Возможно, требуется дополнительная проверка.');
+          return {
+            success: false,
+            error: 'Не удалось авторизоваться. Проверьте учетные данные или наличие дополнительных проверок.'
+          };
+        }
+      } catch (formError) {
+        logger.error(`Ошибка при заполнении формы входа: ${formError.message}`);
+        return {
+          success: false,
+          error: `Ошибка при заполнении формы: ${formError.message}`
+        };
+      }
+    } catch (error) {
+      logger.error(`Ошибка при входе в Facebook: ${error.message}`);
+      return {
+        success: false,
+        error: error.message
+      };
+    }
+  }
+
+  /**
+   * Вводит код 2FA на странице подтверждения
+   * @param {Object} page - Объект страницы Playwright
+   * @param {string} otpCode - Код 2FA
+   * @returns {Promise<Object>} - Результат верификации
+   */
+  async enter2FACode(page, otpCode) {
+    try {
+      logger.info(`Вводим код 2FA: ${otpCode}`);
+      
+      // Проверяем, что мы на странице 2FA
+      const is2FAPage = await page.$('input[name="approvals_code"]');
+      if (!is2FAPage) {
+        logger.warn('Не обнаружена страница ввода 2FA кода');
+        
+        // Если мы не на странице 2FA, проверяем, авторизованы ли мы уже
+        const authStatus = await this.checkFacebookAuth(page);
+        if (authStatus.isAuthenticated) {
+          logger.info('Аккаунт уже авторизован, 2FA не требуется');
+          return {
+            success: true,
+            message: 'Аккаунт уже авторизован, 2FA не требуется'
+          };
+        }
+        
+        return {
+          success: false,
+          error: 'Не обнаружена страница ввода 2FA кода'
+        };
+      }
+      
+      // Вводим код
+      await page.fill('input[name="approvals_code"]', otpCode);
+      
+      // Нажимаем кнопку "Продолжить"
+      await page.click('button[type="submit"]');
+      
+      // Ждем перенаправления
+      await page.waitForTimeout(5000);
+      
+      // Делаем скриншот для анализа
+      await page.screenshot({ path: '2fa_result.png' });
+      
+      // Проверяем наличие ошибки ввода кода
+      const errorElement = await page.$('div[role="alert"]');
+      if (errorElement) {
+        const errorText = await errorElement.innerText();
+        logger.error(`Ошибка при вводе 2FA кода: ${errorText}`);
+        return {
+          success: false,
+          error: errorText
+        };
+      }
+      
+      // Если есть кнопка "Запомнить устройство", нажимаем на неё
+      const saveDeviceButton = await page.$('button[value="dont_save"]');
+      if (saveDeviceButton) {
+        await saveDeviceButton.click();
+        await page.waitForTimeout(3000);
+      }
+      
+      // Проверяем, авторизованы ли мы
+      const authStatus = await this.checkFacebookAuth(page);
+      if (authStatus.isAuthenticated) {
+        logger.info('2FA успешно пройдена, аккаунт авторизован');
+        return {
+          success: true
+        };
+      } else {
+        logger.warn('2FA не пройдена, аккаунт не авторизован');
+        return {
+          success: false,
+          error: 'Не удалось пройти 2FA. Проверьте код или наличие дополнительных проверок.'
+        };
+      }
+    } catch (error) {
+      logger.error(`Ошибка при вводе 2FA кода: ${error.message}`);
+      return {
+        success: false,
+        error: error.message
+      };
+    }
+  }
+
+  /**
+   * Извлекает куки из страницы
+   * @param {Object} page - Объект страницы Playwright
+   * @returns {Promise<Array>} - Массив куки
+   */
+  async extractCookies(page) {
+    try {
+      logger.info('Извлекаем куки из страницы...');
+      
+      // Получаем все куки из контекста страницы
+      const cookies = await page.context().cookies();
+      
+      // Фильтруем только куки с доменом facebook.com
+      const facebookCookies = cookies.filter(cookie => 
+        cookie.domain.includes('facebook.com')
+      );
+      
+      logger.info(`Извлечено ${facebookCookies.length} куки Facebook`);
+      
+      return facebookCookies;
+    } catch (error) {
+      logger.error(`Ошибка при извлечении куки: ${error.message}`);
+      return [];
+    }
+  }
+}
+
+module.exports = new DolphinService();
