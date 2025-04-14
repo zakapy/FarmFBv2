@@ -44,4 +44,4 @@ const proxySchema = new mongoose.Schema({
   timestamps: true
 });
 
-module.exports = mongoose.model('Proxy', proxySchema);
+module.exports = mongoose.model('Proxy', proxySchema); 

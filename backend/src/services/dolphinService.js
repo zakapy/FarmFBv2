@@ -4,6 +4,7 @@
 const axios = require('axios');
 const logger = require('../config/logger');
 const { chromium } = require('playwright');
+const { v4: uuidv4 } = require('uuid');
 
 class DolphinService {
   constructor() {
@@ -21,180 +22,206 @@ class DolphinService {
 
   /**
    * Создает профиль в Dolphin Anty
-   * @param {Object} account - Объект аккаунта из базы данных
-   * @returns {Promise<Object>} - Созданный профиль в Dolphin Anty
+   * @param {Object} data - Данные для создания профиля
+   * @returns {Promise<Object>} - Результат создания профиля
    */
-  async createProfile(account) {
+  async createProfile(data) {
     try {
-      logger.info(`Создание профиля Dolphin Anty для аккаунта: ${account.name || account._id}`);
-
-      const url = `${this.apiUrl}/browser_profiles`;
+      logger.info(`Создаем профиль Dolphin с данными: ${JSON.stringify(data, null, 2)}`);
       
-      // Генерируем уникальное имя профиля
-      const profileName = `Profile ${account.name || account._id}`;
+      // Генерируем имя профиля
+      const profileName = data.name || `FB Profile ${uuidv4().substring(0, 8)}`;
       
+      // Подготавливаем данные для запроса
       const payload = {
-        "homepages": [],
-        "newHomepages": [],
-        "name": profileName,
-        "tags": [],
-        "platform": "windows",
-        "browserType": "anty",
-        "mainWebsite": "",
-        "useragent": {
-          "mode": "manual",
-          "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+        name: profileName,
+        tags: ["FarmFB"],
+        platform: "windows", // или 'mac' если требуется
+        browser: {
+          name: "mimic",
+          version: "120"
         },
-        "deviceName": {
-          "mode": "off",
-          "value": null
+        webrtc: {
+          mode: "altered",
+          ipAddress: ""
         },
-        "macAddress": {
-          "mode": "off",
-          "value": null
+        canvas: {
+          mode: "noise"
         },
-        "webrtc": {
-          "mode": "altered",
-          "ipAddress": null
+        timezone: {
+          mode: "auto" // режим по умолчанию
         },
-        "canvas": {
-          "mode": "real"
+        geolocation: {
+          mode: "prompt" // режим по умолчанию
         },
-        "webgl": {
-          "mode": "real"
+        audio: {
+          mode: "noise" // режим по умолчанию
         },
-        "webglInfo": {
-          "mode": "manual",
-          "vendor": "Google Inc. (Intel)",
-          "renderer": "ANGLE (Intel, Intel(R) Iris(R) Xe Graphics Direct3D11 vs_5_0 ps_5_0, D3D11)"
+        fonts: {
+          mode: "prompt" // режим по умолчанию
         },
-        "webgpu": {
-          "mode": "manual"
-        },
-        "clientRect": {
-          "mode": "real"
-        },
-        "notes": {
-          "content": null,
-          "color": "blue",
-          "style": "text",
-          "icon": null
-        },
-        "timezone": {
-          "mode": "auto",
-          "value": null
-        },
-        "locale": {
-          "mode": "auto",
-          "value": null
-        },
-        "proxy": {
-          "name": "",
-          "host": "",
-          "port": "",
-          "type": "http",
-          "login": "",
-          "password": ""
-        },
-        "statusId": 0,
-        "geolocation": {
-          "mode": "auto",
-          "latitude": null,
-          "longitude": null,
-          "accuracy": null
-        },
-        "cpu": {
-          "mode": "manual",
-          "value": 4
-        },
-        "memory": {
-          "mode": "manual",
-          "value": 8
-        },
-        "screen": {
-          "mode": "real",
-          "resolution": null
-        },
-        "audio": {
-          "mode": "real"
-        },
-        "mediaDevices": {
-          "mode": "real",
-          "audioInputs": null,
-          "videoInputs": null,
-          "audioOutputs": null
-        },
-        "ports": {
-          "mode": "protect",
-          "blacklist": "3389,5900,5800,7070,6568,5938,63333,5901,5902,5903,5950,5931,5939,6039,5944,6040,5279,2112"
-        },
-        "doNotTrack": false,
-        "args": []
+        mediaDevices: {
+          mode: "real" // режим по умолчанию
+        }
       };
       
-      // Добавляем прокси, если он указан
-      if (account.proxy) {
-        const proxyParts = account.proxy.split(':');
+      // Обрабатываем прокси, если он передан
+      if (data.proxyId) {
+        logger.info(`Найден proxyId ${data.proxyId}, извлекаем данные прокси из базы данных`);
         
-        if (proxyParts.length >= 2) {
-          // Определяем тип прокси
-          let proxyType = "http";
+        try {
+          const Proxy = require('../models/proxy');
+          const proxyData = await Proxy.findById(data.proxyId);
           
-          if (account.proxyType && (account.proxyType === "http" || account.proxyType === "socks5")) {
-            proxyType = account.proxyType;
+          if (!proxyData) {
+            logger.warn(`Прокси с ID ${data.proxyId} не найден в базе данных`);
+          } else {
+            logger.info(`Данные прокси получены: ${JSON.stringify(proxyData, null, 2)}`);
+            
+            // Заполняем данные прокси в payload
+            payload.proxy = {
+              mode: "http", // по умолчанию http
+              host: proxyData.host || "",
+              port: proxyData.port ? parseInt(proxyData.port) : 0,
+              username: proxyData.username || "",
+              password: proxyData.password || ""
+            };
+            
+            // Устанавливаем тип прокси, если он указан
+            if (proxyData.type) {
+              const proxyType = proxyData.type.toLowerCase();
+              if (['http', 'https', 'socks4', 'socks5'].includes(proxyType)) {
+                payload.proxy.mode = proxyType;
+                logger.info(`Установлен тип прокси: ${proxyType}`);
+              } else {
+                logger.warn(`Неизвестный тип прокси: ${proxyData.type}, используем http`);
+              }
+            }
+            
+            // Проверяем обязательные поля прокси
+            if (!payload.proxy.host || !payload.proxy.port) {
+              logger.error(`Отсутствуют обязательные поля прокси: host=${payload.proxy.host}, port=${payload.proxy.port}`);
+              delete payload.proxy;
+              logger.info(`Прокси удален из запроса из-за отсутствия обязательных полей`);
+            } else {
+              logger.info(`Прокси добавлен в запрос создания профиля: ${JSON.stringify(payload.proxy)}`);
+            }
+          }
+        } catch (proxyError) {
+          logger.error(`Ошибка при получении данных прокси: ${proxyError.message}`);
+          // Не останавливаем создание профиля из-за ошибки с прокси
+        }
+      } else if (data.proxy) {
+        logger.info(`Используем прямую строку прокси: ${data.proxy}`);
+        
+        try {
+          // Разбираем строку прокси формата user:pass@host:port или host:port
+          let proxyParts = data.proxy.split('@');
+          let host, port, username, password, proxyType = 'http';
+          
+          // Проверяем, указан ли тип прокси в начале строки
+          if (data.proxy.startsWith('http://') || data.proxy.startsWith('https://') || 
+              data.proxy.startsWith('socks4://') || data.proxy.startsWith('socks5://')) {
+            // Извлекаем тип прокси
+            proxyType = data.proxy.split('://')[0].toLowerCase();
+            // Удаляем префикс типа из строки для дальнейшего парсинга
+            data.proxy = data.proxy.replace(`${proxyType}://`, '');
+            proxyParts = data.proxy.split('@');
           }
           
-          payload.proxy.host = proxyParts[0];
-          payload.proxy.port = proxyParts[1];
-          payload.proxy.type = proxyType;
-          
-          if (proxyParts.length >= 4) {
-            payload.proxy.login = proxyParts[2];
-            payload.proxy.password = proxyParts[3];
+          if (proxyParts.length === 2) {
+            // Формат user:pass@host:port
+            const auth = proxyParts[0].split(':');
+            username = auth[0];
+            password = auth[1];
+            
+            const address = proxyParts[1].split(':');
+            host = address[0];
+            port = parseInt(address[1]);
+          } else {
+            // Формат host:port
+            const address = proxyParts[0].split(':');
+            host = address[0];
+            port = parseInt(address[1]);
+            username = '';
+            password = '';
           }
           
-          // Формируем имя прокси для отображения
-          payload.proxy.name = account.proxy;
+          // Добавляем данные прокси в payload
+          if (host && port) {
+            payload.proxy = {
+              mode: proxyType,
+              host: host,
+              port: port,
+              username: username || "",
+              password: password || ""
+            };
+            
+            logger.info(`Прокси из строки добавлен в запрос: ${JSON.stringify(payload.proxy)}`);
+          } else {
+            logger.error(`Не удалось разобрать строку прокси: ${data.proxy}`);
+          }
+        } catch (proxyStringError) {
+          logger.error(`Ошибка при разборе строки прокси: ${proxyStringError.message}`);
+          // Не останавливаем создание профиля из-за ошибки с прокси
         }
       }
-
+      
+      // Используем локальный API для создания профиля
+      const localApiUrl = this.localApiUrl || 'http://localhost:3001';
+      const url = `${localApiUrl}/v1.0/browser_profiles`;
+      
+      logger.info(`Отправляем запрос на создание профиля: ${url}`);
+      logger.info(`Payload для создания профиля: ${JSON.stringify(payload, null, 2)}`);
+      
       const headers = {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.apiToken}`
+        'Content-Type': 'application/json'
       };
-
-      logger.info(`Отправляем запрос на Dolphin API: ${url}`);
       
       const response = await axios.post(url, payload, { headers });
-      logger.info(`Успешно создан профиль в Dolphin. Ответ: ${JSON.stringify(response.data)}`);
       
-      // Получаем ID профиля из ответа
-      let profileId;
-      if (response.data.browserProfileId) {
-        // Новый формат ответа
-        profileId = response.data.browserProfileId;
-      } else if (response.data.id) {
-        // Старый формат ответа
-        profileId = response.data.id;
-      } else if (response.data.data && response.data.data.id) {
-        // Альтернативный формат
-        profileId = response.data.data.id;
+      if (response.data && response.data.uuid) {
+        logger.info(`Профиль успешно создан: ${response.data.uuid}`);
+        return {
+          success: true,
+          data: response.data,
+          profileId: response.data.uuid
+        };
       } else {
-        throw new Error('Не удалось получить ID профиля из ответа API');
+        logger.error(`Ответ API не содержит UUID профиля: ${JSON.stringify(response.data)}`);
+        return {
+          success: false,
+          message: 'Ответ API не содержит UUID профиля',
+          data: response.data
+        };
       }
-      
-      return {
-        id: profileId,
-        name: profileName,
-        originalResponse: response.data
-      };
     } catch (error) {
-      logger.error(`Не удалось создать профиль Dolphin: ${error.message}`);
       if (error.response) {
-        logger.error(`Статус: ${error.response.status}`);
-        logger.error(`Данные: ${JSON.stringify(error.response.data)}`);
+        // Ответ от сервера с ошибкой
+        logger.error(`Ошибка API при создании профиля: ${error.response.status}`);
+        logger.error(`Ответ с ошибкой: ${JSON.stringify(error.response.data)}`);
+        return {
+          success: false,
+          message: `Ошибка API: HTTP ${error.response.status}`,
+          error: error.response.data
+        };
+      } else if (error.request) {
+        // Запрос был сделан, но ответ не получен
+        logger.error(`Нет ответа от сервера Dolphin: ${error.message}`);
+        return {
+          success: false,
+          message: 'Нет ответа от сервера Dolphin',
+          error: error.message
+        };
+      } else {
+        // Что-то еще вызвало ошибку
+        logger.error(`Ошибка при создании профиля: ${error.message}`);
+        return {
+          success: false,
+          message: 'Не удалось создать профиль',
+          error: error.message
+        };
       }
-      throw new Error(`Ошибка создания профиля Dolphin: ${error.message}`);
     }
   }
   
@@ -256,6 +283,17 @@ class DolphinService {
         throw new Error(`Некоторые cookies не содержат обязательные поля: ${errorDetails}`);
       }
       
+      // Проверим URL домена у cookies
+      for (let i = 0; i < cookiesArray.length; i++) {
+        const cookie = cookiesArray[i];
+        
+        // Убедимся, что домен начинается с точки, если это требуется
+        if (cookie.domain && !cookie.domain.startsWith('.') && cookie.domain.indexOf('.') > 0) {
+          cookie.domain = '.' + cookie.domain;
+          logger.info(`Добавлена точка в начало домена для cookie[${i}]: ${cookie.domain}`);
+        }
+      }
+      
       logger.info(`Количество проверенных cookies для импорта: ${cookiesArray.length}`);
       
       // Используем URL локального API
@@ -263,19 +301,17 @@ class DolphinService {
       const localApiUrl = this.localApiUrl || 'http://localhost:3001';
       
       // Используем правильный путь для импорта куки согласно документации Dolphin
-      const url = `${localApiUrl}/v1.0/cookies/import`;
+      const url = `${localApiUrl}/v1.0/browser_profiles/${profileId}/cookies/import`;
       
       logger.info(`Отправляем запрос на импорт cookies: ${url}`);
       
       // Формируем правильную структуру запроса согласно документации
       const payload = {
         cookies: cookiesArray,
-        profileId: Number(profileId),
-        transfer: 0,
-        cloudSyncDisabled: false
+        url: "https://www.facebook.com"
       };
       
-      logger.info(`Отправляем payload: profileId=${profileId}, cookies: ${cookiesArray.length} шт.`);
+      logger.info(`Отправляем payload: profileId=${profileId}, url=${payload.url}, cookies: ${cookiesArray.length} шт.`);
       
       const headers = {
         'Content-Type': 'application/json'
@@ -295,11 +331,36 @@ class DolphinService {
           logger.error(`Ошибка API при импорте cookies: ${axiosError.response.status}`);
           logger.error(`Данные ответа: ${JSON.stringify(axiosError.response.data)}`);
           
-          return {
-            success: false,
-            message: 'Ошибка API при импорте cookies',
-            error: `HTTP ${axiosError.response.status}: ${axiosError.message}`
-          };
+          // Попробуем альтернативный метод импорта (старый вариант API)
+          try {
+            logger.info(`Попытка импорта через альтернативный метод API`);
+            const altUrl = `${localApiUrl}/v1.0/cookies/import`;
+            const altPayload = {
+              cookies: cookiesArray,
+              profileId: Number(profileId),
+              transfer: 0,
+              cloudSyncDisabled: false
+            };
+            
+            const altResponse = await axios.post(altUrl, altPayload, { headers });
+            logger.info(`Успешно импортированы cookies через альтернативный метод API для профиля ${profileId}`);
+            return { 
+              success: true, 
+              message: 'Cookies успешно импортированы через альтернативный метод'
+            };
+          } catch (altError) {
+            logger.error(`Ошибка при использовании альтернативного метода импорта: ${altError.message}`);
+            
+            if (altError.response) {
+              logger.error(`Данные ответа альтернативного метода: ${JSON.stringify(altError.response.data)}`);
+            }
+            
+            return {
+              success: false,
+              message: 'Ошибка API при импорте cookies (оба метода)',
+              error: `Основной метод: HTTP ${axiosError.response.status}, Альтернативный метод: ${altError.message}`
+            };
+          }
         } else if (axiosError.request) {
           // Если запрос был сделан, но ответ не получен
           logger.error(`Нет ответа от сервера Dolphin при импорте cookies: ${axiosError.message}`);
