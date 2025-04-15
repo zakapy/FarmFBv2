@@ -857,34 +857,6 @@ exports.syncWithDolphin = async (req, res) => {
       });
     }
     
-    // Если у аккаунта есть proxyId, получаем данные прокси
-    if (account.proxyId) {
-      try {
-        logger.info(`Аккаунт ${id} имеет proxyId: ${account.proxyId}, получаем данные прокси перед созданием профиля`);
-        
-        const Proxy = require('../models/proxy');
-        const mongoose = require('mongoose');
-        
-        if (mongoose.Types.ObjectId.isValid(account.proxyId)) {
-          const proxyData = await Proxy.findById(account.proxyId);
-          
-          if (proxyData) {
-            logger.info(`Найден прокси в базе данных для аккаунта ${id}: ${proxyData.host}:${proxyData.port}`);
-            
-            // Для логирования и отладки
-            logger.info(`Данные прокси: ${JSON.stringify(proxyData)}`);
-          } else {
-            logger.warn(`Прокси с ID ${account.proxyId} не найден в базе данных для аккаунта ${id}`);
-          }
-        } else {
-          logger.warn(`Недопустимый формат proxyId: ${account.proxyId} для аккаунта ${id}`);
-        }
-      } catch (proxyError) {
-        logger.error(`Ошибка при получении прокси из базы данных для аккаунта ${id}: ${proxyError.message}`);
-        // Не прерываем выполнение, т.к. обработка proxyId будет происходить в dolphinService.createProfile
-      }
-    }
-    
     // Создаем профиль в Dolphin Anty
     const dolphinProfile = await dolphinService.createProfile(account);
     

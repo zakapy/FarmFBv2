@@ -495,30 +495,3 @@ Call log:
     at exports.handleRefreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\services\authService.js:70:11)
     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
     at async exports.refreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\controllers\authController.js:47:20)
-[2025-04-14 21:49:11] [31merror[39m: Не удалось создать профиль Dolphin: Request failed with status code 422
-[2025-04-14 21:49:11] [31merror[39m: Статус: 422
-[2025-04-14 21:49:11] [31merror[39m: Данные: {"success":false,"error":{"type":"E_PROXY","code":"E_PROXY_EMPTY","text":"Required proxy fields missing: type, host"}}
-[2025-04-14 21:49:11] [31merror[39m: Error linking account with Dolphin: Ошибка создания профиля Dolphin: Request failed with status code 422
-[2025-04-14 21:49:12] [31merror[39m: Не удалось создать профиль Dolphin: Request failed with status code 422
-[2025-04-14 21:49:12] [31merror[39m: Статус: 422
-[2025-04-14 21:49:12] [31merror[39m: Данные: {"success":false,"error":{"type":"E_PROXY","code":"E_PROXY_EMPTY","text":"Required proxy fields missing: type, host"}}
-[2025-04-14 21:50:10] [31merror[39m: Не удалось создать профиль Dolphin: Request failed with status code 422
-[2025-04-14 21:50:10] [31merror[39m: Статус: 422
-[2025-04-14 21:50:10] [31merror[39m: Данные: {"success":false,"error":{"type":"E_PROXY","code":"E_PROXY_EMPTY","text":"Required proxy fields missing: type, host"}}
-[2025-04-14 21:50:10] [31merror[39m: Error linking account with Dolphin: Ошибка создания профиля Dolphin: Request failed with status code 422
-[2025-04-14 21:50:10] [31merror[39m: Не удалось создать профиль Dolphin: Request failed with status code 422
-[2025-04-14 21:50:10] [31merror[39m: Статус: 422
-[2025-04-14 21:50:10] [31merror[39m: Данные: {"success":false,"error":{"type":"E_PROXY","code":"E_PROXY_EMPTY","text":"Required proxy fields missing: type, host"}}
-[2025-04-14 21:55:41] [31merror[39m: Не удалось создать профиль Dolphin: Request failed with status code 422
-[2025-04-14 21:55:41] [31merror[39m: Статус: 422
-[2025-04-14 21:55:41] [31merror[39m: Данные: {"success":false,"error":{"type":"E_PROXY","code":"E_PROXY_EMPTY","text":"Required proxy fields missing: type, host"}}
-[2025-04-14 21:57:11] [31merror[39m: Нет ответа от сервера Dolphin при импорте cookies: socket hang up
-[2025-04-14 21:57:11] [31merror[39m: Не удалось загрузить Facebook после трех попыток: page.goto: Target page, context or browser has been closed
-[2025-04-14 21:57:11] [31merror[39m: Ошибка при проверке авторизации: page.waitForTimeout: Target page, context or browser has been closed
-[2025-04-14 21:57:11] [31merror[39m: Ошибка при извлечении куки: browserContext.cookies: Target page, context or browser has been closed
-[2025-04-14 22:02:27] [31merror[39m: Ошибка при получении списка прокси: Proxy.find is not a function
-[2025-04-14 22:02:30] [31merror[39m: Ошибка при получении списка прокси: Proxy.find is not a function
-[2025-04-14 22:02:34] [31merror[39m: Ошибка при получении списка прокси: Proxy.find is not a function
-[2025-04-14 22:02:43] [31merror[39m: Ошибка при получении списка прокси: Proxy.find is not a function
-[2025-04-15 00:19:28] [31merror[39m: Ошибка API при импорте cookies: 404
-[2025-04-15 00:19:28] [31merror[39m: Данные ответа: "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot POST /v1.0/browser_profiles/597173251/cookies/import</pre>\n</body>\n</html>\n"
