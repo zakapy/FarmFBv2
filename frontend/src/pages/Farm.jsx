@@ -24,7 +24,8 @@ const Farm = () => {
     joinGroups: true,
     likeContent: false,
     addFriends: false,
-    viewContent: false
+    viewContent: false,
+    createGroups: false
   });
   
   // Настройки фарминга
@@ -35,7 +36,8 @@ const Farm = () => {
     postsToLike: 3,
     friendsToAdd: 0,
     contentToView: 0,
-    runSequentially: true
+    runSequentially: true,
+    groupsToCreate: 1
   });
   
   // Состояние для пагинации истории
@@ -158,6 +160,10 @@ const Farm = () => {
       viewContent: selectedFunctions.viewContent ? {
         enabled: true,
         count: farmSettings.contentToView
+      } : { enabled: false },
+      createGroups: selectedFunctions.createGroups ? {
+        enabled: true,
+        count: farmSettings.groupsToCreate
       } : { enabled: false }
     };
     
@@ -301,6 +307,7 @@ const Farm = () => {
                   <th>Статус</th>
                   <th>Дата запуска</th>
                   <th>Дата завершения</th>
+                  <th>Результаты</th>
                   <th>Функции</th>
                   <th>Действия</th>
                 </tr>
@@ -313,6 +320,37 @@ const Farm = () => {
                     <td>{renderFarmStatus(item.status)}</td>
                     <td>{formatDate(item.createdAt)}</td>
                     <td>{formatDate(item.config?.completedAt)}</td>
+                    <td>
+                      {item.results && (
+                        <div className="farm-results-summary">
+                          {item.results.groupsJoined > 0 && (
+                            <span className="result-badge" title="Присоединился к группам">
+                              👥 {item.results.groupsJoined}
+                            </span>
+                          )}
+                          {item.results.groupsCreated > 0 && (
+                            <span className="result-badge" title="Создано групп">
+                              ➕👥 {item.results.groupsCreated}
+                            </span>
+                          )}
+                          {item.results.postsLiked > 0 && (
+                            <span className="result-badge" title="Поставлено лайков">
+                              👍 {item.results.postsLiked}
+                            </span>
+                          )}
+                          {item.results.friendsAdded > 0 && (
+                            <span className="result-badge" title="Добавлено друзей">
+                              🤝 {item.results.friendsAdded}
+                            </span>
+                          )}
+                          {item.results.contentViewed > 0 && (
+                            <span className="result-badge" title="Просмотрено постов">
+                              👁️ {item.results.contentViewed}
+                            </span>
+                          )}
+                        </div>
+                      )}
+                    </td>
                     <td>
                       {item.config?.functions ? (
                         <div className="farm-functions">
@@ -327,6 +365,9 @@ const Farm = () => {
                           )}
                           {item.config.functions.viewContent?.enabled && (
                             <span className="function-badge view-content">Просмотр</span>
+                          )}
+                          {item.config.functions.createGroups?.enabled && (
+                            <span className="function-badge create-groups">Создание групп</span>
                           )}
                         </div>
                       ) : (
@@ -489,6 +530,15 @@ const Farm = () => {
                   />
                   <span>Просмотр контента</span>
                 </label>
+                
+                <label className="checkbox-label">
+                  <input
+                    type="checkbox"
+                    checked={selectedFunctions.createGroups}
+                    onChange={() => handleFunctionChange('createGroups')}
+                  />
+                  <span>Создание групп</span>
+                </label>
               </div>
             </div>
             
@@ -508,6 +558,22 @@ const Farm = () => {
                     className="input"
                   />
                   <small>Рекомендуется не более 5 групп за один запуск</small>
+                </div>
+              )}
+              
+              {selectedFunctions.createGroups && (
+                <div className="function-setting">
+                  <label>Количество групп для создания:</label>
+                  <input
+                    type="number"
+                    name="groupsToCreate"
+                    value={farmSettings.groupsToCreate}
+                    onChange={handleSettingsChange}
+                    min="1"
+                    max="3"
+                    className="input"
+                  />
+                  <small>Рекомендуется не более 3 групп за один запуск</small>
                 </div>
               )}
               

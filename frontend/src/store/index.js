@@ -4,12 +4,14 @@ import { configureStore } from '@reduxjs/toolkit';
 import authReducer from '../features/auth/authSlice';
 import accountsReducer from '../features/accounts/accountsSlice';
 import farmReducer from '../features/farm/farmSlice';
+import proxiesReducer from '../features/proxies/proxiesSlice';
 
 const store = configureStore({
   reducer: {
     auth: authReducer,
     accounts: accountsReducer,
     farm: farmReducer,
+    proxies: proxiesReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

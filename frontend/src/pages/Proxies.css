@@ -1,0 +1,249 @@
+.proxies-page {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.page-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}
+
+.add-proxy-button {
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.add-proxy-button:hover {
+  background-color: #1d4ed8;
+}
+
+.error-alert {
+  background-color: #fee2e2;
+  color: #b91c1c;
+  padding: 12px 16px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.close-error {
+  background: none;
+  border: none;
+  color: #b91c1c;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.proxies-controls {
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.search-filter-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.search-container {
+  flex: 1;
+  min-width: 250px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+}
+
+.filters-container {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filter-group label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #4b5563;
+}
+
+.filter-group select {
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 14px;
+  background-color: white;
+}
+
+.bulk-actions-container {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.select-all-button,
+.check-selected-button,
+.delete-selected-button {
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 1px solid transparent;
+}
+
+.select-all-button {
+  background-color: #f3f4f6;
+  color: #4b5563;
+  border-color: #e5e7eb;
+}
+
+.select-all-button:hover:not(:disabled) {
+  background-color: #e5e7eb;
+}
+
+.select-all-button.active {
+  background-color: #e5e7eb;
+  color: #1f2937;
+}
+
+.check-selected-button {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.check-selected-button:hover:not(:disabled) {
+  background-color: #2563eb;
+}
+
+.delete-selected-button {
+  background-color: #ef4444;
+  color: white;
+}
+
+.delete-selected-button:hover:not(:disabled) {
+  background-color: #dc2626;
+}
+
+.select-all-button:disabled,
+.check-selected-button:disabled,
+.delete-selected-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.proxies-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.stat-item {
+  background-color: white;
+  padding: 12px 16px;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  min-width: 120px;
+  flex: 1;
+}
+
+.stat-label {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 4px;
+}
+
+.stat-value {
+  font-size: 20px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+  font-weight: 500;
+  z-index: 1000;
+}
+
+.proxies-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 20px;
+}
+
+.no-proxies-message {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px;
+  background-color: #f9fafb;
+  border-radius: 8px;
+  color: #6b7280;
+  font-size: 16px;
+  border: 1px dashed #e5e7eb;
+}
+
+@media (max-width: 768px) {
+  .proxies-list {
+    grid-template-columns: 1fr;
+  }
+  
+  .search-filter-container,
+  .bulk-actions-container {
+    flex-direction: column;
+  }
+  
+  .filter-group {
+    width: 100%;
+  }
+} 

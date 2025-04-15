@@ -47,6 +47,29 @@ const authSelectors = {
       '[aria-label="Close"] svg',
       '[aria-label="Закрыть"] svg',
       '[aria-label="Закрити"] svg'
+    ],
+    // Селекторы для создания групп
+    createGroupButton: [
+      'a[href="/groups/create/"]',
+      'a:has-text("Create group")',
+      'a:has-text("Создать группу")',
+      'a:has-text("Створити групу")'
+    ],
+    groupNameInput: [
+      'input[name="name"]',
+      'input[placeholder="Group name"]',
+      'input[placeholder="Название группы"]',
+      'input[aria-label="Group name"]',
+      'input[aria-label="Название группы"]'
+    ],
+    privacySelector: [
+      '[aria-label="Privacy selector"]',
+      '[aria-label="Селектор конфиденциальности"]'
+    ],
+    createButton: [
+      'button:has-text("Create")',
+      'button:has-text("Создать")',
+      'button:has-text("Створити")'
     ]
   };
   

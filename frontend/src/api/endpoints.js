@@ -25,6 +25,16 @@ export const API = {
   },
   PROXY: {
     LIST: `${BASE}api/v1/proxy`,
+    GET: (id) => `${BASE}api/v1/proxy/${id}`,
+    CREATE: `${BASE}api/v1/proxy`,
+    CREATE_FROM_STRING: `${BASE}api/v1/proxy/create-from-string`,
+    CREATE_BULK: `${BASE}api/v1/proxy/create-bulk`,
+    UPDATE: (id) => `${BASE}api/v1/proxy/${id}`,
+    DELETE: (id) => `${BASE}api/v1/proxy/${id}`,
+    DELETE_BULK: `${BASE}api/v1/proxy/delete-bulk`,
+    CHECK: (id) => `${BASE}api/v1/proxy/${id}/check`,
+    CHECK_BULK: `${BASE}api/v1/proxy/check-bulk`,
     ASSIGN: (accountId) => `${BASE}api/v1/proxy/${accountId}/assign`,
+    UNASSIGN: (id) => `${BASE}api/v1/proxy/${id}/unassign`,
   },
 };

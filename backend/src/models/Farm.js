@@ -31,7 +31,8 @@ const farmSchema = new mongoose.Schema(
           joinGroups: { enabled: true, count: 5 },
           likeContent: { enabled: false, count: 0 },
           addFriends: { enabled: false, count: 0 },
-          viewContent: { enabled: false, count: 0 }
+          viewContent: { enabled: false, count: 0 },
+          createGroups: { enabled: false, count: 1 }
         }
       })
     },
@@ -42,6 +43,7 @@ const farmSchema = new mongoose.Schema(
         postsLiked: 0,
         friendsAdded: 0,
         contentViewed: 0,
+        groupsCreated: 0,
         screenshots: [],
         errors: []
       })

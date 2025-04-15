@@ -407,3 +407,71 @@ Call log:
 [2025-04-14 17:23:06] [31merror[39m: Не удалось импортировать cookies: env is not defined
 [2025-04-14 17:23:14] [31merror[39m: Ошибка при остановке профиля Dolphin Anty: env is not defined
 [2025-04-14 17:23:14] [31merror[39m: Не удалось импортировать cookies: env is not defined
+[2025-04-15 16:45:59] [31merror[39m: Error: Invalid or expired refresh token
+    at exports.handleRefreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\services\authService.js:70:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async exports.refreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\controllers\authController.js:47:20)
+[2025-04-15 16:46:31] [31merror[39m: Не удалось импортировать cookies: env is not defined
+[2025-04-15 16:47:17] [31merror[39m: Не удалось импортировать cookies: env is not defined
+[2025-04-15 16:52:18] [31merror[39m: Не удалось импортировать cookies: env is not defined
+[2025-04-15 16:52:27] [31merror[39m: Не удалось импортировать cookies: env is not defined
+[2025-04-15 16:55:04] [31merror[39m: Не удалось импортировать cookies: env is not defined
+[2025-04-15 16:55:12] [31merror[39m: Не удалось создать профиль Dolphin: Request failed with status code 422
+[2025-04-15 16:55:12] [31merror[39m: Статус: 422
+[2025-04-15 16:55:12] [31merror[39m: Данные: {"success":false,"error":{"type":"E_PROXY","code":"E_PROXY_EMPTY","text":"Required proxy fields missing: type, host"}}
+[2025-04-15 16:55:12] [31merror[39m: Error linking account with Dolphin: Ошибка создания профиля Dolphin: Request failed with status code 422
+[2025-04-15 16:55:43] [31merror[39m: Не удалось импортировать cookies: env is not defined
+[2025-04-15 16:59:55] [31merror[39m: Не удалось импортировать cookies: env is not defined
+[2025-04-15 17:00:14] [31merror[39m: Не удалось импортировать cookies: env is not defined
+[2025-04-15 17:04:15] [31merror[39m: Не удалось импортировать cookies: env is not defined
+[2025-04-15 17:09:40] [31merror[39m: Не удалось импортировать cookies: env is not defined
+[2025-04-15 17:32:58] [31merror[39m: Error: Invalid or expired refresh token
+    at exports.handleRefreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\services\authService.js:70:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async exports.refreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\controllers\authController.js:47:20)
+[2025-04-15 17:48:06] [31merror[39m: Error: Invalid or expired refresh token
+    at exports.handleRefreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\services\authService.js:70:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async exports.refreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\controllers\authController.js:47:20)
+[2025-04-15 19:05:38] [31merror[39m: Error: Invalid or expired refresh token
+    at exports.handleRefreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\services\authService.js:70:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async exports.refreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\controllers\authController.js:47:20)
+[2025-04-15 19:05:38] [31merror[39m: Error: Invalid or expired refresh token
+    at exports.handleRefreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\services\authService.js:70:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async exports.refreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\controllers\authController.js:47:20)
+[2025-04-15 19:17:20] [31merror[39m: [Farm 67fe8660f6544966c7e038b2] Error: Ошибка при создании скриншота: page.screenshot: Timeout 30000ms exceeded.
+Call log:
+[2m  - taking page screenshot[22m
+[2m  - waiting for fonts to load...[22m
+[2m  - fonts loaded[22m
+[2025-04-15 21:37:50] [31merror[39m: [Farm 67fea77cf6544966c7e038d1] Error: Ошибка при запуске профиля: Request failed with status code 500
+[2025-04-15 21:37:50] [31merror[39m: [Farm 67fea77cf6544966c7e038d1] Error: ❌ Ошибка фарминга: Не удалось запустить браузерный профиль
+[2025-04-15 21:38:01] [31merror[39m: [Farm 67fea759f6544966c7e038c5] Error: ❌ Ошибка фарминга: Не удалось загрузить Facebook
+[2025-04-15 21:38:01] [31merror[39m: [Farm 67fea759f6544966c7e038c5] Error: Ошибка при создании скриншота: page.screenshot: Target page, context or browser has been closed
+[2025-04-15 21:47:05] [31merror[39m: [Farm 67fea9a86c656db6b76d0810] Error: Ошибка при запуске профиля: Request failed with status code 500
+[2025-04-15 21:47:05] [31merror[39m: [Farm 67fea9a86c656db6b76d0810] Error: ❌ Ошибка фарминга: Не удалось запустить браузерный профиль
+[2025-04-15 21:47:20] [31merror[39m: [Farm 67fea9b76c656db6b76d081c] Error: Ошибка при запуске профиля: Request failed with status code 500
+[2025-04-15 21:47:20] [31merror[39m: [Farm 67fea9b76c656db6b76d081c] Error: ❌ Ошибка фарминга: Не удалось запустить браузерный профиль
+[2025-04-15 21:52:37] [31merror[39m: Error: Invalid or expired refresh token
+    at exports.handleRefreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\services\authService.js:70:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async exports.refreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\controllers\authController.js:47:20)
+[2025-04-15 23:53:55] [31merror[39m: Error linking account with Dolphin: dolphinService.createProfile is not a function
+[2025-04-15 23:55:03] [31merror[39m: Error linking account with Dolphin: dolphinService.createProfile is not a function
+[2025-04-15 23:55:38] [31merror[39m: Error linking account with Dolphin: dolphinService.createProfile is not a function
+[2025-04-15 23:56:34] [31merror[39m: [Farm 67fec7e1701fc147c6905481] Error: ❌ Ошибка фарминга: Не удалось загрузить Facebook
+[2025-04-15 23:56:34] [31merror[39m: [Farm 67fec7e1701fc147c6905481] Error: Ошибка при создании скриншота: page.screenshot: Target page, context or browser has been closed
+[2025-04-15 23:57:41] [31merror[39m: Error linking account with Dolphin: dolphinService.createProfile is not a function
+[2025-04-15 23:59:01] [31merror[39m: Error linking account with Dolphin: dolphinService.createProfile is not a function
+[2025-04-16 00:09:14] [31merror[39m: Error linking account with Dolphin: dolphinService.createProfile is not a function
+[2025-04-16 00:23:22] [31merror[39m: Error linking account with Dolphin: dolphinService.createProfile is not a function
+[2025-04-16 00:24:51] [31merror[39m: Error: Invalid or expired refresh token
+    at exports.handleRefreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\services\authService.js:70:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async exports.refreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\controllers\authController.js:47:20)
+[2025-04-16 01:08:36] [31merror[39m: Error: Invalid or expired refresh token
+    at exports.handleRefreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\services\authService.js:70:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async exports.refreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\controllers\authController.js:47:20)

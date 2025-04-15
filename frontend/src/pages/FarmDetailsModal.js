@@ -59,6 +59,13 @@ const FarmDetailsModal = ({ farmId, onClose }) => {
           <div className="result-value">{results.groupsJoined || 0}</div>
         </div>
         
+        {results.groupsCreated !== undefined && (
+          <div className="result-item">
+            <div className="result-label">Создано групп:</div>
+            <div className="result-value">{results.groupsCreated || 0}</div>
+          </div>
+        )}
+        
         {results.postsLiked !== undefined && (
           <div className="result-item">
             <div className="result-label">Поставлено лайков:</div>
@@ -84,6 +91,7 @@ const FarmDetailsModal = ({ farmId, onClose }) => {
           <div className="result-label">Общее количество действий:</div>
           <div className="result-value">
             {(results.groupsJoined || 0) + 
+             (results.groupsCreated || 0) + 
              (results.postsLiked || 0) + 
              (results.friendsAdded || 0) + 
              (results.contentViewed || 0)}
@@ -134,6 +142,18 @@ const FarmDetailsModal = ({ farmId, onClose }) => {
               <h4>Вступление в группы</h4>
               <div className="function-param">
                 Количество: <strong>{functions.joinGroups.count || 0}</strong>
+              </div>
+            </div>
+          </div>
+        )}
+        
+        {functions.createGroups?.enabled && (
+          <div className="function-detail-item">
+            <div className="function-icon">➕👥</div>
+            <div className="function-info">
+              <h4>Создание групп</h4>
+              <div className="function-param">
+                Количество: <strong>{functions.createGroups.count || 0}</strong>
               </div>
             </div>
           </div>

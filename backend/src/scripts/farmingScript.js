@@ -18,6 +18,7 @@ const { joinGroups } = require('./modules/joinGroups');
 const { addFriends } = require('./modules/addFriends');
 const { likeContent } = require('./modules/likeContent');
 const { viewContent } = require('./modules/viewContent');
+const { createGroups } = require('./modules/createGroups');
 const { takeScreenshot } = require('./modules/utils');
 
 // Импортируем селекторы
@@ -74,7 +75,8 @@ class FarmingManager {
         joinGroups: { enabled: true, count: 5 },
         likeContent: { enabled: false, count: 0 },
         addFriends: { enabled: false, count: 0 },
-        viewContent: { enabled: false, count: 0 }
+        viewContent: { enabled: false, count: 0 },
+        createGroups: { enabled: false, count: 0 }
       }
     };
   }
@@ -194,6 +196,25 @@ class FarmingManager {
           }
         }
         
+        // Создаем группы
+        if (this.config.functions.createGroups?.enabled) {
+          const createGroupsResult = await createGroups(
+            this.page,
+            groupsSelectors,
+            this.config.functions.createGroups.count,
+            takeScreenshot,
+            screenshotsDir
+          );
+          
+          if (createGroupsResult.groupsCreated > 0) {
+            this.results.groupsCreated = createGroupsResult.groupsCreated;
+          }
+          
+          if (createGroupsResult.errors.length > 0) {
+            this.results.errors = [...this.results.errors, ...createGroupsResult.errors];
+          }
+        }
+        
         // Ставим лайки
         if (this.config.functions.likeContent?.enabled) {
           const likesResult = await likeContent(
@@ -268,6 +289,9 @@ class FarmingManager {
         if (this.config.functions.viewContent?.enabled) {
           enabledFunctions.push('viewContent');
         }
+        if (this.config.functions.createGroups?.enabled) {
+          enabledFunctions.push('createGroups');
+        }
         
         if (enabledFunctions.length === 0) {
           console.log('Нет включенных функций фарминга');
@@ -289,6 +313,24 @@ class FarmingManager {
               
               if (result.groupsJoined > 0) {
                 this.results.groupsJoined = result.groupsJoined;
+              }
+              
+              if (result.errors.length > 0) {
+                this.results.errors = [...this.results.errors, ...result.errors];
+              }
+              break;
+            }
+            case 'createGroups': {
+              const result = await createGroups(
+                this.page,
+                groupsSelectors,
+                this.config.functions.createGroups.count,
+                takeScreenshot,
+                screenshotsDir
+              );
+              
+              if (result.groupsCreated > 0) {
+                this.results.groupsCreated = result.groupsCreated;
               }
               
               if (result.errors.length > 0) {

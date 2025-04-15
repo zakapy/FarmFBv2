@@ -1,0 +1,1 @@
+{"watch": ["src/", ".env"],"ext": "js,json,env","ignore": ["node_modules/", "logs/", "screenshots/"],"delay": "500","verbose": true,"env": {"NODE_ENV": "development"},"execMap": {"js": "node"}}
