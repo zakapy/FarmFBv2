@@ -10,15 +10,38 @@ const AvatarUploader = ({ accountId, avatarUrl, className }) => {
   const dispatch = useDispatch();
   const [previewUrl, setPreviewUrl] = useState(null);
   const fileInputRef = useRef(null);
-  const { avatarLoadingId } = useSelector(state => state.accounts);
+  const { avatarLoadingIds } = useSelector(state => state.accounts);
   const { list: accounts } = useSelector(state => state.accounts);
   const [progress, setProgress] = useState(0);
+  const [localLoading, setLocalLoading] = useState(false);
 
   // Определяем, загружается ли аватар для текущего аккаунта
-  const isLoading = avatarLoadingId === accountId;
+  const isLoading = avatarLoadingIds.includes(accountId);
 
   useEffect(() => {
-    // Очистка URL при размонтировании компонента
+    // Если аккаунт начал загрузку, устанавливаем localLoading
+    if (isLoading && !localLoading) {
+      setLocalLoading(true);
+      setProgress(0); // Сбрасываем прогресс при начале новой загрузки
+    }
+    
+    // Если аккаунт закончил загрузку, сбрасываем localLoading через некоторое время
+    if (!isLoading && localLoading) {
+      // Быстро доводим прогресс до 100%
+      setProgress(100);
+      
+      // И через небольшую задержку сбрасываем его
+      const timer = setTimeout(() => {
+        setLocalLoading(false);
+        setProgress(0);
+      }, 500);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [isLoading, localLoading, accountId]);
+
+  // Очистка URL при размонтировании компонента
+  useEffect(() => {
     return () => {
       if (previewUrl) {
         URL.revokeObjectURL(previewUrl);
@@ -32,7 +55,6 @@ const AvatarUploader = ({ accountId, avatarUrl, className }) => {
       // Очищаем предпросмотр после успешной загрузки
       URL.revokeObjectURL(previewUrl);
       setPreviewUrl(null);
-      setProgress(0);
     }
   }, [isLoading, previewUrl]);
 
@@ -40,23 +62,27 @@ const AvatarUploader = ({ accountId, avatarUrl, className }) => {
   useEffect(() => {
     let progressInterval;
     
-    if (isLoading) {
+    if (localLoading && progress < 95) {
       progressInterval = setInterval(() => {
         setProgress(prevProgress => {
-          // Увеличиваем прогресс до 90%, оставляя последние 10% для завершения запроса
-          if (prevProgress < 90) {
-            return prevProgress + 5;
+          // Делаем загрузку более реалистичной:
+          // Быстрый старт, замедление в середине, ускорение в конце
+          if (prevProgress < 20) {
+            // Быстрый старт
+            return prevProgress + 3;
+          } else if (prevProgress < 50) {
+            // Медленнее в середине
+            return prevProgress + 1.5;
+          } else if (prevProgress < 85) {
+            // Еще медленнее ближе к концу
+            return prevProgress + 0.8;
+          } else if (prevProgress < 95) {
+            // Очень медленно на финише
+            return prevProgress + 0.3;
           }
           return prevProgress;
         });
-      }, 500);
-    } else if (progress > 0) {
-      // Если загрузка завершена, быстро доводим прогресс до 100%
-      setProgress(100);
-      // И через небольшую задержку сбрасываем его
-      setTimeout(() => {
-        setProgress(0);
-      }, 500);
+      }, 800); // Более медленный интервал для обновления
     }
 
     return () => {
@@ -64,7 +90,7 @@ const AvatarUploader = ({ accountId, avatarUrl, className }) => {
         clearInterval(progressInterval);
       }
     };
-  }, [isLoading, progress]);
+  }, [localLoading, progress]);
 
   // Получаем актуальный URL аватарки из Redux store
   const getCurrentAvatarUrl = () => {
@@ -142,10 +168,10 @@ const AvatarUploader = ({ accountId, avatarUrl, className }) => {
 
       {/* Область отображения аватарки */}
       <div 
-        className={`avatar-container ${isLoading ? 'loading' : ''}`}
+        className={`avatar-container ${localLoading ? 'loading' : ''}`}
         onClick={handleAvatarClick}
       >
-        {isLoading ? (
+        {localLoading ? (
           <>
             <div className="circle-loader" style={{ 
               backgroundImage: `conic-gradient(
@@ -156,7 +182,7 @@ const AvatarUploader = ({ accountId, avatarUrl, className }) => {
             <div className="spinner">
               <FontAwesomeIcon icon={faSpinner} spin />
             </div>
-            <div className="progress-text">{progress}%</div>
+            <div className="progress-text">{Math.round(progress)}%</div>
           </>
         ) : (
           <>
@@ -179,7 +205,11 @@ const AvatarUploader = ({ accountId, avatarUrl, className }) => {
               </div>
             )}
             <div className="avatar-overlay">
-              <FontAwesomeIcon icon={faCamera} />
+              Сменить аватар
+            </div>
+            <div className="avatar-tooltip">
+              <div className="avatar-tooltip-title">Смена аватарки</div>
+              Функционал для загрузки и смены изображения профиля на вашем аккаунте Facebook.
             </div>
           </>
         )}

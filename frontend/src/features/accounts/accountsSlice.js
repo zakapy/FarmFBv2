@@ -63,7 +63,7 @@ const accountsSlice = createSlice({
     list: [],
     loading: false,
     error: null,
-    avatarLoadingId: null,
+    avatarLoadingIds: [],
     avatarError: null
   },
   reducers: {},
@@ -119,11 +119,11 @@ const accountsSlice = createSlice({
       
       // Обработчики для смены аватарки
       .addCase(changeAvatar.pending, (state, action) => {
-        state.avatarLoadingId = action.meta.arg.id;
+        state.avatarLoadingIds.push(action.meta.arg.id);
         state.avatarError = null;
       })
       .addCase(changeAvatar.fulfilled, (state, action) => {
-        state.avatarLoadingId = null;
+        state.avatarLoadingIds = state.avatarLoadingIds.filter(id => id !== action.meta.arg.id);
         
         // Обновляем аватарку аккаунта в списке
         const { id, avatarUrl, account } = action.payload;
@@ -179,7 +179,7 @@ const accountsSlice = createSlice({
         }
       })
       .addCase(changeAvatar.rejected, (state, action) => {
-        state.avatarLoadingId = null;
+        state.avatarLoadingIds = state.avatarLoadingIds.filter(id => id !== action.meta.arg.id);
         state.avatarError = action.payload;
       });
   }

@@ -521,3 +521,23 @@ Call log:
 [2025-04-18 20:16:47] [31merror[39m: Ошибка при запуске профиля: browserContext.newPage: Protocol error (Target.createTarget): Failed to open a new tab
 [2025-04-18 20:16:47] [31merror[39m: Ошибка при смене аватарки: Не удалось запустить профиль: browserContext.newPage: Protocol error (Target.createTarget): Failed to open a new tab
 [2025-04-18 20:23:40] [31merror[39m: Ошибка при обработке диалога Windows: Shell is not a constructor
+[2025-04-18 20:27:17] [31merror[39m: Ошибка при смене аватарки: page.goto: Target page, context or browser has been closed
+Call log:
+[2m  - navigating to "https://www.facebook.com/profile.php", waiting until "networkidle"[22m
+
+[2025-04-18 20:30:56] [31merror[39m: Error: Invalid or expired refresh token
+    at exports.handleRefreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\services\authService.js:70:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async exports.refreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\controllers\authController.js:47:20)
+[2025-04-18 20:31:49] [31merror[39m: Ошибка при обработке диалога Windows: Shell is not a constructor
+[2025-04-18 20:32:21] [31merror[39m: Ошибка при смене аватарки: page.goto: Timeout 30000ms exceeded.
+Call log:
+[2m  - navigating to "https://www.facebook.com/profile.php", waiting until "networkidle"[22m
+
+[2025-04-18 20:35:42] [31merror[39m: Ошибка при запуске профиля: browserContext.newPage: Protocol error (Target.createTarget): Failed to open a new tab
+[2025-04-18 20:35:42] [31merror[39m: Ошибка при смене аватарки: Не удалось запустить профиль: browserContext.newPage: Protocol error (Target.createTarget): Failed to open a new tab
+[2025-04-18 20:38:53] [31merror[39m: Ошибка при смене аватарки: page.goto: net::ERR_ABORTED; maybe frame was detached?
+Call log:
+[2m  - navigating to "https://www.facebook.com/profile.php", waiting until "networkidle"[22m
+
+[2025-04-18 20:39:32] [31merror[39m: Ошибка при обработке диалога Windows: Shell is not a constructor
