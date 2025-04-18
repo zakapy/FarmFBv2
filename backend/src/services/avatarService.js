@@ -135,12 +135,111 @@ class AvatarService {
       fs.unlinkSync(tempFilePath);
       logger.info('Временный файл аватарки удален');
       
+      // Получаем URL аватарки пользователя
+      let avatarUrl = null;
+      try {
+        // Попытка получить URL аватарки
+        logger.info('Получаем URL новой аватарки');
+        
+        // Переходим на страницу профиля для получения актуальной аватарки
+        await page.goto('https://www.facebook.com/profile.php', {
+          waitUntil: 'networkidle',
+          timeout: 20000
+        });
+        
+        // Ждем загрузку страницы
+        await page.waitForTimeout(3000);
+        
+        // Получаем URL аватарки через JavaScript
+        avatarUrl = await page.evaluate(() => {
+          // Поиск изображения профиля различными способами
+          const avatarImages = Array.from(document.querySelectorAll('image[preserveAspectRatio="xMidYMid slice"]'));
+          if (avatarImages.length > 0) {
+            return avatarImages[0].getAttribute('xlink:href');
+          }
+          
+          // Альтернативный поиск аватарки
+          const profileImgs = Array.from(document.querySelectorAll('img[data-imgperflogname="profileCoverPhoto"]'));
+          if (profileImgs.length > 0) {
+            return profileImgs[0].src;
+          }
+          
+          // Дополнительные селекторы для поиска аватарки
+          const avatarSelectors = [
+            'img.x6umtig[data-imgperflogname="profileCoverPhoto"]',
+            'image[xlink\\:href*="fbcdn"]',
+            'img[src*="fbcdn"]',
+            '.x1rg5ohu image',
+            '.x1lliihq image',
+            'svg.x3ajldb image'
+          ];
+          
+          for (const selector of avatarSelectors) {
+            const elements = document.querySelectorAll(selector);
+            if (elements.length > 0) {
+              // Получаем src или xlink:href в зависимости от типа элемента
+              const element = elements[0];
+              return element.getAttribute('xlink:href') || element.getAttribute('href') || element.src;
+            }
+          }
+          
+          // Поиск любых изображений профиля
+          const anyProfileImages = Array.from(document.querySelectorAll('image[href*="facebook"], img[src*="facebook"], img[src*="fbcdn"]'));
+          if (anyProfileImages.length > 0) {
+            return anyProfileImages[0].getAttribute('href') || anyProfileImages[0].src;
+          }
+          
+          return null;
+        });
+        
+        logger.info(`Получен URL аватарки: ${avatarUrl || 'не найден'}`);
+        
+        // Создаем уникальный URL с timestamp, чтобы избежать кеширования
+        if (avatarUrl) {
+          avatarUrl = `${avatarUrl}?t=${Date.now()}`;
+        }
+      } catch (avatarError) {
+        logger.error(`Ошибка при получении URL аватарки: ${avatarError.message}`);
+        // Не прерываем процесс из-за ошибки получения URL аватарки
+      }
+      
+      // Обновляем мета-информацию аккаунта с URL новой аватарки
+      if (!account.meta) account.meta = {};
+      
+      // Сохраняем URL аватарки в мета-данных аккаунта
+      if (avatarUrl) {
+        account.meta.avatarUrl = avatarUrl;
+        account.meta.avatarUpdatedAt = new Date();
+        
+        // Сохраняем обновления в базе данных
+        try {
+          await account.save();
+          logger.info(`Обновлен URL аватарки в базе данных: ${account.meta.avatarUrl}`);
+        } catch (saveError) {
+          logger.error(`Ошибка при сохранении URL аватарки в базе данных: ${saveError.message}`);
+        }
+      } else {
+        logger.warn('URL аватарки не получен, не удалось обновить мета-данные');
+        
+        // Пробуем сохранить заглушку, если нет аватарки, чтобы сервер знал, что попытка была
+        if (!account.meta.avatarUrl) {
+          account.meta.avatarAttempted = true;
+          account.meta.avatarAttemptedAt = new Date();
+          try {
+            await account.save();
+          } catch (saveError) {
+            logger.error(`Ошибка при сохранении флага попытки загрузки аватарки: ${saveError.message}`);
+          }
+        }
+      }
+      
       // Закрываем браузер
       await this.dolphinService.stopProfile(dolphinProfileId, browser);
       
       return {
         success: true,
-        message: 'Аватарка успешно изменена'
+        message: 'Аватарка успешно изменена',
+        avatarUrl: account.meta?.avatarUrl || null
       };
       
     } catch (error) {

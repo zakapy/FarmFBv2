@@ -5,8 +5,8 @@
 }
 
 .avatar-container {
-  width: 100px;
-  height: 100px;
+  width: 90px;
+  height: 90px;
   border-radius: 50%;
   position: relative;
   overflow: hidden;
@@ -38,8 +38,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #7a7a7a;
-  font-size: 3rem;
+  color: #4a4a4a;
+  background-color: #f0f2f5;
+}
+
+.avatar-placeholder svg {
+  width: 60%;
+  height: 60%;
+  fill: #444;
 }
 
 .avatar-overlay {

@@ -44,11 +44,11 @@ export const changeAvatar = createAsyncThunk('accounts/changeAvatar', async ({ i
     
     // Если операция успешна, обновим аккаунт в состоянии
     if (result.success) {
-      // Получим обновленные данные аккаунта
-      const updatedAccount = await accountsAPI.getAccounts();
-      // Найдем обновленный аккаунт
-      const account = updatedAccount.find(acc => acc._id === id || acc.id === id);
-      return account || { id }; // В случае если аккаунт не найден, возвращаем хотя бы id
+      return {
+        id,
+        avatarUrl: result.avatarUrl,
+        account: result.account // Получаем обновленный аккаунт из ответа
+      };
     }
     
     return thunkAPI.rejectWithValue(result.error || 'Неизвестная ошибка при смене аватарки');
@@ -75,7 +75,25 @@ const accountsSlice = createSlice({
       })
       .addCase(fetchAccounts.fulfilled, (state, action) => {
         state.loading = false;
-        state.list = action.payload;
+        
+        // Преобразуем данные аккаунтов, добавляя timestamp к URL аватарок для избежания кеширования
+        state.list = action.payload.map(account => {
+          // Копируем аккаунт
+          const transformedAccount = { ...account };
+          
+          // Если есть мета-данные с URL аватарки
+          if (transformedAccount.meta && transformedAccount.meta.avatarUrl) {
+            // Добавляем или обновляем timestamp
+            const url = transformedAccount.meta.avatarUrl;
+            if (!url.includes('?')) {
+              transformedAccount.meta.avatarUrl = `${url}?t=${Date.now()}`;
+            } else if (!url.includes('t=')) {
+              transformedAccount.meta.avatarUrl = `${url}&t=${Date.now()}`;
+            }
+          }
+          
+          return transformedAccount;
+        });
       })
       .addCase(fetchAccounts.rejected, (state, action) => {
         state.loading = false;
@@ -105,11 +123,42 @@ const accountsSlice = createSlice({
       })
       .addCase(changeAvatar.fulfilled, (state, action) => {
         state.avatarLoading = false;
-        // Обновляем аккаунт в списке
-        const updatedId = action.payload._id || action.payload.id;
-        const index = state.list.findIndex(acc => acc._id === updatedId || acc.id === updatedId);
-        if (index !== -1 && action.payload._id) {
-          state.list[index] = action.payload;
+        
+        // Обновляем аватарку аккаунта в списке
+        const { id, avatarUrl, account } = action.payload;
+        const index = state.list.findIndex(acc => acc._id === id || acc.id === id);
+        
+        if (index !== -1) {
+          // Если получили полный объект аккаунта с сервера, используем его
+          if (account) {
+            // Сохраняем ID, который может быть в разных форматах
+            const existingId = state.list[index]._id || state.list[index].id;
+            
+            // Обновляем аккаунт, сохраняя его ID (может быть в _id или id)
+            state.list[index] = {
+              ...(typeof account === 'object' ? account : {}),
+              _id: existingId,
+              id: existingId
+            };
+            
+            // Убеждаемся, что meta существует и содержит avatarUrl
+            if (!state.list[index].meta) {
+              state.list[index].meta = {};
+            }
+            if (avatarUrl && (!state.list[index].meta.avatarUrl || state.list[index].meta.avatarUrl !== avatarUrl)) {
+              state.list[index].meta.avatarUrl = avatarUrl;
+            }
+          } 
+          // Если не получили полный аккаунт, просто обновляем avatarUrl
+          else {
+            // Инициализируем meta если не существует
+            if (!state.list[index].meta) {
+              state.list[index].meta = {};
+            }
+            
+            // Обновляем URL аватарки
+            state.list[index].meta.avatarUrl = avatarUrl;
+          }
         }
       })
       .addCase(changeAvatar.rejected, (state, action) => {

@@ -3,6 +3,7 @@
  */
 const logger = require('../config/logger');
 const avatarService = require('../services/avatarService');
+const Account = require('../models/Account');
 
 /**
  * Сменить аватарку Facebook аккаунта
@@ -33,9 +34,25 @@ exports.changeAvatar = async (req, res) => {
     const result = await avatarService.changeAvatar(accountId, req.file);
     
     if (result.success) {
+      // Получаем актуальные данные аккаунта
+      const updatedAccount = await Account.findById(accountId);
+      
+      // Добавляем timestamp к URL, чтобы избежать кеширования
+      let responseAvatarUrl = result.avatarUrl || (updatedAccount?.meta?.avatarUrl || null);
+      if (responseAvatarUrl && !responseAvatarUrl.includes('?')) {
+        responseAvatarUrl = `${responseAvatarUrl}?t=${Date.now()}`;
+      }
+      
       return res.status(200).json({
         success: true,
-        message: result.message
+        message: result.message,
+        avatarUrl: responseAvatarUrl,
+        account: {
+          id: updatedAccount._id,
+          name: updatedAccount.name,
+          status: updatedAccount.status,
+          meta: updatedAccount.meta
+        }
       });
     } else {
       return res.status(400).json({

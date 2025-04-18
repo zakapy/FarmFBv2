@@ -1,6 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { changeAvatar } from '../features/accounts/accountsSlice';
+import { changeAvatar, fetchAccounts } from '../features/accounts/accountsSlice';
 import { toast } from 'react-toastify';
 import './AvatarUploader.css';
 
@@ -9,6 +9,20 @@ const AvatarUploader = ({ accountId, avatarUrl, className }) => {
   const [previewUrl, setPreviewUrl] = useState(null);
   const fileInputRef = useRef(null);
   const { avatarLoading } = useSelector(state => state.accounts);
+  const { list: accounts } = useSelector(state => state.accounts);
+
+  // Обновляем предпросмотр при изменении avatarUrl из пропсов
+  useEffect(() => {
+    if (avatarUrl) {
+      setPreviewUrl(null); // Сбрасываем локальный предпросмотр, чтобы использовать URL из пропсов
+    }
+  }, [avatarUrl]);
+
+  // Получаем актуальный URL аватарки из Redux store
+  const getCurrentAvatarUrl = () => {
+    const account = accounts.find(acc => acc._id === accountId || acc.id === accountId);
+    return account?.meta?.avatarUrl || avatarUrl;
+  };
 
   // Обработчик клика на аватарку для выбора файла
   const handleAvatarClick = () => {
@@ -41,15 +55,27 @@ const AvatarUploader = ({ accountId, avatarUrl, className }) => {
     // Вызываем экшн смены аватарки
     dispatch(changeAvatar({ id: accountId, file }))
       .unwrap()
-      .then(() => {
+      .then((result) => {
         toast.success('Аватарка успешно изменена');
+        
+        // Если получен URL аватарки с сервера
+        if (result && result.avatarUrl) {
+          // URL будет обновлен через getCurrentAvatarUrl
+          setPreviewUrl(null); // Сбрасываем локальный предпросмотр
+        }
+        
+        // Обновляем список аккаунтов с сервера для получения актуальных данных
+        dispatch(fetchAccounts());
       })
       .catch((error) => {
         toast.error(error || 'Ошибка при смене аватарки');
-        // Сбрасываем предпросмотр
+        // Сбрасываем предпросмотр при ошибке
         setPreviewUrl(null);
       });
   };
+
+  // Используем актуальный URL из Redux или предпросмотр
+  const displayUrl = previewUrl || getCurrentAvatarUrl();
 
   return (
     <div className={`avatar-uploader ${className || ''}`}>
@@ -73,15 +99,22 @@ const AvatarUploader = ({ accountId, avatarUrl, className }) => {
           </div>
         ) : (
           <>
-            {previewUrl || avatarUrl ? (
+            {displayUrl ? (
               <img 
-                src={previewUrl || avatarUrl} 
+                src={displayUrl} 
                 alt="Аватар" 
                 className="avatar-image" 
+                onError={() => {
+                  // Если изображение не загружается, показываем плейсхолдер
+                  setPreviewUrl(null);
+                  console.error("Ошибка загрузки изображения:", displayUrl);
+                }}
               />
             ) : (
               <div className="avatar-placeholder">
-                <i className="fas fa-user"></i>
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                </svg>
               </div>
             )}
             <div className="avatar-overlay">
