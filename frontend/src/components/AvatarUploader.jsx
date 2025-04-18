@@ -2,21 +2,69 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { changeAvatar, fetchAccounts } from '../features/accounts/accountsSlice';
 import { toast } from 'react-toastify';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCamera, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import './AvatarUploader.css';
 
 const AvatarUploader = ({ accountId, avatarUrl, className }) => {
   const dispatch = useDispatch();
   const [previewUrl, setPreviewUrl] = useState(null);
   const fileInputRef = useRef(null);
-  const { avatarLoading } = useSelector(state => state.accounts);
+  const { avatarLoadingId } = useSelector(state => state.accounts);
   const { list: accounts } = useSelector(state => state.accounts);
+  const [progress, setProgress] = useState(0);
 
-  // Обновляем предпросмотр при изменении avatarUrl из пропсов
+  // Определяем, загружается ли аватар для текущего аккаунта
+  const isLoading = avatarLoadingId === accountId;
+
   useEffect(() => {
-    if (avatarUrl) {
-      setPreviewUrl(null); // Сбрасываем локальный предпросмотр, чтобы использовать URL из пропсов
+    // Очистка URL при размонтировании компонента
+    return () => {
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+    };
+  }, [previewUrl]);
+
+  // При успешной загрузке аватара сбрасываем предпросмотр
+  useEffect(() => {
+    if (!isLoading && previewUrl) {
+      // Очищаем предпросмотр после успешной загрузки
+      URL.revokeObjectURL(previewUrl);
+      setPreviewUrl(null);
+      setProgress(0);
     }
-  }, [avatarUrl]);
+  }, [isLoading, previewUrl]);
+
+  // Запускаем имитацию прогресса загрузки
+  useEffect(() => {
+    let progressInterval;
+    
+    if (isLoading) {
+      progressInterval = setInterval(() => {
+        setProgress(prevProgress => {
+          // Увеличиваем прогресс до 90%, оставляя последние 10% для завершения запроса
+          if (prevProgress < 90) {
+            return prevProgress + 5;
+          }
+          return prevProgress;
+        });
+      }, 500);
+    } else if (progress > 0) {
+      // Если загрузка завершена, быстро доводим прогресс до 100%
+      setProgress(100);
+      // И через небольшую задержку сбрасываем его
+      setTimeout(() => {
+        setProgress(0);
+      }, 500);
+    }
+
+    return () => {
+      if (progressInterval) {
+        clearInterval(progressInterval);
+      }
+    };
+  }, [isLoading, progress]);
 
   // Получаем актуальный URL аватарки из Redux store
   const getCurrentAvatarUrl = () => {
@@ -26,6 +74,10 @@ const AvatarUploader = ({ accountId, avatarUrl, className }) => {
 
   // Обработчик клика на аватарку для выбора файла
   const handleAvatarClick = () => {
+    // Проверяем, не загружается ли уже аватар для этого аккаунта
+    if (isLoading) return;
+    
+    // Клик по аватару вызывает клик по скрытому input[type="file"]
     fileInputRef.current.click();
   };
 
@@ -90,13 +142,22 @@ const AvatarUploader = ({ accountId, avatarUrl, className }) => {
 
       {/* Область отображения аватарки */}
       <div 
-        className={`avatar-container ${avatarLoading ? 'loading' : ''}`}
+        className={`avatar-container ${isLoading ? 'loading' : ''}`}
         onClick={handleAvatarClick}
       >
-        {avatarLoading ? (
-          <div className="avatar-loader">
-            <div className="spinner"></div>
-          </div>
+        {isLoading ? (
+          <>
+            <div className="circle-loader" style={{ 
+              backgroundImage: `conic-gradient(
+                #4CAF50 ${progress}%, 
+                rgba(255, 255, 255, 0.2) ${progress}%
+              )`
+            }}></div>
+            <div className="spinner">
+              <FontAwesomeIcon icon={faSpinner} spin />
+            </div>
+            <div className="progress-text">{progress}%</div>
+          </>
         ) : (
           <>
             {displayUrl ? (
@@ -118,7 +179,7 @@ const AvatarUploader = ({ accountId, avatarUrl, className }) => {
               </div>
             )}
             <div className="avatar-overlay">
-              <span>Сменить аватарку</span>
+              <FontAwesomeIcon icon={faCamera} />
             </div>
           </>
         )}

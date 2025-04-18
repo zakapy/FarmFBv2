@@ -63,7 +63,7 @@ const accountsSlice = createSlice({
     list: [],
     loading: false,
     error: null,
-    avatarLoading: false,
+    avatarLoadingId: null,
     avatarError: null
   },
   reducers: {},
@@ -83,13 +83,14 @@ const accountsSlice = createSlice({
           
           // Если есть мета-данные с URL аватарки
           if (transformedAccount.meta && transformedAccount.meta.avatarUrl) {
-            // Добавляем или обновляем timestamp
-            const url = transformedAccount.meta.avatarUrl;
-            if (!url.includes('?')) {
-              transformedAccount.meta.avatarUrl = `${url}?t=${Date.now()}`;
-            } else if (!url.includes('t=')) {
-              transformedAccount.meta.avatarUrl = `${url}&t=${Date.now()}`;
+            // Получаем чистый URL без параметров
+            let cleanUrl = transformedAccount.meta.avatarUrl;
+            if (cleanUrl.includes('?')) {
+              cleanUrl = cleanUrl.split('?')[0];
             }
+            
+            // Добавляем новый timestamp
+            transformedAccount.meta.avatarUrl = `${cleanUrl}?t=${Date.now()}`;
           }
           
           return transformedAccount;
@@ -117,12 +118,12 @@ const accountsSlice = createSlice({
       })
       
       // Обработчики для смены аватарки
-      .addCase(changeAvatar.pending, (state) => {
-        state.avatarLoading = true;
+      .addCase(changeAvatar.pending, (state, action) => {
+        state.avatarLoadingId = action.meta.arg.id;
         state.avatarError = null;
       })
       .addCase(changeAvatar.fulfilled, (state, action) => {
-        state.avatarLoading = false;
+        state.avatarLoadingId = null;
         
         // Обновляем аватарку аккаунта в списке
         const { id, avatarUrl, account } = action.payload;
@@ -145,8 +146,16 @@ const accountsSlice = createSlice({
             if (!state.list[index].meta) {
               state.list[index].meta = {};
             }
-            if (avatarUrl && (!state.list[index].meta.avatarUrl || state.list[index].meta.avatarUrl !== avatarUrl)) {
-              state.list[index].meta.avatarUrl = avatarUrl;
+            
+            // Всегда обновляем URL аватарки с добавлением timestamp для избежания кеширования
+            if (avatarUrl) {
+              // Удаляем старый timestamp если есть и добавляем новый
+              let cleanUrl = avatarUrl;
+              if (cleanUrl.includes('?')) {
+                cleanUrl = cleanUrl.split('?')[0];
+              }
+              
+              state.list[index].meta.avatarUrl = `${cleanUrl}?t=${Date.now()}`;
             }
           } 
           // Если не получили полный аккаунт, просто обновляем avatarUrl
@@ -156,13 +165,21 @@ const accountsSlice = createSlice({
               state.list[index].meta = {};
             }
             
-            // Обновляем URL аватарки
-            state.list[index].meta.avatarUrl = avatarUrl;
+            // Всегда обновляем URL аватарки с добавлением timestamp для избежания кеширования
+            if (avatarUrl) {
+              // Удаляем старый timestamp если есть и добавляем новый
+              let cleanUrl = avatarUrl;
+              if (cleanUrl.includes('?')) {
+                cleanUrl = cleanUrl.split('?')[0];
+              }
+              
+              state.list[index].meta.avatarUrl = `${cleanUrl}?t=${Date.now()}`;
+            }
           }
         }
       })
       .addCase(changeAvatar.rejected, (state, action) => {
-        state.avatarLoading = false;
+        state.avatarLoadingId = null;
         state.avatarError = action.payload;
       });
   }

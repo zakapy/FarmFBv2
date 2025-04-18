@@ -507,3 +507,17 @@ Call log:
 [2025-04-18 16:56:37] [31merror[39m: Ошибка при загрузке аватарки: Ошибка при сохранении аватарки: Фото профиля обновлено
 [2025-04-18 16:56:37] [31merror[39m: Ошибка при смене аватарки: Не удалось загрузить аватарку: Ошибка при сохранении аватарки: Фото профиля обновлено
 [2025-04-18 17:08:34] [31merror[39m: Ошибка при обработке диалога Windows: Shell is not a constructor
+[2025-04-18 18:46:45] [31merror[39m: Ошибка при обработке диалога Windows: Shell is not a constructor
+[2025-04-18 18:54:35] [31merror[39m: Ошибка при обработке диалога Windows: Shell is not a constructor
+[2025-04-18 18:59:31] [31merror[39m: Error: Invalid or expired refresh token
+    at exports.handleRefreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\services\authService.js:70:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async exports.refreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\controllers\authController.js:47:20)
+[2025-04-18 19:00:28] [31merror[39m: Ошибка при обработке диалога Windows: Shell is not a constructor
+[2025-04-18 19:18:52] [31merror[39m: Ошибка при загрузке фото профиля: page.evaluate: Target page, context or browser has been closed
+[2025-04-18 19:18:52] [31merror[39m: Ошибка при смене аватарки: page.screenshot: Target page, context or browser has been closed
+[2025-04-18 19:23:48] [31merror[39m: Ошибка при обработке диалога Windows: Shell is not a constructor
+[2025-04-18 19:33:25] [31merror[39m: Ошибка при обработке диалога Windows: Shell is not a constructor
+[2025-04-18 20:16:47] [31merror[39m: Ошибка при запуске профиля: browserContext.newPage: Protocol error (Target.createTarget): Failed to open a new tab
+[2025-04-18 20:16:47] [31merror[39m: Ошибка при смене аватарки: Не удалось запустить профиль: browserContext.newPage: Protocol error (Target.createTarget): Failed to open a new tab
+[2025-04-18 20:23:40] [31merror[39m: Ошибка при обработке диалога Windows: Shell is not a constructor

@@ -8,6 +8,8 @@ import { toast } from 'react-toastify';
 import Button from './Button';
 import AccountForm from './AccountForm';
 import AvatarUploader from './AvatarUploader';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPen, faTrash, faSync, faKey, faCheck, faUserCheck, faUserTimes } from '@fortawesome/free-solid-svg-icons';
 
 const AccountCard = ({ account, onEdit, onDelete, refreshAccounts }) => {
   const [status, setStatus] = useState(account.status || 'неизвестно');
@@ -334,12 +336,18 @@ const AccountCard = ({ account, onEdit, onDelete, refreshAccounts }) => {
           </div>
 
           <div className="edit-delete-buttons">
-            <Button onClick={() => onEdit(account)} variant="outline-primary">
-              ✏️ Изменить
-            </Button>
-            <Button onClick={() => onDelete(account._id || account.id)} variant="outline-danger">
-              🗑️ Удалить
-            </Button>
+            <button 
+              className="edit-button" 
+              onClick={() => onEdit(account)}
+            >
+              <FontAwesomeIcon icon={faPen} /> Изменить
+            </button>
+            <button 
+              className="delete-button" 
+              onClick={() => onDelete(account._id || account.id)}
+            >
+              <FontAwesomeIcon icon={faTrash} /> Удалить
+            </button>
           </div>
         </div>
       </div>
