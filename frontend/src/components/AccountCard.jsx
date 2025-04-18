@@ -7,6 +7,7 @@ import { API as ENDPOINTS } from '../api/endpoints';
 import { toast } from 'react-toastify';
 import Button from './Button';
 import AccountForm from './AccountForm';
+import AvatarUploader from './AvatarUploader';
 
 const AccountCard = ({ account, onEdit, onDelete, refreshAccounts }) => {
   const [status, setStatus] = useState(account.status || 'неизвестно');
@@ -14,12 +15,14 @@ const AccountCard = ({ account, onEdit, onDelete, refreshAccounts }) => {
   const [syncState, setSyncState] = useState('idle'); // idle | loading | success | error
   const [show2FAModal, setShow2FAModal] = useState(false);
   const [authState, setAuthState] = useState('idle'); // idle | loading | success | error
+  const [twoFACode, setTwoFACode] = useState('');
 
   const cookiesOk = Array.isArray(account.cookies) && account.cookies.length > 0;
   const proxy = typeof account.proxy === 'string' ? account.proxy : (account.proxy?.name || '');
   const hasDolphinProfile = account.dolphin && account.dolphin.profileId;
   const needs2FA = account.meta && account.meta.requires2FA;
   const hasAuthData = account.meta && account.meta.email;
+  const avatarUrl = account.meta?.avatarUrl || '';
 
   const renderStatus = () => {
     switch (status?.toLowerCase()) {
@@ -198,7 +201,7 @@ const AccountCard = ({ account, onEdit, onDelete, refreshAccounts }) => {
     }
   };
 
-  const renderDolphinButton = () => {
+  const renderSyncButton = () => {
     if (hasDolphinProfile) {
       return null; // Уже синхронизирован
     }
@@ -285,52 +288,79 @@ const AccountCard = ({ account, onEdit, onDelete, refreshAccounts }) => {
   };
 
   return (
-    <>
-      <div className="account-card">
-        <div>
-          <h3>{account.name || 'Без названия'}</h3>
-          <p><strong>Куки:</strong> {cookiesOk ? <span style={{ color: 'green' }}>✅ Есть</span> : <span style={{ color: 'red' }}>❌ Нет</span>}</p>
-          <p><strong>Прокси:</strong> {proxy ? <span>🌐 {proxy}</span> : <span style={{ color: 'gray' }}>— Нет</span>}</p>
-          <p><strong>Статус:</strong> {renderStatus()}</p>
-          {renderDolphinInfo()}
-          {render2FABadge()}
-          {hasAuthData && (
-            <p><strong>Учетные данные:</strong> <span style={{ color: 'green' }}>✅ Сохранены</span></p>
-          )}
+    <div className="account-card">
+      <div className="account-card-header">
+        <div className="account-avatar-section">
+          <AvatarUploader
+            accountId={account._id || account.id}
+            avatarUrl={avatarUrl}
+            className="account-avatar"
+          />
+          <h3 className="account-name">{account.name}</h3>
         </div>
 
-        <div className="actions">
-          <button
-            className="btn-icon btn-secondary"
-            onClick={onEdit}
-            title="Редактировать"
-          >
-            ✏️
-          </button>
-          <button
-            className="btn-icon btn-primary"
-            onClick={onDelete}
-            title="Удалить"
-          >
-            🗑️
-          </button>
-          <div className="action-buttons">
-            {renderCheckButton()}
-            {renderDolphinButton()}
-            {renderAuthButton()}
+        <div className="account-status">
+          {renderStatus()}
+        </div>
+      </div>
+
+      <div className="account-card-body">
+        <div className="account-details">
+          <p><strong>ID:</strong> {account._id || account.id}</p>
+          {renderDolphinInfo()}
+          {account.meta && account.meta.email && (
+            <p><strong>Email:</strong> {account.meta.email}</p>
+          )}
+          {proxy && <p><strong>Proxy:</strong> {proxy}</p>}
+          {account.proxyType && <p><strong>Proxy Type:</strong> {account.proxyType}</p>}
+        </div>
+
+        <div className="account-card-buttons">
+          <div className="button-group">
+            {!hasDolphinProfile && (
+              <div className="action-button">
+                {renderSyncButton()}
+              </div>
+            )}
+            <div className="action-button">
+              {renderCheckButton()}
+            </div>
+            {hasAuthData && (
+              <div className="action-button">
+                {renderAuthButton()}
+              </div>
+            )}
+            {render2FABadge()}
+          </div>
+
+          <div className="edit-delete-buttons">
+            <Button onClick={() => onEdit(account)} variant="outline-primary">
+              ✏️ Изменить
+            </Button>
+            <Button onClick={() => onDelete(account._id || account.id)} variant="outline-danger">
+              🗑️ Удалить
+            </Button>
           </div>
         </div>
       </div>
 
-      {/* Модальное окно для 2FA верификации */}
       {show2FAModal && (
-        <AccountForm
-          initialData={account}
-          onClose={() => setShow2FAModal(false)}
-          onSubmit={handle2FAVerify}
-        />
+        <div className="modal">
+          <div className="modal-content">
+            <h2>Введите код 2FA</h2>
+            <input 
+              type="text" 
+              placeholder="Код из Google Authenticator"
+              onChange={(e) => setTwoFACode(e.target.value)}
+            />
+            <div className="modal-buttons">
+              <button onClick={() => handle2FAVerify({ twoFactorCode: twoFACode })}>Подтвердить</button>
+              <button onClick={() => setShow2FAModal(false)}>Отмена</button>
+            </div>
+          </div>
+        </div>
       )}
-    </>
+    </div>
   );
 };
 

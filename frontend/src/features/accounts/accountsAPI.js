@@ -24,3 +24,18 @@ export const deleteAccount = async (id) => {
   const res = await api.delete(API.ACCOUNTS.DELETE(id));
   return res.data;
 };
+
+// Сменить аватарку аккаунта
+export const changeAvatar = async (id, file) => {
+  // Создаем FormData для отправки файла
+  const formData = new FormData();
+  formData.append('avatar', file);
+  
+  const res = await api.post(API.ACCOUNTS.CHANGE_AVATAR(id), formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  });
+  
+  return res.data;
+};

@@ -217,3 +217,145 @@
 .credentials-info.no-credentials {
   color: #757575;
 }
+
+/* Добавляем в конец файла стили для поддержки отображения аватарки */
+
+.account-card {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+}
+
+.account-card:hover {
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.account-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 15px;
+}
+
+.account-avatar-section {
+  display: flex;
+  align-items: center;
+}
+
+.account-avatar {
+  margin-right: 15px;
+}
+
+.account-name {
+  margin: 0;
+  font-size: 1.4rem;
+  color: #1877f2;
+}
+
+.account-status {
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.account-card-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.account-details {
+  margin-bottom: 15px;
+}
+
+.account-details p {
+  margin: 5px 0;
+  font-size: 0.9rem;
+}
+
+.account-card-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.button-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.action-button {
+  flex: 1;
+  min-width: 120px;
+}
+
+.edit-delete-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+/* Стили для модального окна 2FA */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  min-width: 300px;
+  max-width: 500px;
+}
+
+.modal-content h2 {
+  margin-top: 0;
+  color: #1877f2;
+}
+
+.modal-content input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 15px;
+  gap: 10px;
+}
+
+.modal-buttons button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.modal-buttons button:first-child {
+  background-color: #1877f2;
+  color: white;
+}
+
+.modal-buttons button:last-child {
+  background-color: #f0f2f5;
+  color: #333;
+}

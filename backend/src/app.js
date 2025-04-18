@@ -67,6 +67,7 @@ console.log(' - DELETE /api/v1/accounts/:id/delete');
 console.log(' - POST   /api/v1/accounts/:id/check');
 console.log(' - POST   /api/v1/accounts/check-proxy');
 console.log(' - POST   /api/v1/accounts/:id/sync-dolphin');
+console.log(' - POST   /api/v1/accounts/:id/avatar');
 console.log(' - POST   /api/v1/farm/start');
 console.log(' - GET    /api/v1/farm/status/:accountId');
 console.log(' - POST   /api/v1/farm/stop/:farmId');

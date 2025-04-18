@@ -475,3 +475,35 @@ Call log:
     at exports.handleRefreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\services\authService.js:70:11)
     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
     at async exports.refreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\controllers\authController.js:47:20)
+[2025-04-18 16:04:38] [31merror[39m: Error: Invalid or expired refresh token
+    at exports.handleRefreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\services\authService.js:70:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async exports.refreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\controllers\authController.js:47:20)
+[2025-04-18 16:07:18] [31merror[39m: Ошибка при запуске профиля: Request failed with status code 500
+[2025-04-18 16:07:18] [31merror[39m: Статус: 500
+[2025-04-18 16:07:18] [31merror[39m: Данные: {"success":false,"message":"initConnectionError","error":"Error: The checkProxy operation timed out after 30 seconds"}
+[2025-04-18 16:07:18] [31merror[39m: Не удалось запустить профиль Dolphin: Request failed with status code 500
+[2025-04-18 16:15:00] [31merror[39m: Ошибка при смене аватарки: Профиль Dolphin не настроен для этого аккаунта
+[2025-04-18 16:16:07] [31merror[39m: Ошибка при смене аватарки: Профиль Dolphin не настроен для этого аккаунта
+[2025-04-18 16:16:10] [31merror[39m: Ошибка при смене аватарки: Профиль Dolphin не настроен для этого аккаунта
+[2025-04-18 16:18:19] [31merror[39m: Ошибка при смене аватарки: Профиль Dolphin не настроен для этого аккаунта
+[2025-04-18 16:24:35] [31merror[39m: Ошибка при смене аватарки: Аккаунт не авторизован в Facebook. Пожалуйста, авторизуйтесь перед сменой аватарки
+[2025-04-18 16:26:46] [31merror[39m: Ошибка при навигации на страницу редактирования аватарки: page.click: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('image[href*="profile-picture"], [data-visualcompletion="media-vc-image"]')[22m
+
+[2025-04-18 16:26:46] [31merror[39m: Ошибка при смене аватарки: Не удалось перейти на страницу редактирования аватарки: page.click: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('image[href*="profile-picture"], [data-visualcompletion="media-vc-image"]')[22m
+
+[2025-04-18 16:46:04] [31merror[39m: Error: Invalid or expired refresh token
+    at exports.handleRefreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\services\authService.js:70:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async exports.refreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\controllers\authController.js:47:20)
+[2025-04-18 16:54:43] [31merror[39m: Ошибка при запуске профиля: Request failed with status code 500
+[2025-04-18 16:54:43] [31merror[39m: Статус: 500
+[2025-04-18 16:54:43] [31merror[39m: Данные: {"error":"_ct: Profile ID 598701445 already running","errorObject":{"name":"_ct","text":"Profile ID 598701445 already running","code":"E_BROWSER_RUN_DUPLICATE"}}
+[2025-04-18 16:54:43] [31merror[39m: Ошибка при смене аватарки: Не удалось запустить профиль: Request failed with status code 500
+[2025-04-18 16:56:37] [31merror[39m: Ошибка при загрузке аватарки: Ошибка при сохранении аватарки: Фото профиля обновлено
+[2025-04-18 16:56:37] [31merror[39m: Ошибка при смене аватарки: Не удалось загрузить аватарку: Ошибка при сохранении аватарки: Фото профиля обновлено
+[2025-04-18 17:08:34] [31merror[39m: Ошибка при обработке диалога Windows: Shell is not a constructor

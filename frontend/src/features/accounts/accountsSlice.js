@@ -37,12 +37,34 @@ export const removeAccount = createAsyncThunk('accounts/delete', async (id, thun
   }
 });
 
+// Thunk для смены аватарки аккаунта
+export const changeAvatar = createAsyncThunk('accounts/changeAvatar', async ({ id, file }, thunkAPI) => {
+  try {
+    const result = await accountsAPI.changeAvatar(id, file);
+    
+    // Если операция успешна, обновим аккаунт в состоянии
+    if (result.success) {
+      // Получим обновленные данные аккаунта
+      const updatedAccount = await accountsAPI.getAccounts();
+      // Найдем обновленный аккаунт
+      const account = updatedAccount.find(acc => acc._id === id || acc.id === id);
+      return account || { id }; // В случае если аккаунт не найден, возвращаем хотя бы id
+    }
+    
+    return thunkAPI.rejectWithValue(result.error || 'Неизвестная ошибка при смене аватарки');
+  } catch (err) {
+    return thunkAPI.rejectWithValue(err.response?.data?.error || 'Ошибка при смене аватарки');
+  }
+});
+
 const accountsSlice = createSlice({
   name: 'accounts',
   initialState: {
     list: [],
     loading: false,
     error: null,
+    avatarLoading: false,
+    avatarError: null
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -74,6 +96,25 @@ const accountsSlice = createSlice({
 
       .addCase(removeAccount.fulfilled, (state, action) => {
         state.list = state.list.filter(acc => acc._id !== action.payload);
+      })
+      
+      // Обработчики для смены аватарки
+      .addCase(changeAvatar.pending, (state) => {
+        state.avatarLoading = true;
+        state.avatarError = null;
+      })
+      .addCase(changeAvatar.fulfilled, (state, action) => {
+        state.avatarLoading = false;
+        // Обновляем аккаунт в списке
+        const updatedId = action.payload._id || action.payload.id;
+        const index = state.list.findIndex(acc => acc._id === updatedId || acc.id === updatedId);
+        if (index !== -1 && action.payload._id) {
+          state.list[index] = action.payload;
+        }
+      })
+      .addCase(changeAvatar.rejected, (state, action) => {
+        state.avatarLoading = false;
+        state.avatarError = action.payload;
       });
   }
 });

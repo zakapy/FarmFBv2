@@ -14,6 +14,7 @@ export const API = {
     DELETE: (id) => `${BASE}api/v1/accounts/${id}/delete`,
     CHECK_PROXY: `${BASE}api/v1/accounts/check-proxy`,
     SYNC_DOLPHIN: (id) => `${BASE}api/v1/accounts/${id}/sync-dolphin`,
+    CHANGE_AVATAR: (id) => `${BASE}api/v1/accounts/${id}/avatar`,
   },
   FARMING: {
     BASE: `${BASE}api/v1/farm`,
