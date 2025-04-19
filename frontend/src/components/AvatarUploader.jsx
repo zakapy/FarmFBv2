@@ -3,8 +3,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { changeAvatar, fetchAccounts } from '../features/accounts/accountsSlice';
 import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCamera, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faCamera } from '@fortawesome/free-solid-svg-icons';
 import './AvatarUploader.css';
+
+const STORAGE_KEY_PREFIX = 'avatar_upload_';
+const MAX_PROGRESS = 95; // Максимальный процент до завершения загрузки
 
 const AvatarUploader = ({ accountId, avatarUrl, className }) => {
   const dispatch = useDispatch();
@@ -12,33 +15,64 @@ const AvatarUploader = ({ accountId, avatarUrl, className }) => {
   const fileInputRef = useRef(null);
   const { avatarLoadingIds } = useSelector(state => state.accounts);
   const { list: accounts } = useSelector(state => state.accounts);
-  const [progress, setProgress] = useState(0);
-  const [localLoading, setLocalLoading] = useState(false);
+  const [progress, setProgress] = useState(() => {
+    // Восстанавливаем прогресс из localStorage при монтировании
+    const savedProgress = localStorage.getItem(`${STORAGE_KEY_PREFIX}${accountId}`);
+    return savedProgress ? parseInt(savedProgress, 10) : 0;
+  });
+  const [localLoading, setLocalLoading] = useState(() => {
+    // Восстанавливаем состояние загрузки из localStorage
+    return localStorage.getItem(`${STORAGE_KEY_PREFIX}${accountId}_loading`) === 'true';
+  });
 
   // Определяем, загружается ли аватар для текущего аккаунта
   const isLoading = avatarLoadingIds.includes(accountId);
+
+  // Обновляем localStorage при изменении прогресса
+  useEffect(() => {
+    if (progress > 0) {
+      localStorage.setItem(`${STORAGE_KEY_PREFIX}${accountId}`, progress.toString());
+    } else {
+      localStorage.removeItem(`${STORAGE_KEY_PREFIX}${accountId}`);
+    }
+  }, [progress, accountId]);
+
+  // Обновляем localStorage при изменении состояния загрузки
+  useEffect(() => {
+    if (localLoading) {
+      localStorage.setItem(`${STORAGE_KEY_PREFIX}${accountId}_loading`, 'true');
+    } else {
+      localStorage.removeItem(`${STORAGE_KEY_PREFIX}${accountId}_loading`);
+    }
+  }, [localLoading, accountId]);
 
   useEffect(() => {
     // Если аккаунт начал загрузку, устанавливаем localLoading
     if (isLoading && !localLoading) {
       setLocalLoading(true);
-      setProgress(0); // Сбрасываем прогресс при начале новой загрузки
+      // Не сбрасываем прогресс, если он уже есть
+      if (progress === 0) {
+        setProgress(5); // Начинаем с 5%
+      }
     }
     
-    // Если аккаунт закончил загрузку, сбрасываем localLoading через некоторое время
+    // Если аккаунт закончил загрузку, доводим прогресс до 100%
     if (!isLoading && localLoading) {
       // Быстро доводим прогресс до 100%
       setProgress(100);
       
-      // И через небольшую задержку сбрасываем его
+      // И через небольшую задержку сбрасываем всё
       const timer = setTimeout(() => {
         setLocalLoading(false);
         setProgress(0);
-      }, 500);
+        // Очищаем localStorage
+        localStorage.removeItem(`${STORAGE_KEY_PREFIX}${accountId}`);
+        localStorage.removeItem(`${STORAGE_KEY_PREFIX}${accountId}_loading`);
+      }, 800);
       
       return () => clearTimeout(timer);
     }
-  }, [isLoading, localLoading, accountId]);
+  }, [isLoading, localLoading, accountId, progress]);
 
   // Очистка URL при размонтировании компонента
   useEffect(() => {
@@ -62,27 +96,20 @@ const AvatarUploader = ({ accountId, avatarUrl, className }) => {
   useEffect(() => {
     let progressInterval;
     
-    if (localLoading && progress < 95) {
+    // Если идет загрузка и прогресс меньше максимального порога
+    if (localLoading && progress < MAX_PROGRESS) {
       progressInterval = setInterval(() => {
         setProgress(prevProgress => {
-          // Делаем загрузку более реалистичной:
-          // Быстрый старт, замедление в середине, ускорение в конце
           if (prevProgress < 20) {
-            // Быстрый старт
-            return prevProgress + 3;
+            return prevProgress + 0.5; // Очень медленно в начале
           } else if (prevProgress < 50) {
-            // Медленнее в середине
-            return prevProgress + 1.5;
-          } else if (prevProgress < 85) {
-            // Еще медленнее ближе к концу
-            return prevProgress + 0.8;
-          } else if (prevProgress < 95) {
-            // Очень медленно на финише
-            return prevProgress + 0.3;
+            return prevProgress + 0.3; // Медленнее в середине
+          } else if (prevProgress < MAX_PROGRESS) {
+            return prevProgress + 0.1; // Крайне медленно ближе к концу
           }
           return prevProgress;
         });
-      }, 800); // Более медленный интервал для обновления
+      }, 300); // Более редкие обновления
     }
 
     return () => {
@@ -101,7 +128,7 @@ const AvatarUploader = ({ accountId, avatarUrl, className }) => {
   // Обработчик клика на аватарку для выбора файла
   const handleAvatarClick = () => {
     // Проверяем, не загружается ли уже аватар для этого аккаунта
-    if (isLoading) return;
+    if (isLoading || localLoading) return;
     
     // Клик по аватару вызывает клик по скрытому input[type="file"]
     fileInputRef.current.click();
@@ -130,11 +157,16 @@ const AvatarUploader = ({ accountId, avatarUrl, className }) => {
     const objectUrl = URL.createObjectURL(file);
     setPreviewUrl(objectUrl);
 
+    // Сохраняем начальный прогресс
+    setProgress(5);
+    localStorage.setItem(`${STORAGE_KEY_PREFIX}${accountId}`, '5');
+    localStorage.setItem(`${STORAGE_KEY_PREFIX}${accountId}_loading`, 'true');
+
     // Вызываем экшн смены аватарки
     dispatch(changeAvatar({ id: accountId, file }))
       .unwrap()
       .then((result) => {
-        toast.success('Аватарка успешно изменена');
+        toast.success('Аватарка обновлена');
         
         // Если получен URL аватарки с сервера
         if (result && result.avatarUrl) {
@@ -149,6 +181,11 @@ const AvatarUploader = ({ accountId, avatarUrl, className }) => {
         toast.error(error || 'Ошибка при смене аватарки');
         // Сбрасываем предпросмотр при ошибке
         setPreviewUrl(null);
+        // Очищаем состояние загрузки и прогресс
+        setLocalLoading(false);
+        setProgress(0);
+        localStorage.removeItem(`${STORAGE_KEY_PREFIX}${accountId}`);
+        localStorage.removeItem(`${STORAGE_KEY_PREFIX}${accountId}_loading`);
       });
   };
 
@@ -173,16 +210,10 @@ const AvatarUploader = ({ accountId, avatarUrl, className }) => {
       >
         {localLoading ? (
           <>
-            <div className="circle-loader" style={{ 
-              backgroundImage: `conic-gradient(
-                #4CAF50 ${progress}%, 
-                rgba(255, 255, 255, 0.2) ${progress}%
-              )`
-            }}></div>
-            <div className="spinner">
-              <FontAwesomeIcon icon={faSpinner} spin />
-            </div>
-            <div className="progress-text">{Math.round(progress)}%</div>
+            <div className="circle-loader"></div>
+            {progress > 0 && (
+              <div className="progress-text">{Math.round(progress)}%</div>
+            )}
           </>
         ) : (
           <>
@@ -205,11 +236,7 @@ const AvatarUploader = ({ accountId, avatarUrl, className }) => {
               </div>
             )}
             <div className="avatar-overlay">
-              Сменить аватар
-            </div>
-            <div className="avatar-tooltip">
-              <div className="avatar-tooltip-title">Смена аватарки</div>
-              Функционал для загрузки и смены изображения профиля на вашем аккаунте Facebook.
+              <FontAwesomeIcon icon={faCamera} />
             </div>
           </>
         )}

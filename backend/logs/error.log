@@ -541,3 +541,38 @@ Call log:
 [2m  - navigating to "https://www.facebook.com/profile.php", waiting until "networkidle"[22m
 
 [2025-04-18 20:39:32] [31merror[39m: Ошибка при обработке диалога Windows: Shell is not a constructor
+[2025-04-19 11:25:41] [31merror[39m: Error: Email already in use
+    at exports.register (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\services\authService.js:9:21)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async exports.register (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\controllers\authController.js:5:20)
+[2025-04-19 11:26:32] [31merror[39m: Ошибка при вызове Dolphin API для робот нагула: Request failed with status code 500
+[2025-04-19 11:26:32] [31merror[39m: Статус ответа: 500
+[2025-04-19 11:26:32] [31merror[39m: Данные ответа: {"error":"rct: Failed to get port and socket to start automation","errorObject":{"name":"rct","text":"Failed to get port and socket to start automation","code":"E_BROWSER_GET_AUTOMATION_DATA"}}
+[2025-04-19 11:30:21] [31merror[39m: Ошибка при смене аватарки: page.goto: Timeout 30000ms exceeded.
+Call log:
+[2m  - navigating to "https://www.facebook.com/profile.php", waiting until "networkidle"[22m
+
+[2025-04-19 11:31:44] [31merror[39m: Ошибка при смене аватарки: page.goto: Timeout 30000ms exceeded.
+Call log:
+[2m  - navigating to "https://www.facebook.com/profile.php", waiting until "networkidle"[22m
+
+[2025-04-19 11:33:01] [31merror[39m: Ошибка при обработке диалога Windows: Shell is not a constructor
+[2025-04-19 11:39:25] [31merror[39m: Ошибка при обработке диалога Windows: Shell is not a constructor
+[2025-04-19 11:41:37] [31merror[39m: Ошибка при смене аватарки: page.goto: Target page, context or browser has been closed
+Call log:
+[2m  - navigating to "https://www.facebook.com/profile.php", waiting until "networkidle"[22m
+
+[2025-04-19 11:41:39] [31merror[39m: Ошибка при смене аватарки: page.goto: Target page, context or browser has been closed
+Call log:
+[2m  - navigating to "https://www.facebook.com/profile.php", waiting until "networkidle"[22m
+
+[2025-04-19 11:44:23] [31merror[39m: Ошибка при обработке диалога Windows: Shell is not a constructor
+[2025-04-19 11:44:50] [31merror[39m: Ошибка при получении URL аватарки: page.goto: Target page, context or browser has been closed
+Call log:
+[2m  - navigating to "https://www.facebook.com/profile.php", waiting until "networkidle"[22m
+
+[2025-04-19 11:44:54] [31merror[39m: Ошибка при запуске профиля: Request failed with status code 500
+[2025-04-19 11:44:54] [31merror[39m: Статус: 500
+[2025-04-19 11:44:54] [31merror[39m: Данные: {"error":"_ct: Profile ID 598701445 already running","errorObject":{"name":"_ct","text":"Profile ID 598701445 already running","code":"E_BROWSER_RUN_DUPLICATE"}}
+[2025-04-19 11:44:54] [31merror[39m: Ошибка при смене аватарки: Не удалось запустить профиль: Request failed with status code 500
+[2025-04-19 11:45:41] [31merror[39m: Ошибка при обработке диалога Windows: Shell is not a constructor
