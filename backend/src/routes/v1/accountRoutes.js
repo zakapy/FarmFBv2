@@ -56,4 +56,7 @@ router.post('/:id/sync-dolphin', accountController.syncWithDolphin);
 
 router.post('/:id/relogin', accountController.reloginAccount);
 
+// Маршрут для импорта куков
+router.post('/:id/import-cookies', accountController.importCookies);
+
 module.exports = router;

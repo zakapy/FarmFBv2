@@ -899,3 +899,84 @@ exports.syncWithDolphin = async (req, res) => {
     });
   }
 };
+
+/**
+ * Импортирует куки для профиля Dolphin
+ * @param {Object} req - HTTP-запрос
+ * @param {Object} res - HTTP-ответ
+ * @returns {Object} Результат операции
+ */
+exports.importCookies = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { profileId, data, headless, imageless } = req.body;
+
+    if (!profileId) {
+      return res.status(400).json({
+        success: false,
+        message: 'ID профиля Dolphin не указан'
+      });
+    }
+
+    if (!data || !Array.isArray(data) || data.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Некорректные данные для импорта куков'
+      });
+    }
+
+    // Проверяем существование аккаунта
+    const Account = require('../models/Account');
+    const account = await Account.findById(id);
+    if (!account) {
+      return res.status(404).json({
+        success: false,
+        message: 'Аккаунт не найден'
+      });
+    }
+
+    // Проверяем, что у аккаунта есть профиль Dolphin
+    if (!account.dolphin || !account.dolphin.profileId) {
+      return res.status(400).json({
+        success: false,
+        message: 'У аккаунта нет привязки к профилю Dolphin'
+      });
+    }
+
+    // Проверяем, что ID профиля соответствует тому, что в аккаунте
+    if (account.dolphin.profileId.toString() !== profileId.toString()) {
+      return res.status(400).json({
+        success: false,
+        message: 'ID профиля не соответствует привязанному к аккаунту'
+      });
+    }
+
+    // Отправляем запрос для импорта куков
+    const url = `http://localhost:3001/v1.0/import/cookies/${profileId}/robot`;
+    
+    const payload = {
+      data,
+      headless: headless !== undefined ? headless : false,
+      imageless: imageless !== undefined ? imageless : true
+    };
+
+    const headers = {
+      'Content-Type': 'application/json'
+    };
+
+    const axios = require('axios');
+    const response = await axios.post(url, payload, { headers });
+
+    return res.status(200).json({
+      success: true,
+      message: 'Куки успешно импортированы',
+      data: response.data
+    });
+  } catch (error) {
+    console.error('Ошибка при импорте куков:', error);
+    return res.status(500).json({
+      success: false,
+      message: `Ошибка при импорте куков: ${error.message}`
+    });
+  }
+};

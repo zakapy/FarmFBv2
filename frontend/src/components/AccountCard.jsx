@@ -9,7 +9,7 @@ import Button from './Button';
 import AccountForm from './AccountForm';
 import AvatarUploader from './AvatarUploader';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPen, faTrash, faSync, faKey, faCheck, faUserCheck, faUserTimes } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faTrash, faSync, faKey, faCheck, faUserCheck, faUserTimes, faCookieBite } from '@fortawesome/free-solid-svg-icons';
 
 const AccountCard = ({ account, onEdit, onDelete, refreshAccounts }) => {
   const [status, setStatus] = useState(account.status || 'неизвестно');
@@ -17,6 +17,7 @@ const AccountCard = ({ account, onEdit, onDelete, refreshAccounts }) => {
   const [syncState, setSyncState] = useState('idle'); // idle | loading | success | error
   const [show2FAModal, setShow2FAModal] = useState(false);
   const [authState, setAuthState] = useState('idle'); // idle | loading | success | error
+  const [cookieState, setCookieState] = useState('idle'); // idle | loading | success | error
   const [twoFACode, setTwoFACode] = useState('');
 
   const cookiesOk = Array.isArray(account.cookies) && account.cookies.length > 0;
@@ -164,6 +165,243 @@ const AccountCard = ({ account, onEdit, onDelete, refreshAccounts }) => {
     }
   };
 
+  const handleCookieImport = async () => {
+    if (!hasDolphinProfile) {
+      toast.error('Необходимо сначала создать профиль в Dolphin');
+      return;
+    }
+
+    setCookieState('loading');
+    try {
+      // Используем axios и наш API вместо fetch напрямую
+      const profileId = account.dolphin.profileId;
+      
+      // Здесь используем наш API, который будет выполнять запрос от имени клиента
+      const res = await API.post(`/api/v1/accounts/${account._id || account.id}/import-cookies`, {
+        profileId: profileId,
+        data: [
+          "https://www.vice.com/",
+          "http://www.lifedaily.com/",
+          "https://flickr.com/",
+          "https://www.box.com/",
+          "https://www.kapanlagi.com/",
+          "https://gyazo.com/",
+          "http://lifehacker.com/",
+          "https://hh.ru/",
+          "https://www.infobae.com/america/",
+          "https://www.itmedia.co.jp/",
+          "https://roaring.earth/",
+          "https://www.mynet.com/",
+          "https://prom.ua/",
+          "https://www.hmyquickconverter.com/",
+          "http://www.jawabkom.com/",
+          "https://www.besoccer.com/",
+          "https://assine.abril.com.br/?redirect=abrilcom",
+          "https://www.bastillepost.com/hongkong",
+          "https://www.icims.com/",
+          "https://www.lavanguardia.com/",
+          "https://www.sanook.com/",
+          "https://www.sporx.com/",
+          "https://www.mundodeportivo.com/",
+          "https://www.eurogamer.net/",
+          "https://www.incruit.com/",
+          "https://www.bankbazaar.com/",
+          "https://www.unc.edu/",
+          "https://hemailaccessonline.com/",
+          "https://front.wemakeprice.com/main",
+          "https://www.indiegogo.com/",
+          "https://minuto30.com/",
+          "https://msu.edu/",
+          "https://www.sarayanews.com/",
+          "https://www.cafe24.com/",
+          "https://www.jhu.edu/",
+          "https://www.protothema.gr/",
+          "https://www.islamweb.net/ar/",
+          "http://www.hearthstonetopdecks.com/",
+          "https://www.thekitchn.com/",
+          "https://www.mcgill.ca/",
+          "http://gamme.com.tw/",
+          "https://redlink.com.ar/",
+          "https://www.alamy.com/",
+          "https://jang.com.pk/",
+          "https://www.bluewin.ch/de/index.html",
+          "https://www.deloitte.com/uk/en.html",
+          "http://syri.net/",
+          "https://www.giga.de/",
+          "https://socorder.com/",
+          "https://www.zdnet.com/",
+          "https://unwire.hk/",
+          "https://www.rockpapershotgun.com/",
+          "https://wustl.edu/",
+          "https://www.record.pt/",
+          "http://popcornvod.com/",
+          "https://www.sopitas.com/",
+          "https://russian7.ru/",
+          "https://www.24sata.hr/",
+          "https://searchipdf.com/",
+          "https://www.kocpc.com.tw/",
+          "https://uwo.ca/",
+          "https://eu.mouser.com/",
+          "https://www.jawharafm.net/ar/",
+          "http://www.iloveoldschoolmusic.com/",
+          "https://www.superteacherworksheets.com/",
+          "https://searchdconvertnow.com/",
+          "https://svpressa.ru/",
+          "https://www.ldoceonline.com/",
+          "https://mingpao.com/",
+          "https://www.apartmenttherapy.com/",
+          "https://soha.vn/",
+          "https://www.futbolarena.com/",
+          "https://www.carsensor.net/",
+          "https://www.dcfever.com/",
+          "https://www.filefactory.com/",
+          "https://secure.imvu.com/",
+          "https://ethplorer.io/",
+          "https://www.programiz.com/",
+          "https://www.a-q-f.com/openpc/USA0000S01.do",
+          "https://sc.edu/",
+          "https://healthylives.tw/",
+          "https://www.hattrick.org/en-us/",
+          "https://www.gamespark.jp/",
+          "https://fineartamerica.com/",
+          "https://e-gov.az/",
+          "https://unacademy.com/",
+          "https://newpost.gr/",
+          "https://www.vcommission.com/",
+          "https://www.click108.com.tw/",
+          "https://www.gigabyte.com/",
+          "https://bpjs-kesehatan.go.id/",
+          "https://flexmls.com/",
+          "https://www.pravda.sk/",
+          "https://www.resultados-futbol.com/",
+          "https://www.compass.education/",
+          "https://fstoppers.com/",
+          "https://trafficnews.jp/",
+          "https://sprzedajemy.pl/",
+          "https://www.smule.com/",
+          "https://www.jvzoo.com/",
+          "https://sneakernews.com/",
+          "https://www.upmedia.mg/",
+          "https://www.nationalreview.com/",
+          "https://www.aceenggacademy.com/",
+          "https://manychat.com/",
+          "https://www.mundo.com/",
+          "https://www.enuri.com/",
+          "https://www.bikewale.com/",
+          "https://www.practo.com/",
+          "https://www.omelete.com.br/",
+          "https://www.thegradcafe.com/",
+          "https://www.cmjornal.pt/",
+          "https://remitano.com/",
+          "https://www.vccs.edu/",
+          "https://electroneum.com/",
+          "https://president.jp/",
+          "https://smartlink.media/",
+          "https://retty.me/",
+          "https://futurenet.club/",
+          "https://response.jp/",
+          "https://litnet.com/",
+          "https://www.fshare.vn/",
+          "http://takprosto.cc/",
+          "https://www.free-power-point-templates.com/",
+          "https://www.inside.com.tw/",
+          "https://thegioinoithat.com/",
+          "https://myamcat.com/",
+          "https://www.2banh.vn/",
+          "https://mymoneytimes.com/",
+          "https://www.ultrasawt.com/",
+          "https://satu.kz/",
+          "https://www.sidefx.com/",
+          "https://www.snowdaycalculator.com/calculator.php",
+          "https://www.youth4work.com/",
+          "https://www.haaretz.com/",
+          "https://www.idrlabs.com/",
+          "https://www.poste.dz/",
+          "https://www.sportsv.net/",
+          "https://www.chilevision.cl/",
+          "https://www.thaiware.com/",
+          "https://www.egypt-today.com/",
+          "https://heasyspeedtest.co/",
+          "https://siol.net/",
+          "https://cryptopanic.com/",
+          "http://airvuz.com/",
+          "https://www.autocarindia.com/",
+          "https://wowwo.com/",
+          "https://www.jpost.com/",
+          "https://gogo.mn/",
+          "https://wormate.io/",
+          "https://clarivate.com/",
+          "http://www.dingit.tv/",
+          "https://www.bc.edu/",
+          "https://www.xserver.ne.jp/",
+          "https://transdoc.com/",
+          "https://eng.lottedfs.com/kr/shopmain/home?gatePopUpYn=Y",
+          "https://www.tudocelular.com/",
+          "https://www.sinoptik.bg/london-great-britain-102643743?location",
+          "https://icotto.jp/",
+          "https://www.nla.gov.au/",
+          "https://bilimland.kz/kk",
+          "https://www.salary.com/",
+          "https://multiplayer.it/",
+          "https://eiga.com/",
+          "https://www.cuantarazon.com/",
+          "https://www.unipd.it/",
+          "https://www.slb.com/",
+          "https://www.pizap.com/",
+          "https://wlu.ca/",
+          "https://ek.ua/",
+          "https://eternallifestyle.com/",
+          "https://www.mercantil.com/",
+          "https://brobible.com/",
+          "https://walletinvestor.com/",
+          "https://www.jobs77.com/",
+          "https://www.cool-style.com.tw/wd2/",
+          "https://www.otofun.net/",
+          "https://www.hinode.com.br/",
+          "https://www.viewbug.com/",
+          "https://www.hktvmall.com/",
+          "https://10x10.co.kr/index.asp",
+          "https://hh.kz/",
+          "https://deal.by/",
+          "https://www.trt1.com.tr/",
+          "https://www.rescuetime.com/",
+          "https://pytorch.org/",
+          "https://in.via.com/",
+          "https://www.thestranger.com/",
+          "https://www.yupptv.com/",
+          "https://www.bitlanders.com/",
+          "http://www.thefader.com/",
+          "https://www.beliefnet.com/",
+          "https://searchgst.com/",
+          "https://www.ert.gr/",
+          "https://www.coolstuffinc.com/",
+          "https://thehungryjpeg.com/",
+          "https://jne.co.id/",
+          "https://www.moto.it/",
+          "https://kfupm.edu.sa/",
+          "https://www.consumeraffairs.com/"
+        ],
+        headless: false,
+        imageless: true
+      });
+
+      if (res.data.success) {
+        toast.success('Куки успешно нагуляны!');
+        setCookieState('success');
+      } else {
+        toast.error(res.data.message || 'Не удалось нагулять куки');
+        setCookieState('error');
+      }
+      
+      setTimeout(() => setCookieState('idle'), 2000);
+    } catch (err) {
+      console.error('Ошибка нагуливания куки:', err);
+      toast.error('Ошибка нагуливания куки: ' + (err.response?.data?.message || err.message || 'Неизвестная ошибка'));
+      setCookieState('error');
+      setTimeout(() => setCookieState('idle'), 2000);
+    }
+  };
+
   const renderDolphinInfo = () => {
     if (hasDolphinProfile) {
       return (
@@ -289,6 +527,40 @@ const AccountCard = ({ account, onEdit, onDelete, refreshAccounts }) => {
     return null;
   };
 
+  const renderCookieButton = () => {
+    if (!hasDolphinProfile) {
+      return null; // Кнопка доступна только если есть профиль Dolphin
+    }
+
+    switch (cookieState) {
+      case 'loading':
+        return (
+          <button className="btn default" disabled>
+            <span className="spinner small"></span>
+            <span>Нагуливаю...</span>
+          </button>
+        );
+      case 'success':
+        return (
+          <button className="btn success" disabled>
+            ✅ Готово!
+          </button>
+        );
+      case 'error':
+        return (
+          <button className="btn error" disabled>
+            ❌ Ошибка
+          </button>
+        );
+      default:
+        return (
+          <button className="btn secondary" onClick={handleCookieImport}>
+            <FontAwesomeIcon icon={faCookieBite} /> Нагулять куки
+          </button>
+        );
+    }
+  };
+
   return (
     <div className="account-card">
       <div className="account-card-header">
@@ -327,6 +599,11 @@ const AccountCard = ({ account, onEdit, onDelete, refreshAccounts }) => {
             <div className="action-button">
               {renderCheckButton()}
             </div>
+            {hasDolphinProfile && (
+              <div className="action-button">
+                {renderCookieButton()}
+              </div>
+            )}
             {hasAuthData && (
               <div className="action-button">
                 {renderAuthButton()}
