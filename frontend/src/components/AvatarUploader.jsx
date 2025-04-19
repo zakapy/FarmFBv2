@@ -7,11 +7,15 @@ import { faCamera } from '@fortawesome/free-solid-svg-icons';
 import './AvatarUploader.css';
 
 const STORAGE_KEY_PREFIX = 'avatar_upload_';
+const STORAGE_KEY_PREVIEW = 'avatar_preview_';
 const MAX_PROGRESS = 95; // Максимальный процент до завершения загрузки
 
 const AvatarUploader = ({ accountId, avatarUrl, className }) => {
   const dispatch = useDispatch();
-  const [previewUrl, setPreviewUrl] = useState(null);
+  // Используем localStorage для сохранения URL предпросмотра
+  const [previewUrl, setPreviewUrl] = useState(() => {
+    return localStorage.getItem(`${STORAGE_KEY_PREVIEW}${accountId}`) || null;
+  });
   const fileInputRef = useRef(null);
   const { avatarLoadingIds } = useSelector(state => state.accounts);
   const { list: accounts } = useSelector(state => state.accounts);
@@ -27,6 +31,15 @@ const AvatarUploader = ({ accountId, avatarUrl, className }) => {
 
   // Определяем, загружается ли аватар для текущего аккаунта
   const isLoading = avatarLoadingIds.includes(accountId);
+
+  // Обновляем localStorage при изменении previewUrl
+  useEffect(() => {
+    if (previewUrl) {
+      localStorage.setItem(`${STORAGE_KEY_PREVIEW}${accountId}`, previewUrl);
+    } else {
+      localStorage.removeItem(`${STORAGE_KEY_PREVIEW}${accountId}`);
+    }
+  }, [previewUrl, accountId]);
 
   // Обновляем localStorage при изменении прогресса
   useEffect(() => {
@@ -65,32 +78,15 @@ const AvatarUploader = ({ accountId, avatarUrl, className }) => {
       const timer = setTimeout(() => {
         setLocalLoading(false);
         setProgress(0);
-        // Очищаем localStorage
+        // Очищаем localStorage для прогресса и загрузки
         localStorage.removeItem(`${STORAGE_KEY_PREFIX}${accountId}`);
         localStorage.removeItem(`${STORAGE_KEY_PREFIX}${accountId}_loading`);
+        // НЕ очищаем превью, т.к. оно должно оставаться до следующей загрузки
       }, 800);
       
       return () => clearTimeout(timer);
     }
   }, [isLoading, localLoading, accountId, progress]);
-
-  // Очистка URL при размонтировании компонента
-  useEffect(() => {
-    return () => {
-      if (previewUrl) {
-        URL.revokeObjectURL(previewUrl);
-      }
-    };
-  }, [previewUrl]);
-
-  // При успешной загрузке аватара сбрасываем предпросмотр
-  useEffect(() => {
-    if (!isLoading && previewUrl) {
-      // Очищаем предпросмотр после успешной загрузки
-      URL.revokeObjectURL(previewUrl);
-      setPreviewUrl(null);
-    }
-  }, [isLoading, previewUrl]);
 
   // Запускаем имитацию прогресса загрузки
   useEffect(() => {
@@ -134,8 +130,18 @@ const AvatarUploader = ({ accountId, avatarUrl, className }) => {
     fileInputRef.current.click();
   };
 
+  // Конвертирует File в base64 строку для сохранения в localStorage
+  const fileToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
+    });
+  };
+
   // Обработчик изменения файла
-  const handleFileChange = (e) => {
+  const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
@@ -153,43 +159,66 @@ const AvatarUploader = ({ accountId, avatarUrl, className }) => {
       return;
     }
 
-    // Создаем временный URL для предпросмотра
-    const objectUrl = URL.createObjectURL(file);
-    setPreviewUrl(objectUrl);
+    try {
+      // Создаем временный URL для предпросмотра
+      const objectUrl = URL.createObjectURL(file);
+      setPreviewUrl(objectUrl);
 
-    // Сохраняем начальный прогресс
-    setProgress(5);
-    localStorage.setItem(`${STORAGE_KEY_PREFIX}${accountId}`, '5');
-    localStorage.setItem(`${STORAGE_KEY_PREFIX}${accountId}_loading`, 'true');
+      // Сохраняем начальный прогресс
+      setProgress(5);
+      localStorage.setItem(`${STORAGE_KEY_PREFIX}${accountId}`, '5');
+      localStorage.setItem(`${STORAGE_KEY_PREFIX}${accountId}_loading`, 'true');
 
-    // Вызываем экшн смены аватарки
-    dispatch(changeAvatar({ id: accountId, file }))
-      .unwrap()
-      .then((result) => {
-        toast.success('Аватарка обновлена');
-        
-        // Если получен URL аватарки с сервера
-        if (result && result.avatarUrl) {
-          // URL будет обновлен через getCurrentAvatarUrl
-          setPreviewUrl(null); // Сбрасываем локальный предпросмотр
-        }
-        
-        // Обновляем список аккаунтов с сервера для получения актуальных данных
-        dispatch(fetchAccounts());
-      })
-      .catch((error) => {
-        toast.error(error || 'Ошибка при смене аватарки');
-        // Сбрасываем предпросмотр при ошибке
-        setPreviewUrl(null);
-        // Очищаем состояние загрузки и прогресс
-        setLocalLoading(false);
-        setProgress(0);
-        localStorage.removeItem(`${STORAGE_KEY_PREFIX}${accountId}`);
-        localStorage.removeItem(`${STORAGE_KEY_PREFIX}${accountId}_loading`);
-      });
+      // Вызываем экшн смены аватарки
+      dispatch(changeAvatar({ id: accountId, file }))
+        .unwrap()
+        .then((result) => {
+          toast.success('Аватарка обновлена');
+          
+          // Если получен URL аватарки с сервера, мы не сбрасываем превью,
+          // оно останется в localStorage и будет отображаться после перезагрузки страницы
+          
+          // Обновляем список аккаунтов с сервера для получения актуальных данных
+          dispatch(fetchAccounts());
+        })
+        .catch((error) => {
+          toast.error(error || 'Ошибка при смене аватарки');
+          // Сбрасываем предпросмотр при ошибке
+          setPreviewUrl(null);
+          // Очищаем состояние загрузки и прогресс
+          setLocalLoading(false);
+          setProgress(0);
+          localStorage.removeItem(`${STORAGE_KEY_PREFIX}${accountId}`);
+          localStorage.removeItem(`${STORAGE_KEY_PREFIX}${accountId}_loading`);
+          localStorage.removeItem(`${STORAGE_KEY_PREVIEW}${accountId}`);
+        });
+    } catch (error) {
+      console.error('Ошибка при обработке файла:', error);
+      toast.error('Произошла ошибка при обработке файла');
+    }
   };
 
-  // Используем актуальный URL из Redux или предпросмотр
+  // Проверяем, есть ли сохраненный URL из бэкенда и сравниваем время его обновления с временем сохранения локального превью
+  useEffect(() => {
+    const serverAvatarUrl = getCurrentAvatarUrl();
+    
+    // Если на сервере есть аватарка и она содержит timestamp
+    if (serverAvatarUrl && serverAvatarUrl.includes('?t=')) {
+      try {
+        // Извлекаем timestamp из URL
+        const serverTimestamp = parseInt(serverAvatarUrl.split('?t=')[1], 10);
+        
+        // Если есть локальное превью и timestamp сервера новее, очищаем локальное превью
+        if (previewUrl && serverTimestamp > 0) {
+          setPreviewUrl(null);
+        }
+      } catch (e) {
+        console.error('Ошибка при обработке timestamp аватара:', e);
+      }
+    }
+  }, [accounts, accountId]);
+
+  // Используем актуальный URL из Redis, localStorage либо с сервера
   const displayUrl = previewUrl || getCurrentAvatarUrl();
 
   return (
@@ -224,8 +253,8 @@ const AvatarUploader = ({ accountId, avatarUrl, className }) => {
                 className="avatar-image" 
                 onError={() => {
                   // Если изображение не загружается, показываем плейсхолдер
-                  setPreviewUrl(null);
                   console.error("Ошибка загрузки изображения:", displayUrl);
+                  // НЕ сбрасываем previewUrl при ошибке загрузки, чтобы сохранить попытки
                 }}
               />
             ) : (
