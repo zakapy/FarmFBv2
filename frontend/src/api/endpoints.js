@@ -39,4 +39,7 @@ export const API = {
     ASSIGN: (accountId) => `${BASE}api/v1/proxy/${accountId}/assign`,
     UNASSIGN: (id) => `${BASE}api/v1/proxy/${id}/unassign`,
   },
+  REGISTRATION: {
+    FACEBOOK: `${BASE}api/v1/registration/facebook`,
+  },
 };

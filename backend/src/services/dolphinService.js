@@ -272,9 +272,11 @@ class DolphinService {
     try {
       logger.info(`Запускаем профиль Dolphin Anty с ID: ${profileId}`);
       
-      // Проверяем доступность URL и используем значение по умолчанию, если необходимо
-      const localApiUrl = this.localApiUrl || 'http://localhost:3001';
+      // Проверяем наличие и доступность DOLPHIN_LOCAL_API_URL
+      const localApiUrl = process.env.DOLPHIN_LOCAL_API_URL || 'http://localhost:3001';
       
+      logger.info(`Используем Dolphin API URL: ${localApiUrl}`);
+
       // Формируем URL для запуска профиля
       const apiUrl = `${localApiUrl}/v1.0/browser_profiles/${profileId}/start?automation=1`;
       
@@ -335,124 +337,51 @@ class DolphinService {
   }
 
   /**
- * Запускает профиль браузера Dolphin Anty
- * @param {Number} profileId - ID профиля Dolphin Anty
- * @returns {Promise<Object>} - Результат запуска {success, browser, page, error}
- */
-async startProfile(profileId) {
-  try {
-    logger.info(`Запускаем профиль Dolphin Anty с ID: ${profileId}`);
-    
-    // Проверяем наличие и доступность DOLPHIN_LOCAL_API_URL
-    const localApiUrl = process.env.DOLPHIN_LOCAL_API_URL || 'http://localhost:3001';
-    
-    logger.info(`Используем Dolphin API URL: ${localApiUrl}`);
-
-    // Формируем URL для запуска профиля
-    const apiUrl = `${localApiUrl}/v1.0/browser_profiles/${profileId}/start?automation=1`;
-    
-    // Отправляем запрос на запуск
-    logger.info(`Отправляем запрос на запуск профиля: ${apiUrl}`);
-    const response = await axios.get(apiUrl);
-    
-    if (!response.data.success) {
-      throw new Error(`Ошибка запуска профиля: ${response.data.error || 'Неизвестная ошибка'}`);
-    }
-    
-    // Получаем данные для подключения
-    const port = response.data.automation.port;
-    const wsEndpoint = response.data.automation.wsEndpoint;
-    const wsUrl = `ws://127.0.0.1:${port}${wsEndpoint}`;
-    
-    logger.info(`Профиль запущен успешно. WebSocket URL: ${wsUrl}`);
-    
-    // Подключаемся к браузеру через Playwright
-    const browser = await chromium.connectOverCDP(wsUrl);
-    
-    if (!browser.isConnected()) {
-      throw new Error('Браузер не подключен');
-    }
-
-    logger.info('Браузер подключен успешно');
-    
-    // Получаем существующий контекст (в Dolphin Anty он уже создан)
-    const contexts = browser.contexts();
-    if (!contexts.length) {
-      throw new Error('Нет доступных контекстов браузера');
-    }
-    
-    const context = contexts[0];
-    logger.info('Контекст браузера получен');
-    
-    // Создаем новую страницу
-    const page = await context.newPage();
-    logger.info('Новая страница создана');
-    
-    return {
-      success: true,
-      browser,
-      context,
-      page
-    };
-  } catch (error) {
-    logger.error(`Ошибка при запуске профиля: ${error.message}`);
-    if (error.response) {
-      logger.error(`Статус: ${error.response.status}`);
-      logger.error(`Данные: ${JSON.stringify(error.response.data)}`);
-    }
-    return {
-      success: false,
-      error: error.message
-    };
-  }
-}
-
-/**
    * Останавливает профиль браузера Dolphin Anty
    * @param {Number} profileId - ID профиля Dolphin Anty
    * @param {Object} browser - Объект браузера Playwright
    * @returns {Promise<boolean>} - Успешность операции
    */
-async stopProfile(profileId, browser) {
-  try {
-    // Сначала закрываем браузер Playwright, если он открыт
-    if (browser && browser.isConnected()) {
-      await browser.close();
-      logger.info('Браузер Playwright закрыт');
-    }
-    
-    if (profileId) {
-      logger.info(`Останавливаем профиль Dolphin Anty с ID: ${profileId}`);
+  async stopProfile(profileId, browser) {
+    try {
+      // Сначала закрываем браузер Playwright, если он открыт
+      if (browser && browser.isConnected()) {
+        await browser.close();
+        logger.info('Браузер Playwright закрыт');
+      }
       
-      // Проверяем доступность URL и используем значение по умолчанию, если необходимо
-      const localApiUrl = this.localApiUrl || 'http://localhost:3001';
-      
-      // Формируем URL для остановки профиля
-      const apiUrl = `${localApiUrl}/v1.0/browser_profiles/${profileId}/stop`;
+      if (profileId) {
+        logger.info(`Останавливаем профиль Dolphin Anty с ID: ${profileId}`);
         
-        // Отправляем запрос на остановку
-        const response = await axios.get(apiUrl);
+        // Проверяем доступность URL и используем значение по умолчанию, если необходимо
+        const localApiUrl = this.localApiUrl || 'http://localhost:3001';
         
-        if (response.data && response.data.success) {
-          logger.info('Профиль Dolphin Anty успешно остановлен');
-          return true;
+        // Формируем URL для остановки профиля
+        const apiUrl = `${localApiUrl}/v1.0/browser_profiles/${profileId}/stop`;
+          
+          // Отправляем запрос на остановку
+          const response = await axios.get(apiUrl);
+          
+          if (response.data && response.data.success) {
+            logger.info('Профиль Dolphin Anty успешно остановлен');
+            return true;
+          } else {
+            logger.warn('Получен неуспешный ответ от API при остановке профиля:', response.data);
+            return false;
+          }
         } else {
-          logger.warn('Получен неуспешный ответ от API при остановке профиля:', response.data);
+          logger.warn('ID профиля не задан, невозможно остановить');
           return false;
         }
-      } else {
-        logger.warn('ID профиля не задан, невозможно остановить');
+      } catch (error) {
+        logger.error(`Ошибка при остановке профиля Dolphin Anty: ${error.message}`);
+        if (error.response) {
+          logger.error('Статус ответа:', error.response.status);
+          logger.error('Данные ответа:', error.response.data);
+        }
         return false;
       }
-    } catch (error) {
-      logger.error(`Ошибка при остановке профиля Dolphin Anty: ${error.message}`);
-      if (error.response) {
-        logger.error('Статус ответа:', error.response.status);
-        logger.error('Данные ответа:', error.response.data);
-      }
-      return false;
     }
-  }
 
   /**
    * Переходит на страницу Facebook

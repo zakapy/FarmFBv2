@@ -9,6 +9,7 @@ const authRoutes = require('./routes/v1/authRoutes');
 const accountRoutes = require('./routes/v1/accountRoutes');
 const farmRoutes = require('./routes/v1/farmRoutes');
 const proxyRoutes = require('./routes/v1/proxyRoutes');
+const registrationRoutes = require('./routes/v1/registrationRoutes');
 const errorHandler = require('./middlewares/errorHandler');
 
 const app = express();
@@ -47,6 +48,7 @@ app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/accounts', accountRoutes);
 app.use('/api/v1/farm', farmRoutes);
 app.use('/api/v1/proxy', proxyRoutes);
+app.use('/api/v1/registration', registrationRoutes);
 
 // ❌ Обработка несуществующих маршрутов
 app.use((req, res) => {
@@ -85,5 +87,6 @@ console.log(' - POST   /api/v1/proxy/:id/check');
 console.log(' - POST   /api/v1/proxy/check-bulk');
 console.log(' - POST   /api/v1/proxy/:accountId/assign');
 console.log(' - POST   /api/v1/proxy/:id/unassign');
+console.log(' - POST   /api/v1/registration/facebook');
 
 module.exports = app;
