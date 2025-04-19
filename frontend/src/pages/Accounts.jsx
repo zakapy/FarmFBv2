@@ -21,6 +21,7 @@ const Accounts = () => {
   const [showForm, setShowForm] = useState(false);
   const [editData, setEditData] = useState(null);
   const [deleteId, setDeleteId] = useState(null);
+  const [searchQuery, setSearchQuery] = useState(''); // Добавляем состояние для поиска
 
   useEffect(() => {
     dispatch(fetchAccounts());
@@ -50,6 +51,15 @@ const Accounts = () => {
     dispatch(fetchAccounts()); // 🔄 обновляем список
   };
   
+  // Обработчик изменения поискового запроса
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  // Фильтрация аккаунтов по поисковому запросу
+  const filteredAccounts = list.filter((acc) => 
+    acc.name?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const submitForm = (data) => {
     if (editData) {
@@ -64,16 +74,49 @@ const Accounts = () => {
     <div className="container">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <h1>Мои аккаунты</h1>
-        <Button onClick={handleAdd}>➕ Добавить аккаунт</Button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+          {/* Компонент поиска */}
+          <div style={{ position: 'relative' }}>
+            <span style={{ 
+              position: 'absolute', 
+              left: '10px', 
+              top: '50%', 
+              transform: 'translateY(-50%)',
+              color: '#888'
+            }}>
+              🔍
+            </span>
+            <input
+              type="text"
+              placeholder="Поиск по названию..."
+              value={searchQuery}
+              onChange={handleSearchChange}
+              style={{
+                padding: '8px 10px 8px 35px',
+                borderRadius: '6px',
+                border: '1px solid #ddd',
+                fontSize: '14px',
+                minWidth: '200px',
+                outline: 'none'
+              }}
+            />
+          </div>
+          <Button onClick={handleAdd}>➕ Добавить аккаунт</Button>
+        </div>
       </div>
 
       {loading ? (
         <Loader />
-      ) : list.length === 0 ? (
-        <p>Нет аккаунтов</p>
+      ) : filteredAccounts.length === 0 ? (
+        <p>
+          {list.length === 0 
+            ? "Нет аккаунтов" 
+            : `Нет аккаунтов, соответствующих "${searchQuery}"`
+          }
+        </p>
       ) : (
         <div style={{ display: 'grid', gap: '1rem', marginTop: '1rem' }}>
-          {list.map((acc) => (
+          {filteredAccounts.map((acc) => (
             <AccountCard
               key={acc._id || acc.id} // подстраиваемся под Mongo _id
               account={{
@@ -112,4 +155,4 @@ const Accounts = () => {
   );
 };
 
-export default Accounts;
+export default Accounts; 
