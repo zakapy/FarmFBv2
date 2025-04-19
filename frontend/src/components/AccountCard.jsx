@@ -386,19 +386,34 @@ const AccountCard = ({ account, onEdit, onDelete, refreshAccounts }) => {
       });
 
       if (res.data.success) {
-        toast.success('Куки успешно нагуляны!');
-        setCookieState('success');
+        // Задержка перед показом успешного состояния для лучшего UX
+        setTimeout(() => {
+          toast.success('Куки успешно нагуляны!');
+          setCookieState('success');
+          
+          // Возвращаем кнопку в исходное состояние через 3 секунды
+          setTimeout(() => setCookieState('idle'), 3000);
+        }, 1000);
       } else {
-        toast.error(res.data.message || 'Не удалось нагулять куки');
-        setCookieState('error');
+        setTimeout(() => {
+          toast.error(res.data.message || 'Не удалось нагулять куки');
+          setCookieState('error');
+          
+          // Возвращаем кнопку в исходное состояние через 3 секунды
+          setTimeout(() => setCookieState('idle'), 3000);
+        }, 1000);
       }
-      
-      setTimeout(() => setCookieState('idle'), 2000);
     } catch (err) {
       console.error('Ошибка нагуливания куки:', err);
-      toast.error('Ошибка нагуливания куки: ' + (err.response?.data?.message || err.message || 'Неизвестная ошибка'));
-      setCookieState('error');
-      setTimeout(() => setCookieState('idle'), 2000);
+      
+      // Задержка перед показом ошибки для лучшего UX
+      setTimeout(() => {
+        toast.error('Ошибка нагуливания куки: ' + (err.response?.data?.message || err.message || 'Неизвестная ошибка'));
+        setCookieState('error');
+        
+        // Возвращаем кнопку в исходное состояние через 3 секунды
+        setTimeout(() => setCookieState('idle'), 3000);
+      }, 1000);
     }
   };
 
@@ -535,8 +550,7 @@ const AccountCard = ({ account, onEdit, onDelete, refreshAccounts }) => {
     switch (cookieState) {
       case 'loading':
         return (
-          <button className="btn default" disabled>
-            <span className="spinner small"></span>
+          <button className="btn cookie-loading" disabled>
             <span>Нагуливаю...</span>
           </button>
         );
@@ -554,7 +568,7 @@ const AccountCard = ({ account, onEdit, onDelete, refreshAccounts }) => {
         );
       default:
         return (
-          <button className="btn secondary" onClick={handleCookieImport}>
+          <button className="btn cookie-btn" onClick={handleCookieImport}>
             <FontAwesomeIcon icon={faCookieBite} /> Нагулять куки
           </button>
         );

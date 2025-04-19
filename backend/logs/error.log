@@ -576,3 +576,8 @@ Call log:
 [2025-04-19 11:44:54] [31merror[39m: Данные: {"error":"_ct: Profile ID 598701445 already running","errorObject":{"name":"_ct","text":"Profile ID 598701445 already running","code":"E_BROWSER_RUN_DUPLICATE"}}
 [2025-04-19 11:44:54] [31merror[39m: Ошибка при смене аватарки: Не удалось запустить профиль: Request failed with status code 500
 [2025-04-19 11:45:41] [31merror[39m: Ошибка при обработке диалога Windows: Shell is not a constructor
+[2025-04-19 15:52:53] [31merror[39m: Ошибка при запуске профиля: Request failed with status code 500
+[2025-04-19 15:52:53] [31merror[39m: Статус: 500
+[2025-04-19 15:52:53] [31merror[39m: Данные: {"error":"_ct: Profile ID 598701445 already running","errorObject":{"name":"_ct","text":"Profile ID 598701445 already running","code":"E_BROWSER_RUN_DUPLICATE"}}
+[2025-04-19 15:52:53] [31merror[39m: Ошибка при смене аватарки: Не удалось запустить профиль: Request failed with status code 500
+[2025-04-19 15:53:53] [31merror[39m: Ошибка при обработке диалога Windows: Shell is not a constructor

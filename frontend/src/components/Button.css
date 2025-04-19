@@ -30,6 +30,57 @@
 .btn-secondary:hover {
   background-color: var(--secondary-dark);
 }
+
+/* Меняем цвет кнопки "Нагулять куки" на нежно-фиолетовый */
+.btn.cookie-btn {
+  background-color: #b19cd9; /* Нежно-фиолетовый цвет */
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn.cookie-btn:hover {
+  background-color: #9d84c6; /* Более темный оттенок при наведении */
+}
+
+/* Стиль для анимации загрузки куков */
+.btn.cookie-loading {
+  position: relative;
+  background-color: #dcd0f0; /* Светлый фиолетовый фон */
+  color: white;
+  cursor: not-allowed;
+  overflow: hidden;
+}
+
+.btn.cookie-loading::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  background-color: #9d84c6; /* Фиолетовый цвет для анимации */
+  animation: cookie-progress 2s infinite ease-in-out;
+  z-index: 0;
+}
+
+.btn.cookie-loading span {
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes cookie-progress {
+  0% {
+    width: 0%;
+  }
+  50% {
+    width: 100%;
+  }
+  100% {
+    width: 0%;
+  }
+}
+
 .btn.default {
   background: rgba(0, 0, 0, 0.1); /* вместо белого */
   color: #333;
