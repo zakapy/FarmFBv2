@@ -136,7 +136,8 @@ class DolphinService {
       if (account.proxy) {
         const proxyParts = account.proxy.split(':');
         
-        if (proxyParts.length >= 2) {
+        // Ожидаем формат ip:port:login:pass
+        if (proxyParts.length === 4) {
           // Определяем тип прокси
           let proxyType = "http";
           
@@ -146,15 +147,14 @@ class DolphinService {
           
           payload.proxy.host = proxyParts[0];
           payload.proxy.port = proxyParts[1];
+          payload.proxy.login = proxyParts[2];
+          payload.proxy.password = proxyParts[3];
           payload.proxy.type = proxyType;
-          
-          if (proxyParts.length >= 4) {
-            payload.proxy.login = proxyParts[2];
-            payload.proxy.password = proxyParts[3];
-          }
           
           // Формируем имя прокси для отображения
           payload.proxy.name = account.proxy;
+        } else {
+          logger.warn(`Неверный формат прокси: ${account.proxy}. Ожидается формат ip:port:login:pass`);
         }
       }
 

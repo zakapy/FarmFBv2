@@ -980,3 +980,84 @@ exports.importCookies = async (req, res) => {
     });
   }
 };
+
+/**
+ * Создает профиль в Dolphin Anty без привязки к аккаунту FB
+ * @param {Object} req - Express request
+ * @param {Object} res - Express response
+ */
+exports.createDolphinProfile = async (req, res) => {
+  try {
+    // Проверяем доступность Dolphin API
+    if (!env.DOLPHIN_ENABLED || !env.DOLPHIN_API_TOKEN) {
+      return res.status(400).json({
+        success: false,
+        error: 'Интеграция с Dolphin Anty не настроена'
+      });
+    }
+    
+    // Получаем данные прокси из запроса
+    const proxyData = req.body;
+    
+    // Проверяем формат прокси
+    if (!proxyData.proxy) {
+      return res.status(400).json({
+        success: false,
+        error: 'Не указан прокси-сервер'
+      });
+    }
+
+    // Проверяем формат строки прокси (ip:port:login:pass)
+    const proxyParts = proxyData.proxy.split(':');
+    if (proxyParts.length !== 4) {
+      return res.status(400).json({
+        success: false,
+        error: 'Неверный формат прокси. Требуется формат ip:port:login:pass'
+      });
+    }
+    
+    // Создаем временное имя для профиля
+    const tempName = `FB Creator ${Date.now()}`;
+    
+    // Создаем пустой объект аккаунта с минимально необходимыми данными и данными прокси
+    const tempAccount = {
+      name: tempName,
+      _id: `temp_${Date.now()}`,
+      proxy: proxyData.proxy,
+      proxyType: proxyData.proxyType || 'http'
+    };
+    
+    try {
+      // Создаем профиль в Dolphin Anty
+      const dolphinProfile = await dolphinService.createProfile(tempAccount);
+      
+      if (!dolphinProfile || !dolphinProfile.id) {
+        throw new Error('Не удалось создать профиль Dolphin');
+      }
+      
+      // Возвращаем данные созданного профиля
+      return res.status(200).json({
+        success: true,
+        message: 'Профиль Dolphin успешно создан',
+        profile: {
+          id: dolphinProfile.id,
+          name: dolphinProfile.name
+        }
+      });
+      
+    } catch (profileError) {
+      logger.error(`Ошибка при создании профиля Dolphin: ${profileError.message}`);
+      return res.status(400).json({
+        success: false,
+        error: `Не удалось создать профиль Dolphin: ${profileError.message}`
+      });
+    }
+    
+  } catch (error) {
+    logger.error('Ошибка при создании профиля Dolphin:', error);
+    res.status(500).json({ 
+      success: false,
+      error: 'Ошибка сервера при создании профиля Dolphin'
+    });
+  }
+};

@@ -20,6 +20,7 @@ const Header = () => {
       <nav className="nav">
         <Link to="/dashboard">Кабинет</Link>
         <Link to="/accounts">Аккаунты</Link>
+        <Link to="/create-facebook">Создать FB аккаунт</Link>
         <Link to="/proxies">Прокси</Link>
         <Link to="/farm">Фарм</Link>
         <button className="logout-button" onClick={handleLogout}>Выйти</button>

@@ -59,4 +59,7 @@ router.post('/:id/relogin', accountController.reloginAccount);
 // Маршрут для импорта куков
 router.post('/:id/import-cookies', accountController.importCookies);
 
+// API для создания FB аккаунтов
+router.post('/create-dolphin-profile', accountController.createDolphinProfile);
+
 module.exports = router;

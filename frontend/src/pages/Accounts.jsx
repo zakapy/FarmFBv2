@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 import {
   fetchAccounts,
@@ -101,6 +102,23 @@ const Accounts = () => {
               }}
             />
           </div>
+          <Link 
+            to="/create-facebook" 
+            style={{
+              textDecoration: 'none',
+              padding: '8px 14px',
+              borderRadius: '6px',
+              backgroundColor: '#1877f2',
+              color: 'white',
+              fontSize: '14px',
+              marginRight: '10px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '5px'
+            }}
+          >
+            <span>🚀</span> Создать FB аккаунт
+          </Link>
           <Button onClick={handleAdd}>➕ Добавить аккаунт</Button>
         </div>
       </div>

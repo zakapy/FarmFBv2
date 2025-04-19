@@ -39,3 +39,9 @@ export const changeAvatar = async (id, file) => {
   
   return res.data;
 };
+
+// Создать профиль Dolphin для создания FB аккаунта
+export const createDolphinProfile = async (proxyData) => {
+  const res = await api.post(API.ACCOUNTS.CREATE_DOLPHIN_PROFILE, proxyData);
+  return res.data;
+};

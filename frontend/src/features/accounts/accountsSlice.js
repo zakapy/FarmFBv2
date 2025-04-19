@@ -57,6 +57,24 @@ export const changeAvatar = createAsyncThunk('accounts/changeAvatar', async ({ i
   }
 });
 
+// Thunk для создания профиля Dolphin для создания FB аккаунта
+export const createDolphinProfile = createAsyncThunk(
+  'accounts/createDolphinProfile',
+  async (proxyData, thunkAPI) => {
+    try {
+      const result = await accountsAPI.createDolphinProfile(proxyData);
+      if (result.success) {
+        return result.profile;
+      }
+      return thunkAPI.rejectWithValue(result.error || 'Ошибка при создании профиля Dolphin');
+    } catch (err) {
+      return thunkAPI.rejectWithValue(
+        err.response?.data?.error || 'Ошибка при создании профиля Dolphin'
+      );
+    }
+  }
+);
+
 const accountsSlice = createSlice({
   name: 'accounts',
   initialState: {
@@ -64,7 +82,13 @@ const accountsSlice = createSlice({
     loading: false,
     error: null,
     avatarLoadingIds: [],
-    avatarError: null
+    avatarError: null,
+    // Добавляем состояние для создания FB аккаунтов
+    fbCreator: {
+      dolphinProfile: null,
+      loading: false,
+      error: null
+    }
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -181,6 +205,20 @@ const accountsSlice = createSlice({
       .addCase(changeAvatar.rejected, (state, action) => {
         state.avatarLoadingIds = state.avatarLoadingIds.filter(id => id !== action.meta.arg.id);
         state.avatarError = action.payload;
+      })
+
+      // Обработчики для создания профиля Dolphin
+      .addCase(createDolphinProfile.pending, (state) => {
+        state.fbCreator.loading = true;
+        state.fbCreator.error = null;
+      })
+      .addCase(createDolphinProfile.fulfilled, (state, action) => {
+        state.fbCreator.loading = false;
+        state.fbCreator.dolphinProfile = action.payload;
+      })
+      .addCase(createDolphinProfile.rejected, (state, action) => {
+        state.fbCreator.loading = false;
+        state.fbCreator.error = action.payload;
       });
   }
 });
