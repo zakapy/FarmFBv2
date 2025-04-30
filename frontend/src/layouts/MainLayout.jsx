@@ -1,14 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Header from '../components/Header';
+import './MainLayout.css';
 
 const MainLayout = ({ children }) => {
   return (
-    <div className="app-layout">
+    <div className="layout-wrapper">
       <Header />
       <main className="main-content">
-        <div className="content-container">
-          {children}
-        </div>
+        {children}
       </main>
     </div>
   );

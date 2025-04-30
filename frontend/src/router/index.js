@@ -6,7 +6,6 @@ import MainLayout from '../layouts/MainLayout';
 import Loader from '../components/Loader';
 
 // Ленивая загрузка страниц
-const Landing = lazy(() => import('../pages/Landing'));
 const Auth = lazy(() => import('../pages/Auth'));
 const Dashboard = lazy(() => import('../pages/Dashboard'));
 const Accounts = lazy(() => import('../pages/Accounts'));
@@ -16,11 +15,10 @@ const AdminPage = lazy(() => import('../pages/AdminPage')); // если доба
 const CreateFacebookAccount = lazy(() => import('../pages/CreateFacebookAccount')); // Новая страница
 
 export const AppRoutes = () => (
-  <Suspense fallback={<Loader />}>
+  <Suspense fallback={<Loader size="large" variant="primary" text="Загрузка..." />}>
     <Routes>
       {/* Public */}
-      <Route path="/" element={<Landing />} />
-      <Route path="/auth" element={<Auth />} />
+      <Route path="/" element={<Auth />} />
 
       {/* Protected */}
       <Route

@@ -1,16 +1,16 @@
 {
     "short_name": "Nuvio",
-    "name": "Nuvio — Управление Facebook аккаунтами",
+    "name": "Nuvio - Facebook аккаунты на автопилоте",
     "icons": [
       {
-        "src": "assets/images/icon-192x192.png",
-        "type": "image/png",
-        "sizes": "192x192"
+        "src": "favicon.ico",
+        "sizes": "64x64 32x32 24x24 16x16",
+        "type": "image/x-icon"
       },
       {
-        "src": "assets/images/icon-512x512.png",
-        "type": "image/png",
-        "sizes": "512x512"
+        "src": "favicon.svg",
+        "type": "image/svg+xml",
+        "sizes": "64x64"
       }
     ],
     "start_url": ".",

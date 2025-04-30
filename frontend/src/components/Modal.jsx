@@ -1,30 +1,17 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import './Modal.css';
 
-const Modal = ({ isOpen, onClose, title, children }) => {
-  useEffect(() => {
-    const handleEscape = (e) => {
-      if (e.key === 'Escape' && isOpen) {
-        onClose();
-      }
-    };
-
-    window.addEventListener('keydown', handleEscape);
-    return () => window.removeEventListener('keydown', handleEscape);
-  }, [isOpen, onClose]);
-
+const Modal = ({ title, children, onClose, isOpen = true, width = 'medium' }) => {
   if (!isOpen) return null;
-
+  
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+    <div className="modal-backdrop">
+      <div className={`modal-window modal-width-${width}`}>
         <div className="modal-header">
-          <h3 className="modal-title">{title}</h3>
-          <button className="modal-close" onClick={onClose}>×</button>
+          {title && <h3>{title}</h3>}
+          <button className="btn-close" onClick={onClose}>×</button>
         </div>
-        <div className="modal-body">
-          {children}
-        </div>
+        <div className="modal-body">{children}</div>
       </div>
     </div>
   );
