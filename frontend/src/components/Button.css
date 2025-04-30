@@ -1,111 +1,110 @@
 /* ==== Общие стили кнопок ==== */
-.btn {
-  padding: 0.6rem 1.2rem;
-  border-radius: 8px;
-  font-weight: 500;
-  font-family: inherit;
-  border: none;
-  cursor: pointer;
+.button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: 0.3s ease-in-out;
+  border-radius: var(--radius);
+  font-weight: 500;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 0.7rem 1.5rem;
+  cursor: pointer;
+  border: none;
+  outline: none;
   position: relative;
   overflow: hidden;
+  letter-spacing: 0.3px;
+  font-family: 'Inter', sans-serif;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* ==== Варианты цвета ==== */
-.btn-primary {
+.primary {
   background-color: var(--primary);
   color: white;
-}
-.btn-primary:hover {
-  background-color: var(--primary-dark);
+  box-shadow: 0 0 0 0 var(--primary-glow);
 }
 
-.btn-secondary {
+.primary:hover {
+  background-color: var(--primary-dark);
+  box-shadow: 0 0 10px 0 var(--primary-glow);
+}
+
+.secondary {
   background-color: var(--secondary);
   color: white;
 }
-.btn-secondary:hover {
+
+.secondary:hover {
   background-color: var(--secondary-dark);
 }
 
-/* Меняем цвет кнопки "Нагулять куки" на нежно-фиолетовый */
-.btn.cookie-btn {
-  background-color: #b19cd9; /* Нежно-фиолетовый цвет */
+.outline {
+  background-color: transparent;
+  color: var(--primary);
+  border: 1px solid var(--primary);
+  box-shadow: none;
+}
+
+.outline:hover {
+  background-color: rgba(0, 191, 255, 0.1);
+  box-shadow: 0 0 10px 0 var(--primary-glow);
+}
+
+.ghost {
+  background-color: transparent;
+  color: var(--text);
+  box-shadow: none;
+}
+
+.ghost:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  box-shadow: none;
+}
+
+.danger {
+  background-color: var(--error);
   color: white;
-  position: relative;
-  overflow: hidden;
 }
 
-.btn.cookie-btn:hover {
-  background-color: #9d84c6; /* Более темный оттенок при наведении */
+.danger:hover {
+  background-color: #d63031;
 }
 
-/* Стиль для анимации загрузки куков */
-.btn.cookie-loading {
-  position: relative;
-  background-color: #dcd0f0; /* Светлый фиолетовый фон */
+.danger-outline {
+  background-color: transparent;
+  color: var(--error);
+  border: 1px solid var(--error);
+  box-shadow: none;
+}
+
+.danger-outline:hover {
+  background-color: rgba(239, 68, 68, 0.1);
+}
+
+.success {
+  background-color: var(--success);
   color: white;
-  cursor: not-allowed;
-  overflow: hidden;
 }
 
-.btn.cookie-loading::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 0;
-  height: 100%;
-  background-color: #9d84c6; /* Фиолетовый цвет для анимации */
-  animation: cookie-progress 2s infinite ease-in-out;
-  z-index: 0;
-}
-
-.btn.cookie-loading span {
-  position: relative;
-  z-index: 1;
-}
-
-@keyframes cookie-progress {
-  0% {
-    width: 0%;
-  }
-  50% {
-    width: 100%;
-  }
-  100% {
-    width: 0%;
-  }
-}
-
-.btn.default {
-  background: rgba(0, 0, 0, 0.1); /* вместо белого */
-  color: #333;
-}
-.btn.default:hover {
-  background-color: #0044ff;
+.success:hover {
+  background-color: #0ca678;
 }
 
 /* ==== Компактные кнопки (иконки) ==== */
-.btn-icon {
-  padding: 4px;
-  width: 34px;
-  height: 34px;
-  min-width: 34px;
-  border-radius: 6px;
-  font-size: 16px;
-  line-height: 1;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease-in-out, background 0.2s;
-}
-.btn-icon:hover {
-  transform: scale(1.07);
-}
-.btn-icon:active {
-  transform: scale(0.95);
+.button-with-icon {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 /* ==== Ripple-эффект ==== */
@@ -168,5 +167,7379 @@
   100% {
     transform: translate(-50%, -50%) scale(2.5);
     opacity: 0;
+  }
+}
+
+/* ==== Размеры кнопок ==== */
+.small {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+  border-radius: 6px;
+}
+
+.medium {
+  padding: 0.7rem 1.5rem;
+  font-size: 0.95rem;
+}
+
+.large {
+  padding: 0.9rem 2rem;
+  font-size: 1.05rem;
+}
+
+/* ==== Состояния кнопок ==== */
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.full-width {
+  width: 100%;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.03);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+@keyframes gradientBg {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+/* ==== Общие стили кнопок ==== */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius);
+  font-weight: 500;
+  transition: all var(--transition);
+  padding: 0.7rem 1.5rem;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  position: relative;
+  overflow: hidden;
+  letter-spacing: 0.3px;
+}
+
+.button:hover {
+  transform: translateY(-2px);
+}
+
+.button:active {
+  transform: translateY(1px);
+}
+
+/* ==== Варианты цвета ==== */
+.primary {
+  background-color: var(--primary);
+  color: white;
+  box-shadow: 0 0 0 0 var(--primary-glow);
+}
+
+.primary:hover {
+  background-color: var(--primary-dark);
+  box-shadow: 0 0 10px 0 var(--primary-glow);
+}
+
+.secondary {
+  background-color: var(--secondary);
+  color: white;
+}
+
+.secondary:hover {
+  background-color: var(--secondary-dark);
+}
+
+.outline {
+  background-color: transparent;
+  color: var(--primary);
+  border: 1px solid var(--primary);
+}
+
+.outline:hover {
+  background-color: rgba(0, 170, 255, 0.1);
+}
+
+.ghost {
+  background-color: transparent;
+  color: var(--text);
+}
+
+.ghost:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.danger {
+  background-color: var(--error);
+  color: white;
+}
+
+.danger-outline {
+  background-color: transparent;
+  color: var(--error);
+  border: 1px solid var(--error);
+}
+
+.danger-outline:hover {
+  background-color: rgba(239, 68, 68, 0.1);
+}
+
+/* ==== Компактные кнопки (иконки) ==== */
+.button-icon {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* ==== Ripple-эффект ==== */
+.btn::after,
+.btn-icon::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 120px;
+  height: 120px;
+  transform: translate(-50%, -50%) scale(0);
+  border-radius: 50%;
+  opacity: 0;
+  background: rgba(255, 255, 255, 0.5);
+  pointer-events: none;
+  transition: transform 0.6s ease-out, opacity 0.6s ease-out;
+}
+
+.btn:active::after,
+.btn-icon:active::after {
+  transform: translate(-50%, -50%) scale(2.5);
+  opacity: 0;
+}
+.btn,
+.btn-icon {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::after,
+.btn-icon::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  background: rgba(255, 255, 255, 0.5);
+  transform: scale(0);
+  opacity: 0;
+  pointer-events: none;
+  animation: ripple-animation 0.6s ease-out;
+}
+
+.btn:active::after,
+.btn-icon:active::after {
+  transform: scale(2);
+  opacity: 1;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  animation: ripple-animation 0.6s ease-out;
+}
+
+@keyframes ripple-animation {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0.5;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2.5);
+    opacity: 0;
+  }
+}
+
+/* ==== Размеры кнопок ==== */
+.small {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+}
+
+.medium {
+  padding: 0.7rem 1.5rem;
+  font-size: 1rem;
+}
+
+.large {
+  padding: 0.9rem 2rem;
+  font-size: 1.1rem;
+}
+
+/* ==== Состояния кнопок ==== */
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.full-width {
+  width: 100%;
+}
+
+/* ==== Эффекты ==== */
+.primary.glow {
+  animation: glow 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  background-size: 200% 200%;
+  animation: gradientBg 5s ease infinite;
+}
+
+@keyframes gradientBg {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
   }
 }

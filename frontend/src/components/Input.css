@@ -13,3 +13,89 @@
   text-decoration: underline;
   color: #d9534f; /* мягкий красный при наведении */
 }
+
+.input-wrapper {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+  width: 100%;
+}
+
+.input-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: var(--text-light);
+}
+
+.input-field-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 1rem;
+  color: var(--text-light);
+  z-index: 1;
+}
+
+.input-field {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background-color: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-size: 1rem;
+  transition: all var(--transition);
+  outline: none;
+}
+
+.input-field.with-icon {
+  padding-left: 2.5rem;
+}
+
+.input-field:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px var(--primary-glow);
+}
+
+.input-field::placeholder {
+  color: var(--text-light);
+  opacity: 0.6;
+}
+
+.has-error .input-field {
+  border-color: var(--error);
+}
+
+.input-error {
+  font-size: 0.8rem;
+  color: var(--error);
+  margin-top: 0.4rem;
+}
+
+/* Disabled state */
+.input-field:disabled {
+  background-color: rgba(255, 255, 255, 0.05);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Different types of inputs */
+input[type="date"].input-field,
+input[type="time"].input-field,
+input[type="datetime-local"].input-field {
+  min-height: 42px;
+}
+
+/* Custom appearance for select */
+select.input-field {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 2.5rem;
+}

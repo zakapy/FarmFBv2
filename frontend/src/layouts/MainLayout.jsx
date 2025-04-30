@@ -3,12 +3,14 @@ import Header from '../components/Header';
 
 const MainLayout = ({ children }) => {
   return (
-    <>
+    <div className="app-layout">
       <Header />
-      <main style={{ padding: '2rem', minHeight: 'calc(100vh - 60px)' }}>
-        {children}
+      <main className="main-content">
+        <div className="content-container">
+          {children}
+        </div>
       </main>
-    </>
+    </div>
   );
 };
 

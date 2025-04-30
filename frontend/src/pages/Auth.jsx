@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Input from '../components/Input';
 import Button from '../components/Button';
 import Loader from '../components/Loader';
+import Logo from '../components/Logo';
 import { loginUser, registerUser, fetchUserProfile } from '../features/auth/authSlice';
 import { toast } from 'react-toastify';
-import { useNavigate, useLocation } from 'react-router-dom';
 import validator from 'validator';
 
 const Auth = () => {
@@ -61,7 +62,7 @@ const Auth = () => {
     }
   };
 
-  // 🧠 Редирект после авторизации на предыдущее местоположение или /dashboard
+  // Редирект после авторизации на предыдущее местоположение или /dashboard
   useEffect(() => {
     if (isAuthenticated) {
       const redirectTo = location.state?.from?.pathname || '/dashboard';
@@ -72,7 +73,11 @@ const Auth = () => {
   return (
     <div className="auth-wrapper">
       <div className="auth-card">
-        <h2>
+        <div className="text-center mb-6">
+          <Logo width={150} height={50} />
+        </div>
+        
+        <h2 className="auth-title">
           {{
             login: 'Вход в аккаунт',
             register: 'Регистрация',
@@ -80,16 +85,31 @@ const Auth = () => {
           }[mode]}
         </h2>
 
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <Input name="email" placeholder="Email" value={form.email} onChange={handleChange} type="email" />
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <Input 
+            name="email" 
+            label="Email" 
+            placeholder="Введите ваш email" 
+            value={form.email} 
+            onChange={handleChange} 
+            type="email" 
+          />
 
           {(mode === 'login' || mode === 'register') && (
-            <Input name="password" placeholder="Пароль" value={form.password} onChange={handleChange} type="password" />
+            <Input 
+              name="password" 
+              label="Пароль" 
+              placeholder="Введите пароль" 
+              value={form.password} 
+              onChange={handleChange} 
+              type="password" 
+            />
           )}
 
           {mode === 'register' && (
             <Input
               name="confirm"
+              label="Подтверждение"
               placeholder="Повторите пароль"
               value={form.confirm}
               onChange={handleChange}
@@ -97,7 +117,7 @@ const Auth = () => {
             />
           )}
 
-          <Button type="submit" disabled={loading}>
+          <Button type="submit" variant="primary" fullWidth disabled={loading}>
             {loading ? <Loader /> : {
               login: 'Войти',
               register: 'Зарегистрироваться',
@@ -106,36 +126,43 @@ const Auth = () => {
           </Button>
         </form>
 
-        <div style={{ marginTop: '1rem', fontSize: '0.9rem' }}>
+        <div className="mt-6 text-center" style={{ fontSize: '0.9rem', color: 'var(--text-light)' }}>
           {mode === 'login' && (
             <>
               Нет аккаунта?{' '}
-              <button onClick={() => setMode('register')} style={{ color: 'var(--primary)' }}>
+              <button onClick={() => setMode('register')} style={{ color: 'var(--primary)', background: 'none', border: 'none', cursor: 'pointer' }}>
                 Зарегистрироваться
               </button>
-              <br />
-              Забыли пароль?{' '}
-              <button onClick={() => setMode('forgot')} style={{ color: 'var(--primary)' }}>
-                Восстановить
-              </button>
+              <div className="mt-2">
+                Забыли пароль?{' '}
+                <button onClick={() => setMode('forgot')} style={{ color: 'var(--primary)', background: 'none', border: 'none', cursor: 'pointer' }}>
+                  Восстановить
+                </button>
+              </div>
             </>
           )}
           {mode === 'register' && (
             <>
               Уже есть аккаунт?{' '}
-              <button onClick={() => setMode('login')} style={{ color: 'var(--primary)' }}>
+              <button onClick={() => setMode('login')} style={{ color: 'var(--primary)', background: 'none', border: 'none', cursor: 'pointer' }}>
                 Войти
               </button>
             </>
           )}
           {mode === 'forgot' && (
             <>
-              Вспомнили?{' '}
-              <button onClick={() => setMode('login')} style={{ color: 'var(--primary)' }}>
+              Вспомнили пароль?{' '}
+              <button onClick={() => setMode('login')} style={{ color: 'var(--primary)', background: 'none', border: 'none', cursor: 'pointer' }}>
                 Войти
               </button>
             </>
           )}
+        </div>
+        
+        <div className="mt-6 text-center">
+          <Link to="/" style={{ color: 'var(--text-light)', fontSize: '0.9rem', textDecoration: 'none' }}>
+            На главную
+          </Link>
         </div>
       </div>
     </div>
