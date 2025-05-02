@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUsers, faRobot, faCheckCircle, faBan, faPlus, faPlay, faList } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import './Dashboard.css';
+import LocalServerCard from '../components/LocalServerCard';
 
 const Dashboard = () => {
   const { list } = useSelector((state) => state.accounts);
@@ -73,6 +74,8 @@ const Dashboard = () => {
           </Link>
         </div>
       </div>
+
+      <LocalServerCard />
     </div>
   );
 };

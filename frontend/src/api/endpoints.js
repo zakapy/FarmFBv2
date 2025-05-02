@@ -42,4 +42,11 @@ export const API = {
   REGISTRATION: {
     FACEBOOK: `${BASE}api/v1/registration/facebook`,
   },
+  AGENT: {
+    REGISTER_TOKEN: `${BASE}api/agent/register-token`,
+    GET_STATUS: `${BASE}api/agent/status`,
+    DOWNLOAD: `${BASE}api/agent/download`,
+    COMMAND: `${BASE}api/agent/command`,
+    RESET_CONNECTION: `${BASE}api/agent/reset-connection`,
+  },
 };

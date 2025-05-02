@@ -1,0 +1,337 @@
+.local-server-card {
+  background-color: var(--bg-medium);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+}
+
+.local-server-card h2 {
+  color: var(--text);
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  position: relative;
+}
+
+.card-icon {
+  color: var(--primary);
+}
+
+.connection-status {
+  margin-left: auto;
+  font-size: 0.9rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 20px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.status-active {
+  background-color: rgba(var(--success-rgb), 0.1);
+  color: var(--success);
+}
+
+.status-lost {
+  background-color: rgba(var(--danger-rgb), 0.1);
+  color: var(--danger);
+}
+
+.agent-description {
+  color: var(--text-secondary);
+  font-size: 1.05rem;
+  margin-bottom: 1.25rem;
+  text-align: center;
+}
+
+.instructions-container {
+  background-color: var(--bg-light);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--border);
+}
+
+.instructions-container h3 {
+  color: var(--text);
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.instructions-list {
+  padding-left: 1.5rem;
+  margin-bottom: 0;
+  color: var(--text-secondary);
+}
+
+.instructions-list li {
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.instructions-list li:last-child {
+  margin-bottom: 0;
+}
+
+.instructions-list code {
+  background-color: var(--bg-medium);
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 0.9rem;
+  color: var(--primary);
+}
+
+.download-section {
+  margin: 0.5rem 0 0.25rem;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+}
+
+.download-button {
+  background: linear-gradient(90deg, var(--primary), var(--primary-light));
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.download-button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.download-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.token-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.token-input-container {
+  position: relative;
+  width: 100%;
+}
+
+.token-icon {
+  position: absolute;
+  top: 50%;
+  left: 1rem;
+  transform: translateY(-50%);
+  color: var(--text-secondary);
+}
+
+.token-input {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 2.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background-color: var(--bg-light);
+  color: var(--text);
+  font-size: 1rem;
+  transition: var(--transition);
+}
+
+.token-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.2);
+}
+
+.token-input::placeholder {
+  color: var(--text-muted);
+}
+
+.connect-button {
+  background: linear-gradient(90deg, var(--primary), var(--primary-light));
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  padding: 0.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.connect-button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.connect-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.agent-connected {
+  background-color: rgba(var(--success-rgb), 0.1);
+  border: 1px solid rgba(var(--success-rgb), 0.3);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  text-align: center;
+}
+
+.connected-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.success-icon {
+  color: var(--success);
+  font-size: 1.2rem;
+}
+
+.connected-status span {
+  color: var(--success);
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.status-description {
+  color: var(--text-secondary);
+  margin: 0 0 1rem;
+}
+
+.check-connection-button {
+  background-color: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.5rem 1rem;
+  color: var(--text);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.check-connection-button:hover {
+  background-color: var(--bg-light);
+}
+
+.check-connection-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.connection-lost-warning {
+  background-color: rgba(var(--danger-rgb), 0.1);
+  border: 1px solid rgba(var(--danger-rgb), 0.3);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.connection-lost-warning h3 {
+  color: var(--danger);
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.connection-lost-warning p {
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+.warning-icon {
+  color: var(--danger);
+  font-size: 1.2rem;
+}
+
+.agent-notes {
+  border-top: 1px dashed var(--border);
+  padding-top: 1rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.agent-notes p {
+  margin: 0.5rem 0;
+  line-height: 1.5;
+}
+
+/* Стили для состояния загрузки */
+.loading-state {
+  min-height: 250px;
+  display: flex;
+  flex-direction: column;
+}
+
+.checking-connection {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 2rem 0;
+}
+
+.loading-icon {
+  font-size: 2rem;
+  color: var(--primary);
+}
+
+.checking-connection p {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  margin: 0;
+}
+
+@media (min-width: 768px) {
+  .token-form {
+    flex-direction: row;
+  }
+  
+  .token-input-container {
+    flex: 1;
+  }
+  
+  .connect-button {
+    width: 150px;
+  }
+  
+  .local-server-card h2 {
+    flex-wrap: wrap;
+  }
+  
+  .connection-status {
+    margin-left: auto;
+  }
+} 

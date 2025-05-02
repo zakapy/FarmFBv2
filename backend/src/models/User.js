@@ -20,6 +20,14 @@ const userSchema = new mongoose.Schema(
     },
     refreshToken: {
       type: String
+    },
+    agentToken: {
+      type: String,
+      default: null
+    },
+    agentConnected: {
+      type: Boolean,
+      default: false
     }
   },
   { timestamps: true }
