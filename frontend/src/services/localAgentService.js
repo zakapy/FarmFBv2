@@ -9,16 +9,25 @@ const LOCAL_AGENT_URL = 'http://localhost:8843';
  */
 class LocalAgentService {
   /**
-   * Проверка доступности локального агента
-   * @returns {Promise<boolean>} - Результат проверки
+   * Проверяет доступность локального агента
+   * @returns {Promise<Boolean>} - Доступен ли локальный агент
    */
   async checkConnection() {
     try {
-      // Увеличиваем таймаут до 5 секунд
-      const response = await axios.get(`${LOCAL_AGENT_URL}/ping`, { 
-        timeout: 5000 
+      // Добавляем случайный параметр для предотвращения кэширования
+      const timestamp = new Date().getTime();
+      const response = await axios.get(`${LOCAL_AGENT_URL}/ping?_=${timestamp}`, {
+        // Увеличиваем таймаут до 10 секунд
+        timeout: 10000,
+        // Запрещаем кэширование
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0'
+        }
       });
-      return response.status === 200;
+      
+      return response.data && response.data.status === 'ok';
     } catch (error) {
       console.error('Ошибка при проверке соединения с локальным агентом:', error);
       return false;
@@ -127,16 +136,30 @@ class LocalAgentService {
   }
 
   /**
-   * Настройка интервала для проверки соединения
-   * @param {Function} callback - Функция обратного вызова при изменении статуса соединения
-   * @param {number} interval - Интервал проверки в миллисекундах
-   * @returns {number} - ID интервала для последующей очистки
+   * Настраивает автоматическую проверку соединения
+   * @param {Function} onStatusChange - Функция обратного вызова для обработки изменения статуса
+   * @returns {Number} - ID интервала
    */
-  setupConnectionCheck(callback, interval = 15000) {
-    return setInterval(async () => {
-      const isConnected = await this.checkConnection();
-      callback(isConnected);
-    }, interval);
+  setupConnectionCheck(onStatusChange) {
+    // Проверяем соединение сразу
+    this.checkConnection().then(onStatusChange);
+    
+    // Настраиваем интервал проверки с передачей статуса в callback
+    const intervalId = setInterval(async () => {
+      try {
+        const isOnline = await this.checkConnection();
+        if (onStatusChange) {
+          onStatusChange(isOnline);
+        }
+      } catch (error) {
+        console.error('Ошибка при периодической проверке локального агента:', error);
+        if (onStatusChange) {
+          onStatusChange(false);
+        }
+      }
+    }, 15000); // Проверяем каждые 15 секунд
+    
+    return intervalId;
   }
 
   /**

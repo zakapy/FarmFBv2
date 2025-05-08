@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Novia Agent</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #0d1117;
+            color: #c9d1d9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            background-color: #161b22;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            max-width: 600px;
+        }
+        h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #58a6ff;
+        }
+        .token-box {
+            background-color: #0e4429;
+            color: #39d353;
+            font-family: monospace;
+            padding: 10px;
+            border-radius: 6px;
+            margin: 20px 0;
+            word-break: break-all;
+            font-size: 16px;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        .status.connected {
+            background-color: #0e4429;
+            color: #39d353;
+        }
+        .status.disconnected {
+            background-color: #3b1113;
+            color: #f85149;
+        }
+        small {
+            color: #8b949e;
+            display: block;
+            margin-top: 10px;
+        }
+        .version {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 12px;
+            color: #8b949e;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Добро пожаловать в <strong>Novia</strong></h1>
+        <p>Ваш локальный агент успешно запущен.</p>
+        <p>Скопируйте токен ниже и вставьте его в личный кабинет.</p>
+        <div class="token-box">{{TOKEN}}</div>
+        <div id="status" class="status">Проверка соединения...</div>
+        <small>Это уникальный токен привязанный к вашему устройству.</small>
+        <small>Пожалуйста, не закрывайте это окно пока работаете с системой.</small>
+    </div>
+    <div class="version">v1.0.1</div>
+
+    <script>
+        // Проверка статуса соединения
+        function checkConnection() {
+            const statusEl = document.getElementById('status');
+            statusEl.textContent = 'Проверка соединения...';
+            statusEl.className = 'status';
+            
+            fetch('/ping', { method: 'GET' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'ok') {
+                        statusEl.textContent = `Соединение активно (${data.system})`;
+                        statusEl.className = 'status connected';
+                    } else {
+                        throw new Error('Неверный статус');
+                    }
+                })
+                .catch(error => {
+                    statusEl.textContent = 'Соединение потеряно';
+                    statusEl.className = 'status disconnected';
+                    console.error('Ошибка проверки соединения:', error);
+                });
+        }
+        
+        // Проверяем соединение каждые 5 секунд
+        checkConnection();
+        setInterval(checkConnection, 5000);
+    </script>
+</body>
+</html>

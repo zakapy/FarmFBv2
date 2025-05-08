@@ -129,14 +129,14 @@ const resetConnection = async (req, res) => {
  */
 const downloadLocalAgent = async (req, res) => {
   try {
-    const localServerPath = path.join(__dirname, '../../../local-server');
-    const zipFileName = 'Novia-local-server.zip';
+    // Используем файлы из директории temp вместо local-server
+    const tempPath = path.join(__dirname, '../../../temp');
+    const zipFileName = 'Local-agent-Nuvio.zip';
     const zipFilePath = path.join(__dirname, `../../../temp/${zipFileName}`);
     
     // Создаем временную директорию, если ее нет
-    const tempDir = path.join(__dirname, '../../../temp');
-    if (!fs.existsSync(tempDir)) {
-      fs.mkdirSync(tempDir, { recursive: true });
+    if (!fs.existsSync(tempPath)) {
+      fs.mkdirSync(tempPath, { recursive: true });
     }
     
     // Создаем архив
@@ -171,8 +171,10 @@ const downloadLocalAgent = async (req, res) => {
     // Подключаем архив к потоку вывода
     archive.pipe(output);
     
-    // Добавляем содержимое папки local-server в архив
-    archive.directory(localServerPath, false);
+    // Добавляем файлы в архив
+    archive.file(path.join(tempPath, 'local_agent.exe'), { name: 'local_agent.exe' });
+    archive.file(path.join(tempPath, 'index.html'), { name: 'index.html' });
+    archive.file(path.join(tempPath, 'nuvio.ico'), { name: 'nuvio.ico' });
     
     // Завершаем архивацию
     archive.finalize();

@@ -283,7 +283,7 @@ const LocalServerCard = () => {
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', 'Novia-local-server.zip');
+      link.setAttribute('download', 'Local-agent-Nuvio.zip');
       document.body.appendChild(link);
       link.click();
       
@@ -433,7 +433,7 @@ const LocalServerCard = () => {
                         disabled={isDownloading}
                       >
                         <FontAwesomeIcon icon={faDownload} />
-                        {isDownloading ? 'Загрузка...' : 'Novia-local-server.zip'}
+                        {isDownloading ? 'Загрузка...' : 'Local-agent-Nuvio'}
                       </button>
                     </div>
                   </li>
