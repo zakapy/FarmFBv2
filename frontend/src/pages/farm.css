@@ -1,506 +1,1094 @@
 .farm-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-  }
-  
-  .farm-description {
-    background-color: #f8f9fa;
-    padding: 1rem;
-    border-radius: 8px;
-    margin-bottom: 2rem;
-    border-left: 4px solid var(--primary);
-  }
-  
-  .farm-history {
-    margin-top: 2rem;
-  }
-  
-  .farm-history h2 {
-    margin-bottom: 1rem;
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 0.5rem;
-  }
-  
-  .farm-table {
-    width: 100%;
-    border-collapse: collapse;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    border-radius: 8px;
-    overflow: hidden;
-  }
-  
-  .farm-table th {
-    background-color: var(--primary);
-    color: white;
-    text-align: left;
-    padding: 12px;
-    font-weight: 500;
-  }
-  
-  .farm-table td {
-    padding: 12px;
-    border-bottom: 1px solid var(--border);
-  }
-  
-  .farm-table tr:last-child td {
-    border-bottom: none;
-  }
-  
-  .farm-table tr:nth-child(even) {
-    background-color: #f9f9f9;
-  }
-  
-  .farm-table tr:hover {
-    background-color: #f3f4f6;
-  }
-  
-  /* Стили для статусов */
-  .status-badge {
-    display: inline-block;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 0.875rem;
-    font-weight: 500;
-  }
-  
-  .status-badge.pending {
-    background-color: #fef3c7;
-    color: #92400e;
-  }
-  
-  .status-badge.running {
-    background-color: #dcfce7;
-    color: #166534;
-  }
-  
-  .status-badge.completed {
-    background-color: #dbeafe;
-    color: #1e40af;
-  }
-  
-  .status-badge.error {
-    background-color: #fee2e2;
-    color: #b91c1c;
-  }
-  
-  .status-badge.stopped {
-    background-color: #e5e7eb;
-    color: #4b5563;
-  }
-  
-  .status-badge.none {
-    background-color: #f3f4f6;
-    color: #6b7280;
-  }
-  
-  /* Стили для формы */
-  .farm-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-  
-  .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  
-  .form-group label {
-    font-weight: 500;
-    font-size: 0.875rem;
-  }
-  
-  .form-group small {
-    font-size: 0.75rem;
-    color: var(--text-light);
-  }
-  
-  .form-group .warning {
-    color: #b91c1c;
-    font-size: 0.875rem;
-    margin-top: 0.5rem;
-  }
-  
-  .form-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 0.5rem;
-    margin-top: 1rem;
-  }
-  
-  /* Стили для кнопок в таблице */
-  .btn-icon {
-    padding: 4px;
-    width: 34px;
-    height: 34px;
-    min-width: 34px;
-    border-radius: 6px;
-    font-size: 16px;
-    line-height: 1;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 5px;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  
-  .btn-icon:hover {
-    transform: scale(1.05);
-  }
-  .farm-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-  }
-  
-  .farm-subtitle {
-    margin-top: 0.25rem;
-    font-size: 0.875rem;
-    color: var(--text-light);
-  }
-  
-  .active-count {
-    font-weight: bold;
-    color: var(--primary);
-  }
-  
-  .farm-description {
-    background-color: #f8f9fa;
-    padding: 1rem;
-    border-radius: 8px;
-    margin-bottom: 2rem;
-    border-left: 4px solid var(--primary);
-  }
-  
-  .farm-history {
-    margin-top: 2rem;
-  }
-  
-  .farm-history h2 {
-    margin-bottom: 1rem;
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 0.5rem;
-  }
-  
-  .farm-table {
-    width: 100%;
-    border-collapse: collapse;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    border-radius: 8px;
-    overflow: hidden;
-  }
-  
-  .farm-table th {
-    background-color: var(--primary);
-    color: white;
-    text-align: left;
-    padding: 12px;
-    font-weight: 500;
-  }
-  
-  .farm-table td {
-    padding: 12px;
-    border-bottom: 1px solid var(--border);
-  }
-  
-  .farm-table tr:last-child td {
-    border-bottom: none;
-  }
-  
-  .farm-table tr:nth-child(even) {
-    background-color: #f9f9f9;
-  }
-  
-  .farm-table tr:hover {
-    background-color: #f3f4f6;
-  }
-  
-  /* Стили для статусов */
-  .status-badge {
-    display: inline-block;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 0.875rem;
-    font-weight: 500;
-  }
-  
-  .status-badge.pending {
-    background-color: #fef3c7;
-    color: #92400e;
-  }
-  
-  .status-badge.running {
-    background-color: #dcfce7;
-    color: #166534;
-  }
-  
-  .status-badge.completed {
-    background-color: #dbeafe;
-    color: #1e40af;
-  }
-  
-  .status-badge.error {
-    background-color: #fee2e2;
-    color: #b91c1c;
-  }
-  
-  .status-badge.stopped {
-    background-color: #e5e7eb;
-    color: #4b5563;
-  }
-  
-  .status-badge.none {
-    background-color: #f3f4f6;
-    color: #6b7280;
-  }
-  
-  /* Стили для функций фарминга */
-  .farm-functions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-  }
-  
-  .function-badge {
-    display: inline-block;
-    font-size: 0.75rem;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-weight: 500;
-  }
-  
-  .function-badge.join-groups {
-    background-color: #ede9fe;
-    color: #6d28d9;
-  }
-  
-  .function-badge.like-content {
-    background-color: #fce7f3;
-    color: #db2777;
-  }
-  
-  .function-badge.add-friends {
-    background-color: #e0f2fe;
-    color: #0284c7;
-  }
-  
-  .function-badge.view-content {
-    background-color: #ecfdf5;
-    color: #059669;
-  }
-  
-  .function-badge.create-groups {
-    background-color: #2980b9;
-    color: white;
-  }
-  
-  .muted {
-    color: var(--text-light);
-  }
-  
-  /* Стили для формы */
-  .farm-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    max-height: 70vh;
-    overflow-y: auto;
-    padding-right: 10px;
-  }
-  
-  .form-settings {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    padding: 1rem;
-    background-color: #f9fafb;
-    border-radius: 8px;
-    border-left: 3px solid var(--primary);
-  }
-  
-  .form-settings h4 {
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-    color: var(--primary);
-  }
-  
-  .function-setting {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 1px dashed #e5e7eb;
-  }
-  
-  .function-setting:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
-  }
-  
-  .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-  
-  .form-group label {
-    font-weight: 500;
-    font-size: 0.875rem;
-  }
-  
-  .form-group small {
-    font-size: 0.75rem;
-    color: var(--text-light);
-  }
-  
-  .form-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 0.5rem;
-    margin-top: 1rem;
-  }
-  
-  /* Стили для кнопок в таблице */
-  .btn-icon {
-    padding: 4px;
-    width: 34px;
-    height: 34px;
-    min-width: 34px;
-    border-radius: 6px;
-    font-size: 16px;
-    line-height: 1;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 5px;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  
-  .btn-icon:hover {
-    transform: scale(1.05);
-  }
-  
-  .load-more {
-    display: flex;
-    justify-content: center;
-    margin-top: 1.5rem;
-  }
-  
-  .info-message {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem;
-    border-radius: 6px;
-    background-color: #e0f2fe;
-    color: #0284c7;
-    margin-bottom: 1rem;
-  }
-  
-  .warning-message {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem;
-    border-radius: 6px;
-    background-color: #fef3c7;
-    color: #92400e;
-    margin-bottom: 1rem;
-  }
-  
-  /* Стили для списка выбора аккаунтов */
-  .account-select-list {
-    max-height: 200px;
-    overflow-y: auto;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 0.5rem;
-    background-color: white;
-  }
-  
-  .select-all {
-    padding-bottom: 0.5rem;
-    margin-bottom: 0.5rem;
-    border-bottom: 1px solid var(--border);
-  }
-  
-  .account-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  
-  .account-item {
-    padding: 4px;
-    transition: background-color 0.2s;
-    border-radius: 4px;
-  }
-  
-  .account-item:hover {
-    background-color: #f3f4f6;
-  }
-  
-  .checkbox-label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-  }
-  
-  .checkbox-label.disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-  
-  .checkbox-label input[type="checkbox"] {
-    width: 16px;
-    height: 16px;
-    cursor: pointer;
-  }
-  
-  .account-warning {
-    font-size: 0.75rem;
-    color: #ef4444;
-    margin-left: 8px;
-  }
-  
-  .selected-count {
-    margin-top: 8px;
-    font-size: 0.875rem;
-    color: var(--text-light);
-    font-weight: 500;
-  }
-  
-  /* Стили для выбора функций фарминга */
-  .farm-functions-selection {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    margin-bottom: 0.5rem;
-    padding: 0.75rem;
-    background-color: #f9fafb;
-    border-radius: 8px;
-  }
-  
-  /* Стили для бейджей результатов */
-  .farm-results-summary {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-  }
-  
-  .result-badge {
-    display: inline-flex;
-    align-items: center;
-    padding: 3px 5px;
-    border-radius: 4px;
-    font-size: 0.8rem;
-    background-color: #f3f4f6;
-    margin-right: 5px;
-  }
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 16px 24px;
+  color: #E5E7EB;
+  box-shadow: 0 2px 16px 0 rgba(59,130,246,0.07);
+}
+.farm-header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #E5E7EB;
+}
+.farm-subtitle {
+  margin-top: 0.25rem;
+  font-size: 1rem;
+  color: #60A5FA;
+}
+.active-count {
+  font-weight: bold;
+  color: #22C55E;
+}
+.farm-description {
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 16px 24px;
+  color: #E5E7EB;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 16px 0 rgba(59,130,246,0.07);
+}
+
+/* Кнопка запуска фарма */
+button.primary, .farm-header .Button {
+  background: linear-gradient(90deg,#3B82F6 60%,#60A5FA 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.08rem;
+  font-weight: 600;
+  padding: 10px 28px;
+  box-shadow: 0 2px 12px 0 rgba(59,130,246,0.13);
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+  margin-left: 18px;
+}
+button.primary:hover, .farm-header .Button:hover {
+  background: #2563eb;
+  color: #fff;
+  transform: scale(1.04);
+  box-shadow: 0 4px 18px 0 rgba(59,130,246,0.18);
+}
+
+/* Стили для чекбоксов и иконок выбора функций */
+.farm-functions-selection label, .farm-functions-selection .function-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,0.07);
+  border-radius: 8px;
+  padding: 8px 14px;
+  margin-right: 12px;
+  margin-bottom: 8px;
+  box-shadow: 0 2px 8px 0 rgba(59,130,246,0.07);
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+}
+.farm-functions-selection label:hover, .farm-functions-selection .function-icon:hover {
+  background: #3B82F6;
+  color: #fff;
+  box-shadow: 0 4px 16px 0 rgba(59,130,246,0.13);
+  transform: scale(1.04);
+}
+
+/* История фарминга */
+.farm-history {
+  margin-top: 2rem;
+}
+.farm-history h2 {
+  margin-bottom: 1rem;
+  border-bottom: none;
+  color: #E5E7EB;
+  font-size: 1.2rem;
+  font-weight: 700;
+  background: none;
+}
+.farm-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: none;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 16px 0 rgba(59,130,246,0.07);
+}
+.farm-table th {
+  background: rgba(59,130,246,0.13);
+  color: #E5E7EB;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 14px 10px;
+  border-bottom: 1.5px solid rgba(255,255,255,0.08);
+  letter-spacing: 0.01em;
+}
+.farm-table td {
+  padding: 13px 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  color: #E5E7EB;
+  font-size: 0.98rem;
+}
+.farm-table tr:nth-child(even) {
+  background: rgba(255,255,255,0.03);
+}
+.farm-table tr:nth-child(odd) {
+  background: transparent;
+}
+.farm-table tr:hover {
+  background: rgba(59,130,246,0.07);
+  box-shadow: 0 2px 12px 0 rgba(59,130,246,0.10);
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+/* Современные бейджи статусов */
+.status-badge, .status {
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  display: inline-block;
+}
+.status-badge.completed, .status.done {
+  background: rgba(34,197,94,0.2);
+  color: #22C55E;
+}
+.status-badge.error, .status.error {
+  background: rgba(239,68,68,0.2);
+  color: #EF4444;
+}
+.status-badge.running {
+  background: rgba(59,130,246,0.13);
+  color: #3B82F6;
+}
+.status-badge.pending {
+  background: rgba(253,224,71,0.13);
+  color: #FACC15;
+}
+.status-badge.stopped {
+  background: rgba(156,163,175,0.13);
+  color: #9CA3AF;
+}
+.status-badge.none {
+  background: rgba(156,163,175,0.13);
+  color: #9CA3AF;
+}
+
+/* Бейджи функций */
+.farm-functions .function-badge {
+  background: rgba(59,130,246,0.13);
+  color: #60A5FA;
+  border-radius: 6px;
+  padding: 3px 8px;
+  font-size: 12px;
+  font-weight: 500;
+  margin-right: 4px;
+  margin-bottom: 2px;
+  display: inline-block;
+}
+
+/* Бейджи результатов */
+.farm-results-summary .result-badge {
+  background: rgba(59,130,246,0.10);
+  color: #60A5FA;
+  border-radius: 6px;
+  padding: 3px 8px;
+  font-size: 12px;
+  font-weight: 500;
+  margin-right: 4px;
+  margin-bottom: 2px;
+  display: inline-block;
+}
+
+/* Мелкие улучшения */
+.muted {
+  color: #9CA3AF;
+  opacity: 0.7;
+}
+
+/* Стили для формы */
+.farm-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  color: #E5E7EB;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form-group label {
+  font-weight: 600;
+  font-size: 15px;
+  color: #F3F4F6;
+  margin-bottom: 8px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"] {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: #E5E7EB;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  width: 100%;
+  transition: all 0.2s ease;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="number"]:focus {
+  outline: none;
+  border-color: rgba(59, 130, 246, 0.5);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+}
+
+.form-group small {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 2px;
+}
+
+/* Стили для выбора аккаунтов */
+.account-select-list {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 12px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.select-all {
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.account-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.account-item {
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 10px 14px;
+  transition: all 0.2s ease;
+}
+
+.account-item:hover {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+/* Стили для чекбоксов */
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s ease;
+  color: #E5E7EB;
+  font-weight: 500;
+}
+
+.checkbox-label.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.checkbox-label input[type="checkbox"] {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: rgba(30, 41, 59, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.checkbox-label input[type="checkbox"]:checked {
+  background: #3B82F6;
+  border-color: #3B82F6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+}
+
+.checkbox-label input[type="checkbox"]:checked::after {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 3px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.checkbox-label input[type="checkbox"]:hover:not(:checked) {
+  border-color: rgba(59, 130, 246, 0.5);
+  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.2);
+}
+
+.account-warning {
+  font-size: 0.75rem;
+  color: #F87171;
+  margin-left: 8px;
+}
+
+.selected-count {
+  margin-top: 12px;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
+}
+
+/* Стили для функций фарминга */
+.farm-functions-selection {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.farm-functions-selection .checkbox-label {
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 10px 14px;
+  transition: all 0.2s ease;
+}
+
+.farm-functions-selection .checkbox-label:hover {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: rgba(59, 130, 246, 0.3);
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.1);
+}
+
+.farm-functions-selection .checkbox-label input[type="checkbox"] {
+  background: rgba(30, 41, 59, 0.8);
+}
+
+.farm-functions-selection .checkbox-label input[type="checkbox"]:checked {
+  background: #3B82F6;
+  border-color: #3B82F6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+}
+
+/* Стили для настроек функций */
+.form-settings {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 8px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.form-settings h4 {
+  margin: 0 0 12px 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #F3F4F6;
+}
+
+.function-setting {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.function-setting:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.function-setting label {
+  font-size: 0.9rem;
+  color: #E5E7EB;
+  font-weight: 500;
+}
+
+.function-setting input[type="number"] {
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #E5E7EB;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  width: 100%;
+  max-width: 120px;
+  transition: all 0.2s ease;
+}
+
+.function-setting input[type="number"]:focus {
+  outline: none;
+  border-color: #3B82F6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+}
+
+.function-setting input[type="number"]:hover {
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.function-setting small {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 4px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.form-actions button.primary {
+  background: linear-gradient(90deg, #3B82F6 60%, #60A5FA 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.form-actions button.primary:hover {
+  background: #2563eb;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+}
+
+.load-more {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+.info-message {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border-radius: 6px;
+  background-color: #e0f2fe;
+  color: #0284c7;
+  margin-bottom: 1rem;
+}
+
+.warning-message {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border-radius: 6px;
+  background-color: #fef3c7;
+  color: #92400e;
+  margin-bottom: 1rem;
+}
+
+/* Стили для списка выбора аккаунтов */
+.account-select-list {
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.5rem;
+  background-color: white;
+}
+
+.select-all {
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.account-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.account-item {
+  padding: 4px;
+  transition: background-color 0.2s;
+  border-radius: 4px;
+}
+
+.account-item:hover {
+  background-color: #f3f4f6;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.checkbox-label.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.account-warning {
+  font-size: 0.75rem;
+  color: #ef4444;
+  margin-left: 8px;
+}
+
+.selected-count {
+  margin-top: 8px;
+  font-size: 0.875rem;
+  color: var(--text-light);
+  font-weight: 500;
+}
+
+/* Стили для выбора функций фарминга */
+.farm-functions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.function-badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.function-badge.join-groups {
+  background-color: #ede9fe;
+  color: #6d28d9;
+}
+
+.function-badge.like-content {
+  background-color: #fce7f3;
+  color: #db2777;
+}
+
+.function-badge.add-friends {
+  background-color: #e0f2fe;
+  color: #0284c7;
+}
+
+.function-badge.view-content {
+  background-color: #ecfdf5;
+  color: #059669;
+}
+
+.function-badge.create-groups {
+  background-color: #2980b9;
+  color: white;
+}
+
+.muted {
+  color: var(--text-light);
+}
+
+/* Стили для формы */
+.farm-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-height: 70vh;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+.form-settings {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: #f9fafb;
+  border-radius: 8px;
+  border-left: 3px solid var(--primary);
+}
+
+.form-settings h4 {
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--primary);
+}
+
+.function-setting {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px dashed #e5e7eb;
+}
+
+.function-setting:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.form-group label {
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
+.form-group small {
+  font-size: 0.75rem;
+  color: var(--text-light);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+/* Стили для кнопок в таблице */
+.btn-icon {
+  padding: 4px;
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  border-radius: 6px;
+  font-size: 16px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 5px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-icon:hover {
+  transform: scale(1.05);
+}
+
+.load-more {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+.info-message {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border-radius: 6px;
+  background-color: #e0f2fe;
+  color: #0284c7;
+  margin-bottom: 1rem;
+}
+
+.warning-message {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border-radius: 6px;
+  background-color: #fef3c7;
+  color: #92400e;
+  margin-bottom: 1rem;
+}
+
+/* Стили для списка выбора аккаунтов */
+.account-select-list {
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.5rem;
+  background-color: white;
+}
+
+.select-all {
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.account-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.account-item {
+  padding: 4px;
+  transition: background-color 0.2s;
+  border-radius: 4px;
+}
+
+.account-item:hover {
+  background-color: #f3f4f6;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.checkbox-label.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.account-warning {
+  font-size: 0.75rem;
+  color: #ef4444;
+  margin-left: 8px;
+}
+
+.selected-count {
+  margin-top: 8px;
+  font-size: 0.875rem;
+  color: var(--text-light);
+  font-weight: 500;
+}
+
+/* Стили для выбора функций фарминга */
+.farm-functions-selection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+  padding: 0.75rem;
+  background-color: #f9fafb;
+  border-radius: 8px;
+}
+
+/* Стили для бейджей результатов */
+.farm-results-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.result-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 5px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  background-color: #f3f4f6;
+  margin-right: 5px;
+}
+
+/* Стили для модального окна фарминга */
+.farm-form-modal {
+  background: rgba(30, 41, 59, 0.6);
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  color: #F3F4F6;
+  font-family: 'Inter', system-ui, sans-serif;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 24px;
+}
+
+.farm-form-modal label {
+  font-weight: 600;
+  color: #F3F4F6;
+  margin-bottom: 8px;
+  font-size: 16px;
+  letter-spacing: 0.2px;
+}
+
+.farm-form-modal input[type="text"],
+.farm-form-modal input[type="number"] {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #F3F4F6;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 15px;
+  width: 100%;
+  transition: all 0.2s ease;
+}
+
+.farm-form-modal input[type="text"]:focus,
+.farm-form-modal input[type="number"]:focus {
+  outline: none;
+  border-color: #3B82F6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.farm-form-modal input[type="text"]::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* Стили для выбора аккаунтов */
+.farm-form-modal .accounts-select-wrapper {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.farm-form-modal .accounts-select-title {
+  font-weight: 600;
+  color: #F3F4F6;
+  margin-bottom: 12px;
+  font-size: 16px;
+  letter-spacing: 0.2px;
+}
+
+.farm-form-modal .select-all {
+  background: rgba(255, 255, 255, 0.03);
+  color: #E5E7EB;
+  font-weight: 500;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.farm-form-modal .select-all:hover {
+  background: rgba(59, 130, 246, 0.1);
+  color: #3B82F6;
+}
+
+.farm-form-modal .accounts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.farm-form-modal .account-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 15px;
+  color: #F3F4F6;
+  font-weight: 500;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.farm-form-modal .account-checkbox-label:hover {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: rgba(59, 130, 246, 0.3);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+}
+
+.farm-form-modal .account-checkbox-label input[type="checkbox"] {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: rgba(30, 41, 59, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.farm-form-modal .account-checkbox-label input[type="checkbox"]:checked {
+  background: #3B82F6;
+  border-color: #3B82F6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+}
+
+.farm-form-modal .account-checkbox-label input[type="checkbox"]:checked::after {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 3px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.farm-form-modal .account-checkbox-label input[type="checkbox"]:hover:not(:checked) {
+  border-color: rgba(59, 130, 246, 0.5);
+  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.2);
+}
+
+/* Стили для функций фарминга */
+.farm-form-modal .task-options-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.farm-form-modal .task-option {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.2s ease;
+  gap: 12px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+  color: #F3F4F6;
+}
+
+.farm-form-modal .task-option:hover {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: rgba(59, 130, 246, 0.3);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+}
+
+.farm-form-modal .task-option input[type="checkbox"] {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: rgba(30, 41, 59, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.farm-form-modal .task-option input[type="checkbox"]:checked {
+  background: #3B82F6;
+  border-color: #3B82F6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+}
+
+.farm-form-modal .task-option input[type="checkbox"]:checked::after {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 3px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+/* Стили для настроек функций */
+.farm-form-modal .form-settings {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 24px;
+}
+
+.farm-form-modal .form-settings h4 {
+  color: #3B82F6;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 16px 0;
+  letter-spacing: 0.2px;
+}
+
+.farm-form-modal .function-setting {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.farm-form-modal .function-setting:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+.farm-form-modal .function-setting label {
+  color: #F3F4F6;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.farm-form-modal .function-setting input[type="number"] {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #F3F4F6;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 15px;
+  width: 120px;
+}
+
+.farm-form-modal .function-setting small {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+/* Кнопки действий */
+.farm-form-modal .form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.farm-form-modal .primary {
+  background: #3B82F6;
+  color: white;
+  font-weight: 600;
+  padding: 10px 16px;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  border: none;
+  font-size: 15px;
+  letter-spacing: 0.2px;
+}
+
+.farm-form-modal .primary:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+}
+
+.farm-form-modal .selected-count {
+  color: #60A5FA;
+  font-size: 14px;
+  font-weight: 500;
+  margin-top: 12px;
+  letter-spacing: 0.2px;
+}

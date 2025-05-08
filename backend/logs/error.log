@@ -617,3 +617,18 @@ Call log:
     at exports.handleRefreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\services\authService.js:70:11)
     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
     at async exports.refreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\controllers\authController.js:47:20)
+[2025-05-08 16:13:44] [31merror[39m: Error: Invalid or expired refresh token
+    at exports.handleRefreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\services\authService.js:70:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async exports.refreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\controllers\authController.js:47:20)
+[2025-05-08 17:00:46] [31merror[39m: Error: Invalid or expired refresh token
+    at exports.handleRefreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\services\authService.js:70:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async exports.refreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\controllers\authController.js:47:20)
+[2025-05-08 20:07:37] [31merror[39m: Error: Invalid or expired refresh token
+    at exports.handleRefreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\services\authService.js:70:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async exports.refreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\controllers\authController.js:47:20)
+[2025-05-08 20:13:03] [31merror[39m: Ошибка при обработке диалога Windows: Shell is not a constructor
+[2025-05-08 20:13:27] [31merror[39m: Ошибка при загрузке аватарки: page.evaluate: Target page, context or browser has been closed
+[2025-05-08 20:13:27] [31merror[39m: Ошибка при смене аватарки: Не удалось загрузить аватарку: page.evaluate: Target page, context or browser has been closed

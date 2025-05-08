@@ -431,7 +431,6 @@ const Farm = () => {
                 value={farmSettings.name}
                 onChange={handleSettingsChange}
                 placeholder="Например: Фарм групп основного аккаунта"
-                className="input"
               />
             </div>
             
@@ -542,123 +541,93 @@ const Farm = () => {
               </div>
             </div>
             
-            <div className="form-settings">
-              <h4>Настройки функций:</h4>
-              
-              {selectedFunctions.joinGroups && (
-                <div className="function-setting">
-                  <label>Количество групп для вступления:</label>
-                  <input
-                    type="number"
-                    name="groupsToJoin"
-                    value={farmSettings.groupsToJoin}
-                    onChange={handleSettingsChange}
-                    min="1"
-                    max="10"
-                    className="input"
-                  />
-                  <small>Рекомендуется не более 5 групп за один запуск</small>
-                </div>
-              )}
-              
-              {selectedFunctions.createGroups && (
-                <div className="function-setting">
-                  <label>Количество групп для создания:</label>
-                  <input
-                    type="number"
-                    name="groupsToCreate"
-                    value={farmSettings.groupsToCreate}
-                    onChange={handleSettingsChange}
-                    min="1"
-                    max="3"
-                    className="input"
-                  />
-                  <small>Рекомендуется не более 3 групп за один запуск</small>
-                </div>
-              )}
-              
-              {selectedFunctions.likeContent && (
-                <div className="function-setting">
-                  <label>Количество постов для лайков:</label>
-                  <input
-                    type="number"
-                    name="postsToLike"
-                    value={farmSettings.postsToLike}
-                    onChange={handleSettingsChange}
-                    min="0"
-                    max="10"
-                    className="input"
-                  />
-                </div>
-              )}
-              
-              {selectedFunctions.addFriends && (
-                <div className="function-setting">
-                  <label>Количество друзей для добавления:</label>
-                  <input
-                    type="number"
-                    name="friendsToAdd"
-                    value={farmSettings.friendsToAdd}
-                    onChange={handleSettingsChange}
-                    min="0"
-                    max="5"
-                    className="input"
-                  />
-                  <small>Рекомендуется не более 5 друзей за один запуск</small>
-                </div>
-              )}
-              
-              {selectedFunctions.viewContent && (
-                <div className="function-setting">
-                  <label>Количество просмотров контента:</label>
-                  <input
-                    type="number"
-                    name="contentToView"
-                    value={farmSettings.contentToView}
-                    onChange={handleSettingsChange}
-                    min="0"
-                    max="20"
-                    className="input"
-                  />
-                </div>
-              )}
-              
-              <div className="function-setting">
-                <label>Максимальное количество действий на аккаунт:</label>
-                <input
-                  type="number"
-                  name="maxActionsPerAccount"
-                  value={farmSettings.maxActionsPerAccount}
-                  onChange={handleSettingsChange}
-                  min="1"
-                  max="50"
-                  className="input"
-                />
-                <small>Общий лимит действий для одного запуска фарминга</small>
+            {Object.values(selectedFunctions).some(value => value) && (
+              <div className="form-settings">
+                <h4>Настройки функций:</h4>
+                
+                {selectedFunctions.joinGroups && (
+                  <div className="function-setting">
+                    <label>Количество групп для вступления:</label>
+                    <input
+                      type="number"
+                      name="groupsToJoin"
+                      value={farmSettings.groupsToJoin}
+                      onChange={handleSettingsChange}
+                      min="1"
+                      max="10"
+                    />
+                    <small>Рекомендуется не более 5 групп за один запуск</small>
+                  </div>
+                )}
+                
+                {selectedFunctions.createGroups && (
+                  <div className="function-setting">
+                    <label>Количество групп для создания:</label>
+                    <input
+                      type="number"
+                      name="groupsToCreate"
+                      value={farmSettings.groupsToCreate}
+                      onChange={handleSettingsChange}
+                      min="1"
+                      max="3"
+                    />
+                    <small>Рекомендуется не более 3 групп за один запуск</small>
+                  </div>
+                )}
+                
+                {selectedFunctions.likeContent && (
+                  <div className="function-setting">
+                    <label>Количество постов для лайков:</label>
+                    <input
+                      type="number"
+                      name="postsToLike"
+                      value={farmSettings.postsToLike}
+                      onChange={handleSettingsChange}
+                      min="0"
+                      max="10"
+                    />
+                  </div>
+                )}
+                
+                {selectedFunctions.addFriends && (
+                  <div className="function-setting">
+                    <label>Количество друзей для добавления:</label>
+                    <input
+                      type="number"
+                      name="friendsToAdd"
+                      value={farmSettings.friendsToAdd}
+                      onChange={handleSettingsChange}
+                      min="0"
+                      max="5"
+                    />
+                    <small>Рекомендуется не более 5 друзей за один запуск</small>
+                  </div>
+                )}
+                
+                {selectedFunctions.viewContent && (
+                  <div className="function-setting">
+                    <label>Количество просмотров контента:</label>
+                    <input
+                      type="number"
+                      name="contentToView"
+                      value={farmSettings.contentToView}
+                      onChange={handleSettingsChange}
+                      min="0"
+                      max="20"
+                    />
+                  </div>
+                )}
               </div>
-              
-              <div className="function-setting">
-                <label className="checkbox-label">
-                  <input
-                    type="checkbox"
-                    name="runSequentially"
-                    checked={farmSettings.runSequentially}
-                    onChange={handleSettingsChange}
-                  />
-                  <span>Выполнять функции последовательно</span>
-                </label>
-                <small>Если отключено, будут выполняться параллельно</small>
-              </div>
-            </div>
-            
+            )}
+
             <div className="form-actions">
-              <Button variant="secondary" onClick={() => setShowModal(false)}>Отмена</Button>
-              <Button 
-                onClick={handleStartFarm} 
-                disabled={!selectedAccounts.length || !Object.values(selectedFunctions).some(v => v) || farmLoading}
+              <button 
+                className="primary" 
+                onClick={handleStartFarm}
+                disabled={selectedAccounts.length === 0 || !Object.values(selectedFunctions).some(v => v) || farmLoading}
               >
                 {farmLoading ? 'Запуск...' : 'Запустить фарминг'}
-              </Button>
+              </button>
             </div>
           </div>
         </Modal>

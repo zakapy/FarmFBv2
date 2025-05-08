@@ -314,20 +314,18 @@ IP: ${data.ip}
     >
       <form
         onSubmit={handleSubmit}
-        style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}
+        className="account-form-modal-body"
       >
         <Input
           name="name"
           placeholder="Название аккаунта"
           value={form.name}
           onChange={handleChange}
+          className="input"
         />
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-          <label style={{ 
-            fontSize: '14px', 
-            fontWeight: '500'
-          }}>
+        <div>
+          <label className="input-label">
             Cookies:
           </label>
           <textarea
@@ -336,55 +334,29 @@ IP: ${data.ip}
             value={form.cookies}
             onChange={handleChange}
             rows={6}
-            style={{
-              padding: '0.5rem',
-              borderRadius: '5px',
-              border: '1px solid #ccc',
-              resize: 'vertical',
-              fontFamily: 'monospace',
-              whiteSpace: 'pre-wrap',
-            }}
+            className="input"
+            style={{ fontFamily: 'monospace', whiteSpace: 'pre-wrap' }}
           />
         </div>
 
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          alignItems: 'center',
-          borderTop: '1px solid #eee',
-          paddingTop: '10px'
-        }}>
-          <span style={{ fontSize: '14px', fontWeight: '500' }}>
+        <div className="account-form-auth-toggle">
+          <span>
             {form.showAuthFields ? 'Скрыть данные для входа' : 'Указать данные для входа'}
           </span>
           <button 
             type="button" 
             onClick={toggleAuthFields}
-            style={{
-              background: 'none',
-              border: '1px solid #ccc',
-              borderRadius: '4px',
-              padding: '4px 8px',
-              fontSize: '14px',
-              cursor: 'pointer'
-            }}
+            className="button"
+            style={{ padding: '4px 12px', fontSize: '14px', minWidth: 'unset' }}
           >
             {form.showAuthFields ? '▲ Скрыть' : '▼ Показать'}
           </button>
         </div>
 
         {form.showAuthFields && (
-          <div style={{ 
-            display: 'flex', 
-            flexDirection: 'column', 
-            gap: '1rem',
-            backgroundColor: '#f9f9f9',
-            padding: '12px',
-            borderRadius: '5px',
-            marginTop: '-8px'
-          }}>
+          <div className="account-form-auth-fields">
             <div>
-              <label style={{ fontSize: '14px', fontWeight: '500', display: 'block', marginBottom: '5px' }}>
+              <label className="input-label">
                 Email для входа:
               </label>
               <Input
@@ -393,11 +365,11 @@ IP: ${data.ip}
                 placeholder="Email для входа в Facebook"
                 value={form.email}
                 onChange={handleChange}
+                className="input"
               />
             </div>
-            
             <div>
-              <label style={{ fontSize: '14px', fontWeight: '500', display: 'block', marginBottom: '5px' }}>
+              <label className="input-label">
                 Пароль:
               </label>
               <Input
@@ -406,26 +378,19 @@ IP: ${data.ip}
                 placeholder="Пароль для входа в Facebook"
                 value={form.password}
                 onChange={handleChange}
+                className="input"
               />
-              <small style={{ display: 'block', marginTop: '5px', color: '#666' }}>
+              <small className="input-hint">
                 Пароль не хранится на сервере после авторизации
               </small>
             </div>
-
             {(requires2FA || form.twoFactorSecret) && (
-              <div style={{ 
-                border: '1px solid #4dabf7', 
-                borderRadius: '5px', 
-                padding: '12px',
-                backgroundColor: '#e7f5ff',
-                marginTop: '5px'
-              }}>
-                <h4 style={{ margin: '0 0 10px 0', color: '#1971c2' }}>
+              <div className="account-form-2fa">
+                <h4>
                   <span role="img" aria-label="2FA">🔐</span> Двухфакторная аутентификация
                 </h4>
-                
-                <div style={{ marginBottom: '10px' }}>
-                  <label style={{ fontSize: '14px', fontWeight: '500', display: 'block', marginBottom: '5px' }}>
+                <div>
+                  <label className="input-label">
                     Секретный ключ 2FA API:
                   </label>
                   <Input
@@ -433,14 +398,14 @@ IP: ${data.ip}
                     placeholder="Секретный ключ для 2fa.fb.rip"
                     value={form.twoFactorSecret}
                     onChange={handleChange}
+                    className="input"
                   />
-                  <small style={{ display: 'block', marginTop: '5px', color: '#666' }}>
+                  <small className="input-hint">
                     Будет использован для автоматического получения кода через API
                   </small>
                 </div>
-
                 <div>
-                  <label style={{ fontSize: '14px', fontWeight: '500', display: 'block', marginBottom: '5px' }}>
+                  <label className="input-label">
                     Код 2FA:
                   </label>
                   <div style={{ display: 'flex', gap: '10px' }}>
@@ -449,24 +414,19 @@ IP: ${data.ip}
                       placeholder="Код двухфакторной аутентификации"
                       value={form.twoFactorCode}
                       onChange={handleChange}
+                      className="input"
                     />
                     <button 
                       type="button" 
                       onClick={verify2FA}
                       disabled={isCheckingTwoFactor}
-                      style={{
-                        background: '#4dabf7',
-                        border: 'none',
-                        borderRadius: '5px',
-                        padding: '0 15px',
-                        color: 'white',
-                        cursor: isCheckingTwoFactor ? 'wait' : 'pointer'
-                      }}
+                      className="button"
+                      style={{ background: 'var(--primary-light)', minWidth: 'unset' }}
                     >
                       {isCheckingTwoFactor ? 'Проверка...' : 'Получить код'}
                     </button>
                   </div>
-                  <small style={{ display: 'block', marginTop: '5px', color: '#666' }}>
+                  <small className="input-hint">
                     Введите код вручную или получите его автоматически
                   </small>
                 </div>
@@ -475,64 +435,37 @@ IP: ${data.ip}
           </div>
         )}
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-          <label style={{ 
-            fontSize: '14px', 
-            fontWeight: '500',
-          }}>
+        <div>
+          <label className="input-label">
             Тип прокси:
           </label>
           <select 
             name="proxyType" 
             value={form.proxyType} 
             onChange={handleChange}
-            style={{
-              padding: '8px 12px',
-              borderRadius: '5px',
-              border: '1px solid #ccc',
-              backgroundColor: '#fff',
-              fontSize: '14px',
-              width: '100%',
-              marginBottom: '10px',
-              cursor: 'pointer',
-              outline: 'none'
-            }}
+            className="input"
           >
             <option value="http">HTTP/HTTPS</option>
             <option value="socks5">SOCKS5</option>
           </select>
         </div>
 
-        <label style={{ 
-          fontSize: '14px', 
-          fontWeight: '500',
-          marginBottom: '-8px'
-        }}>
+        <label className="input-label">
           Формат прокси:
         </label>
         <select 
           name="proxyMode" 
           value={form.proxyMode} 
           onChange={handleChange}
-          style={{
-            padding: '8px 12px',
-            borderRadius: '5px',
-            border: '1px solid #ccc',
-            backgroundColor: '#fff',
-            fontSize: '14px',
-            width: '100%',
-            marginBottom: '10px',
-            cursor: 'pointer',
-            outline: 'none'
-          }}
+          className="input"
         >
-          <option value="basic" style={{ padding: '8px' }}>
+          <option value="basic">
             IP:PORT — Базовый формат (например: 192.168.1.1:8080)
           </option>
-          <option value="auth" style={{ padding: '8px' }}>
+          <option value="auth">
             IP:PORT:LOGIN:PASS — С авторизацией (например: 192.168.1.1:8080:user:pass)
           </option>
-          <option value="fields" style={{ padding: '8px' }}>
+          <option value="fields">
             Ввести данные прокси в отдельных полях
           </option>
         </select>
@@ -544,8 +477,9 @@ IP: ${data.ip}
               placeholder={getProxyPlaceholder()}
               value={form.proxyString}
               onChange={handleChange}
+              className="input"
             />
-            <Button type="button" onClick={checkProxy}>
+            <Button type="button" onClick={checkProxy} className="button">
               Проверить
             </Button>
           </div>
@@ -557,6 +491,7 @@ IP: ${data.ip}
                 placeholder="IP адрес" 
                 value={form.proxyIP} 
                 onChange={handleChange}
+                className="input"
                 style={{ flex: 2 }}
               />
               <Input 
@@ -564,6 +499,7 @@ IP: ${data.ip}
                 placeholder="Порт" 
                 value={form.proxyPort} 
                 onChange={handleChange}
+                className="input"
                 style={{ flex: 1 }}
               />
             </div>
@@ -573,6 +509,7 @@ IP: ${data.ip}
                 placeholder="Логин (необязательно)" 
                 value={form.proxyLogin} 
                 onChange={handleChange}
+                className="input"
               />
               <Input 
                 name="proxyPassword" 
@@ -580,41 +517,28 @@ IP: ${data.ip}
                 value={form.proxyPassword} 
                 onChange={handleChange}
                 type="password"
+                className="input"
               />
             </div>
-            <Button type="button" onClick={checkProxy}>
+            <Button type="button" onClick={checkProxy} className="button">
               Проверить
             </Button>
           </div>
         )}
 
         {proxyStatus && (
-          <div style={{ 
-            fontSize: '14px', 
-            color: proxyStatus.includes('✅') ? '#2ecc71' : '#e74c3c',
-            padding: '8px',
-            borderRadius: '4px',
-            backgroundColor: proxyStatus.includes('✅') ? '#eafaf1' : '#fdeaea',
-            marginTop: '4px',
-            whiteSpace: 'pre-line'
-          }}>
+          <div className={proxyStatus.includes('✅') ? 'status-success' : 'status-error'}>
             {proxyStatus}
           </div>
         )}
 
         {error && (
-          <div style={{ 
-            color: '#e74c3c', 
-            fontSize: '14px',
-            padding: '8px',
-            borderRadius: '4px',
-            backgroundColor: '#fdeaea'
-          }}>
+          <div className="status-error">
             ⚠️ {error}
           </div>
         )}
 
-        <Button type="submit">{initialData ? 'Сохранить' : 'Добавить'}</Button>
+        <Button type="submit" className="button">{initialData ? 'Сохранить' : 'Добавить'}</Button>
       </form>
     </Modal>
   );

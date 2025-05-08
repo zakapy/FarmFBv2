@@ -9,7 +9,7 @@ import Button from './Button';
 import AccountForm from './AccountForm';
 import AvatarUploader from './AvatarUploader';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPen, faTrash, faSync, faKey, faCheck, faUserCheck, faUserTimes, faCookieBite } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faTrash, faSync, faKey, faCheck, faUserCheck, faUserTimes, faCookieBite, faIdCard, faNetworkWired, faUserShield, faEnvelope } from '@fortawesome/free-solid-svg-icons';
 
 const AccountCard = ({ account, onEdit, onDelete, refreshAccounts }) => {
   const [status, setStatus] = useState(account.status || 'неизвестно');
@@ -27,18 +27,19 @@ const AccountCard = ({ account, onEdit, onDelete, refreshAccounts }) => {
   const hasAuthData = account.meta && account.meta.email;
   const avatarUrl = account.meta?.avatarUrl || '';
 
-  const renderStatus = () => {
-    switch (status?.toLowerCase()) {
-      case 'активен':
-      case 'active':
-        return <span style={{ color: 'green' }}>🟢 Активен</span>;
-      case 'неактивен':
-      case 'inactive':
-        return <span style={{ color: 'red' }}>🔴 Неактивен</span>;
-      default:
-        return <span style={{ color: 'gray' }}>⚪ Неизвестно</span>;
+  const handleCopyDolphinId = () => {
+    if (hasDolphinProfile) {
+      navigator.clipboard.writeText(account.dolphin.profileId.toString());
+      toast.success('Dolphin ID скопирован!');
     }
   };
+
+  const renderStatus = () => (
+    <span className="account-status">
+      <span className="status-dot" />
+      Активен
+    </span>
+  );
 
   const handleCheckStatus = async () => {
     setCheckState('loading');
@@ -420,7 +421,10 @@ const AccountCard = ({ account, onEdit, onDelete, refreshAccounts }) => {
   const renderDolphinInfo = () => {
     if (hasDolphinProfile) {
       return (
-        <p><strong>Dolphin ID:</strong> <span style={{ color: 'blue' }}>🐬 #{account.dolphin.profileId}</span></p>
+        <div className="account-details-row dolphin-id-copy" onClick={handleCopyDolphinId} title="Скопировать Dolphin ID">
+          <FontAwesomeIcon icon={faUserShield} />
+          <span>Dolphin ID: {account.dolphin.profileId}</span>
+        </div>
       );
     }
     return null;
@@ -586,23 +590,28 @@ const AccountCard = ({ account, onEdit, onDelete, refreshAccounts }) => {
           />
           <h3 className="account-name">{account.name}</h3>
         </div>
-
-        <div className="account-status">
-          {renderStatus()}
-        </div>
+        {account.status === 'активен' && renderStatus()}
       </div>
-
       <div className="account-card-body">
         <div className="account-details">
-          <p><strong>ID:</strong> {account._id || account.id}</p>
+          <div className="account-details-row">
+            <FontAwesomeIcon icon={faIdCard} />
+            <span>ID: {account._id || account.id}</span>
+          </div>
+          {proxy && (
+            <div className="account-details-row">
+              <FontAwesomeIcon icon={faNetworkWired} />
+              <span>Proxy: {proxy}</span>
+            </div>
+          )}
           {renderDolphinInfo()}
           {account.meta && account.meta.email && (
-            <p><strong>Email:</strong> {account.meta.email}</p>
+            <div className="account-details-row">
+              <FontAwesomeIcon icon={faEnvelope} />
+              <span>{account.meta.email}</span>
+            </div>
           )}
-          {proxy && <p><strong>Proxy:</strong> {proxy}</p>}
-          {account.proxyType && <p><strong>Proxy Type:</strong> {account.proxyType}</p>}
         </div>
-
         <div className="account-card-buttons">
           <div className="button-group">
             {!hasDolphinProfile && (
@@ -625,7 +634,6 @@ const AccountCard = ({ account, onEdit, onDelete, refreshAccounts }) => {
             )}
             {render2FABadge()}
           </div>
-
           <div className="edit-delete-buttons">
             <button 
               className="edit-button" 

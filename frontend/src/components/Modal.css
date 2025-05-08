@@ -4,20 +4,25 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.4);
+    background-color: rgba(10, 15, 44, 0.75);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 1000;
+    backdrop-filter: blur(5px);
   }
   
   .modal-window {
-    background-color: white;
-    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
     width: 90%;
     max-width: 500px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.15);
+    box-shadow: 0 0 20px rgba(0, 150, 255, 0.05);
     overflow: hidden;
+    color: #E5E7EB;
+    animation: fadeIn 0.4s;
   }
   
   .modal-width-small {
@@ -36,20 +41,23 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem;
-    border-bottom: 1px solid #e5e7eb;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.03);
   }
   
   .modal-header h3 {
     margin: 0;
     font-size: 1.25rem;
     font-weight: 600;
+    color: #E5E7EB;
   }
   
   .modal-body {
-    padding: 1rem;
+    padding: 24px;
     max-height: 80vh;
     overflow-y: auto;
+    color: #E5E7EB;
   }
   
   .btn-close {
@@ -57,10 +65,11 @@
     font-size: 1.5rem;
     border: none;
     cursor: pointer;
-    color: #6b7280;
+    color: rgba(255, 255, 255, 0.6);
+    transition: color 0.2s ease;
   }
   
   .btn-close:hover {
-    color: #111827;
+    color: #E5E7EB;
   }
   
