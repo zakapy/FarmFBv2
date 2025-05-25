@@ -632,3 +632,87 @@ Call log:
 [2025-05-08 20:13:03] [31merror[39m: Ошибка при обработке диалога Windows: Shell is not a constructor
 [2025-05-08 20:13:27] [31merror[39m: Ошибка при загрузке аватарки: page.evaluate: Target page, context or browser has been closed
 [2025-05-08 20:13:27] [31merror[39m: Ошибка при смене аватарки: Не удалось загрузить аватарку: page.evaluate: Target page, context or browser has been closed
+[2025-05-08 21:57:07] [31merror[39m: Error: Invalid or expired refresh token
+    at exports.handleRefreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\services\authService.js:70:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async exports.refreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\controllers\authController.js:47:20)
+[2025-05-13 15:17:26] [31merror[39m: Error: Invalid or expired refresh token
+    at exports.handleRefreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\services\authService.js:70:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async exports.refreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\controllers\authController.js:47:20)
+[2025-05-13 15:21:05] [31merror[39m: Ошибка при запуске профиля: browserType.connectOverCDP: Timeout 30000ms exceeded.
+Call log:
+[2m  - <ws connecting> ws://127.0.0.1:65467/devtools/browser/0dca6793-6d25-485d-a9a0-86658e8540e2[22m
+[2m  - <ws connected> ws://127.0.0.1:65467/devtools/browser/0dca6793-6d25-485d-a9a0-86658e8540e2[22m
+
+[2025-05-13 15:21:05] [31merror[39m: Не удалось запустить профиль Dolphin: browserType.connectOverCDP: Timeout 30000ms exceeded.
+Call log:
+[2m  - <ws connecting> ws://127.0.0.1:65467/devtools/browser/0dca6793-6d25-485d-a9a0-86658e8540e2[22m
+[2m  - <ws connected> ws://127.0.0.1:65467/devtools/browser/0dca6793-6d25-485d-a9a0-86658e8540e2[22m
+
+[2025-05-13 15:21:05] [31merror[39m: Ошибка при запуске профиля: browserType.connectOverCDP: Timeout 30000ms exceeded.
+Call log:
+[2m  - <ws connecting> ws://127.0.0.1:65467/devtools/browser/0dca6793-6d25-485d-a9a0-86658e8540e2[22m
+[2m  - <ws connected> ws://127.0.0.1:65467/devtools/browser/0dca6793-6d25-485d-a9a0-86658e8540e2[22m
+
+[2025-05-13 15:21:05] [31merror[39m: Не удалось запустить профиль Dolphin: browserType.connectOverCDP: Timeout 30000ms exceeded.
+Call log:
+[2m  - <ws connecting> ws://127.0.0.1:65467/devtools/browser/0dca6793-6d25-485d-a9a0-86658e8540e2[22m
+[2m  - <ws connected> ws://127.0.0.1:65467/devtools/browser/0dca6793-6d25-485d-a9a0-86658e8540e2[22m
+
+[2025-05-13 15:35:52] [31merror[39m: Не удалось импортировать cookies: Request failed with status code 500
+[2025-05-13 15:35:52] [31merror[39m: Статус: 500
+[2025-05-13 15:35:52] [31merror[39m: Данные: {"error":"Failed to sync up browser data directory"}
+[2025-05-13 15:37:02] [31merror[39m: Не удалось импортировать cookies: Request failed with status code 500
+[2025-05-13 15:37:02] [31merror[39m: Статус: 500
+[2025-05-13 15:37:02] [31merror[39m: Данные: {"error":"Failed to add cookie to database"}
+[2025-05-13 15:42:33] [31merror[39m: Не удалось импортировать cookies: Request failed with status code 500
+[2025-05-13 15:42:33] [31merror[39m: Статус: 500
+[2025-05-13 15:42:33] [31merror[39m: Данные: {"error":"Failed to sync up browser data directory"}
+[2025-05-14 20:53:21] [31merror[39m: Error: Invalid or expired refresh token
+    at exports.handleRefreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\services\authService.js:70:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async exports.refreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\controllers\authController.js:47:20)
+[2025-05-14 20:53:21] [31merror[39m: Error: Invalid or expired refresh token
+    at exports.handleRefreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\services\authService.js:70:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async exports.refreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\controllers\authController.js:47:20)
+[2025-05-25 16:02:35] [31merror[39m: Error: Invalid or expired refresh token
+    at exports.handleRefreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\services\authService.js:70:11)
+    at exports.refreshToken (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\src\controllers\authController.js:47:38)
+    at Layer.handle [as handle_request] (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\node_modules\express\lib\router\layer.js:95:5)
+    at C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\node_modules\express\lib\router\index.js:280:10)
+    at Function.handle (C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\node_modules\express\lib\router\index.js:175:3)
+[2025-05-25 16:03:56] [31merror[39m: [Farm 6833150a2f7e2276309ff0cf] Error: Ошибка при запуске профиля: browserType.connectOverCDP: Timeout 30000ms exceeded.
+Call log:
+[2m  - <ws connecting> ws://127.0.0.1:50854/devtools/browser/900692fe-2b73-4e5f-b5a2-36ad2dc3e4d8[22m
+[2m  - <ws connected> ws://127.0.0.1:50854/devtools/browser/900692fe-2b73-4e5f-b5a2-36ad2dc3e4d8[22m
+[2025-05-25 16:03:56] [31merror[39m: [Farm 6833150a2f7e2276309ff0cf] Error: ❌ Ошибка фарминга: Не удалось запустить браузерный профиль
+[2025-05-25 16:04:37] [31merror[39m: Ошибка при запуске профиля: Request failed with status code 500
+[2025-05-25 16:04:37] [31merror[39m: Статус: 500
+[2025-05-25 16:04:37] [31merror[39m: Данные: {"error":"Profile ID 598701445 already running","errorObject":{"name":"Sct","text":"Profile ID 598701445 already running","code":"E_BROWSER_RUN_DUPLICATE"}}
+[2025-05-25 16:04:37] [31merror[39m: Не удалось запустить профиль Dolphin: Request failed with status code 500
+[2025-05-25 16:05:58] [31merror[39m: Ошибка при запуске профиля: browserType.connectOverCDP: Timeout 30000ms exceeded.
+Call log:
+[2m  - <ws connecting> ws://127.0.0.1:54457/devtools/browser/a29a0031-bb92-42fc-b2d5-022ff7605d12[22m
+[2m  - <ws connected> ws://127.0.0.1:54457/devtools/browser/a29a0031-bb92-42fc-b2d5-022ff7605d12[22m
+
+[2025-05-25 16:05:58] [31merror[39m: Ошибка при смене аватарки: Не удалось запустить профиль: browserType.connectOverCDP: Timeout 30000ms exceeded.
+Call log:
+[2m  - <ws connecting> ws://127.0.0.1:54457/devtools/browser/a29a0031-bb92-42fc-b2d5-022ff7605d12[22m
+[2m  - <ws connected> ws://127.0.0.1:54457/devtools/browser/a29a0031-bb92-42fc-b2d5-022ff7605d12[22m
+
+[2025-05-25 16:07:32] [31merror[39m: Ошибка при запуске профиля: Request failed with status code 500
+[2025-05-25 16:07:32] [31merror[39m: Статус: 500
+[2025-05-25 16:07:32] [31merror[39m: Данные: {"error":"EBUSY: resource busy or locked, open 'C:\\Users\\Богдан\\AppData\\Roaming\\dolphin_anty\\browser_profiles\\598701445\\data_dir\\DevToolsActivePort'","errorObject":{"errno":-4082,"code":"EBUSY","syscall":"open","path":"C:\\Users\\Богдан\\AppData\\Roaming\\dolphin_anty\\browser_profiles\\598701445\\data_dir\\DevToolsActivePort"}}
+[2025-05-25 16:07:32] [31merror[39m: Ошибка при смене аватарки: Не удалось запустить профиль: Request failed with status code 500
+[2025-05-25 16:08:44] [31merror[39m: Ошибка при обработке диалога Windows: Shell is not a constructor
+[2025-05-25 16:09:33] [31merror[39m: Ошибка при получении URL аватарки: page.goto: Timeout 20000ms exceeded.
+Call log:
+[2m  - navigating to "https://www.facebook.com/profile.php", waiting until "networkidle"[22m
+

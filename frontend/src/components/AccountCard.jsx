@@ -637,13 +637,45 @@ const AccountCard = ({ account, onEdit, onDelete, refreshAccounts }) => {
           <div className="edit-delete-buttons">
             <button 
               className="edit-button" 
-              onClick={() => onEdit(account)}
+              onClick={() => {
+                console.log('Нажата кнопка редактирования аккаунта в AccountCard');
+                try {
+                  // В случае ошибки, пользователь увидит уведомление
+                  if (typeof onEdit !== 'function') {
+                    console.error('Функция onEdit не определена');
+                    toast.error('Ошибка: функция редактирования не определена');
+                    return;
+                  }
+                  
+                  // Вызываем функцию редактирования
+                  onEdit(account);
+                } catch (error) {
+                  console.error('Ошибка при вызове функции редактирования:', error);
+                  toast.error('Не удалось открыть форму редактирования: ' + error.message);
+                }
+              }}
             >
               <FontAwesomeIcon icon={faPen} /> Изменить
             </button>
             <button 
               className="delete-button" 
-              onClick={() => onDelete(account._id || account.id)}
+              onClick={() => {
+                console.log('Нажата кнопка удаления аккаунта в AccountCard');
+                try {
+                  // В случае ошибки, пользователь увидит уведомление
+                  if (typeof onDelete !== 'function') {
+                    console.error('Функция onDelete не определена');
+                    toast.error('Ошибка: функция удаления не определена');
+                    return;
+                  }
+                  
+                  // Вызываем функцию удаления
+                  onDelete(account._id || account.id);
+                } catch (error) {
+                  console.error('Ошибка при вызове функции удаления:', error);
+                  toast.error('Не удалось удалить аккаунт: ' + error.message);
+                }
+              }}
             >
               <FontAwesomeIcon icon={faTrash} /> Удалить
             </button>

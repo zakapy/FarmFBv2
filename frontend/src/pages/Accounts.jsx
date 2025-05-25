@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import './Accounts.css';
 
 import {
   fetchAccounts,
@@ -28,28 +30,85 @@ const Accounts = () => {
     dispatch(fetchAccounts());
   }, [dispatch]);
 
+  // Добавляем эффект для отслеживания состояния showForm
+  useEffect(() => {
+    console.log('Состояние showForm изменилось:', showForm);
+  }, [showForm]);
+
   const handleAdd = () => {
-    setEditData(null);
-    setShowForm(true);
+    try {
+      console.log('Кнопка добавления аккаунта нажата');
+      setEditData(null);
+      setShowForm(true);
+      console.log('ShowForm установлен в:', true);
+      // Добавим небольшую задержку для гарантии обновления состояния
+      setTimeout(() => {
+        if (!document.querySelector('.modal-backdrop')) {
+          console.log('Модальное окно не отображается, принудительно обновляем состояние');
+          setShowForm(prev => {
+            console.log('Обновляем showForm из', prev, 'в true');
+            return true;
+          });
+        }
+      }, 100);
+    } catch (error) {
+      console.error('Ошибка при обработке кнопки добавления аккаунта:', error);
+      toast.error('Не удалось открыть форму: ' + error.message);
+    }
   };
 
   const handleEdit = (account) => {
-    const safeAccount = {
-      ...account,
-      proxy: account.proxy || { name: '' },
-    };
-    setEditData(safeAccount);
-    setShowForm(true);
+    try {
+      console.log('Кнопка редактирования аккаунта нажата', account);
+      const safeAccount = {
+        ...account,
+        proxy: account.proxy || { name: '' },
+      };
+      setEditData(safeAccount);
+      setShowForm(true);
+      console.log('ShowForm установлен в:', true);
+      // Добавим небольшую задержку для гарантии обновления состояния
+      setTimeout(() => {
+        if (!document.querySelector('.modal-backdrop')) {
+          console.log('Модальное окно не отображается, принудительно обновляем состояние');
+          setShowForm(prev => {
+            console.log('Обновляем showForm из', prev, 'в true');
+            return true;
+          });
+        }
+      }, 100);
+    } catch (error) {
+      console.error('Ошибка при обработке кнопки редактирования аккаунта:', error);
+      toast.error('Не удалось открыть форму редактирования: ' + error.message);
+    }
   };
 
   const handleDelete = (id) => {
+    console.log('Запрос на удаление аккаунта с ID:', id);
     setDeleteId(id);
+    console.log('DeleteId установлен в:', id);
   };
 
   const confirmDelete = async () => {
-    await dispatch(removeAccount(deleteId));
-    setDeleteId(null);
-    dispatch(fetchAccounts()); // 🔄 обновляем список
+    try {
+      console.log('Подтверждено удаление аккаунта с ID:', deleteId);
+      
+      // Сначала удаляем аккаунт
+      await dispatch(removeAccount(deleteId)).unwrap();
+      
+      // Показываем уведомление об успешном удалении
+      toast.success('Аккаунт успешно удален!');
+      
+      // Затем обновляем список аккаунтов
+      console.log('Запрос на обновление списка аккаунтов после удаления');
+      await dispatch(fetchAccounts()).unwrap();
+      
+      // Закрываем модальное окно подтверждения
+      setDeleteId(null);
+    } catch (error) {
+      console.error('Ошибка при удалении аккаунта:', error);
+      toast.error('Произошла ошибка при удалении аккаунта: ' + (error.message || 'Неизвестная ошибка'));
+    }
   };
   
   // Обработчик изменения поискового запроса
@@ -62,20 +121,50 @@ const Accounts = () => {
     acc.name?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const submitForm = (data) => {
-    if (editData) {
-      dispatch(editAccount({ id: editData._id || editData.id, data }));
-    } else {
-      dispatch(addAccount(data));
+  const submitForm = async (data) => {
+    try {
+      console.log('Получены данные формы:', data);
+      
+      if (editData) {
+        console.log('Редактирование аккаунта:', editData._id || editData.id);
+        // Сначала редактируем аккаунт
+        await dispatch(editAccount({ 
+          id: editData._id || editData.id, 
+          data 
+        })).unwrap();
+        
+        // Затем обновляем список аккаунтов
+        console.log('Обновляем список аккаунтов после редактирования');
+        await dispatch(fetchAccounts()).unwrap();
+        
+        // Показываем уведомление об успешном обновлении
+        toast.success('Аккаунт успешно обновлен!');
+      } else {
+        console.log('Добавление нового аккаунта');
+        // Сначала добавляем аккаунт
+        await dispatch(addAccount(data)).unwrap();
+        
+        // Затем обновляем список аккаунтов
+        console.log('Обновляем список аккаунтов после добавления');
+        await dispatch(fetchAccounts()).unwrap();
+        
+        // Показываем уведомление об успешном добавлении
+        toast.success('Аккаунт успешно добавлен!');
+      }
+      
+      // Закрываем форму только после успешного выполнения всех операций
+      setShowForm(false);
+    } catch (error) {
+      console.error('Ошибка при обработке формы:', error);
+      toast.error('Произошла ошибка: ' + (error.message || 'Неизвестная ошибка'));
     }
-    setShowForm(false);
   };
 
   return (
-    <div className="container">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+    <div className="accounts-container">
+      <div className="accounts-header">
         <h1>Мои аккаунты</h1>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+        <div className="actions-container">
           {/* Компонент поиска */}
           <div style={{ position: 'relative' }}>
             <span style={{ 
@@ -119,7 +208,12 @@ const Accounts = () => {
           >
             <span>🚀</span> Создать FB аккаунт
           </Link>
-          <Button onClick={handleAdd}>➕ Добавить аккаунт</Button>
+          <button 
+            className="add-account-button"
+            onClick={handleAdd}
+          >
+            <span>➕</span> Добавить аккаунт
+          </button>
         </div>
       </div>
 
@@ -153,21 +247,36 @@ const Accounts = () => {
       )}
 
       {showForm && (
-        <AccountForm
-          onClose={() => setShowForm(false)}
-          onSubmit={submitForm}
-          initialData={editData}
-        />
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 9998 }}>
+          <AccountForm
+            onClose={() => {
+              console.log('Закрытие формы');
+              setShowForm(false);
+              // Установим небольшую задержку для сброса состояния editData
+              setTimeout(() => {
+                setEditData(null);
+                console.log('EditData сброшен');
+              }, 100);
+            }}
+            onSubmit={(data) => {
+              console.log('Отправка формы с данными:', data);
+              submitForm(data);
+            }}
+            initialData={editData}
+          />
+        </div>
       )}
 
       {deleteId && (
-        <ConfirmModal
-          title="Удалить аккаунт?"
-          onClose={() => setDeleteId(null)}
-          onConfirm={confirmDelete}
-        >
-          Это действие нельзя отменить.
-        </ConfirmModal>
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 9998 }}>
+          <ConfirmModal
+            title="Удалить аккаунт?"
+            onClose={() => setDeleteId(null)}
+            onConfirm={confirmDelete}
+          >
+            Это действие нельзя отменить.
+          </ConfirmModal>
+        </div>
       )}
     </div>
   );

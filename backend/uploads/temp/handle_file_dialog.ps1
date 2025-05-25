@@ -49,11 +49,11 @@
                       Start-Sleep -Seconds 1
                       
                       # Вводим путь к файлу и нажимаем Enter
-                      [System.Windows.Forms.SendKeys]::SendWait("C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\uploads\temp\8ca361e2-d014-4bd6-b7dd-dc63bfb2a691.JPG")
+                      [System.Windows.Forms.SendKeys]::SendWait("C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\uploads\temp\98cce9d5-b791-44cd-bb08-fb02f00193c5.JPG")
                       Start-Sleep -Milliseconds 500
                       [System.Windows.Forms.SendKeys]::SendWait("{ENTER}")
                       
-                      Write-Host "Введен путь к файлу и нажат Enter: C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\uploads\temp\8ca361e2-d014-4bd6-b7dd-dc63bfb2a691.JPG"
+                      Write-Host "Введен путь к файлу и нажат Enter: C:\Users\Богдан\Documents\GitHub\FarmFBv2\backend\uploads\temp\98cce9d5-b791-44cd-bb08-fb02f00193c5.JPG"
                       break
                   }
                   catch {

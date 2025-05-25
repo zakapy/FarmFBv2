@@ -5,8 +5,22 @@ import Modal from './Modal';
 import API from '../api/axios';
 import { API as ENDPOINTS } from '../api/endpoints';
 import { toast } from 'react-toastify';
+// import './AccountForm.css'; - Больше не используем внешний CSS
 
 const AccountForm = ({ initialData, onClose, onSubmit }) => {
+  console.log('AccountForm рендеринг с данными:', initialData);
+
+  useEffect(() => {
+    console.log('AccountForm смонтирован/обновлен, initialData =', initialData);
+    return () => {
+      console.log('AccountForm будет размонтирован');
+    };
+  }, [initialData]);
+
+  if (!onClose || !onSubmit) {
+    console.error('AccountForm: не переданы необходимые функции', { onClose: !!onClose, onSubmit: !!onSubmit });
+  }
+
   const [form, setForm] = useState({
     name: '',
     cookies: '',
@@ -256,45 +270,42 @@ IP: ${data.ip}
       }
     }
 
-    const payload = {
-      _id: initialData?._id,
-      name: form.name.trim(),
-      proxy: proxy || undefined,
-      proxyType: form.proxyType,
-      status: 'неизвестно'
-    };
-
-    // Добавляем куки, если они есть
-    if (parsedCookies) {
-      payload.cookies = parsedCookies;
-    }
-
-    // Добавляем учетные данные, если они нужны
-    if (form.showAuthFields) {
-      if (form.email) payload.email = form.email;
-      if (form.password) payload.password = form.password;
-    }
-
-    // Добавляем код 2FA или секретный ключ, если указаны
-    if (requires2FA || form.twoFactorSecret) {
-      if (form.twoFactorSecret) {
-        payload.twoFactorSecret = form.twoFactorSecret;
-      }
-      if (form.twoFactorCode) {
-        payload.twoFactorCode = form.twoFactorCode;
-      }
-    }
-
     try {
-      const result = await onSubmit(payload);
-      
-      // Проверяем, нужна ли 2FA
-      if (result?.requires2FA) {
-        setRequires2FA(true);
-        setError(result.message || 'Требуется верификация 2FA');
+      // Преобразовать данные формы в требуемый формат
+      const accountData = {
+        name: form.name.trim(),
+        cookies: parsedCookies,
+        proxy: proxy || null,
+        proxyType: form.proxyType,
+        meta: {}
+      };
+
+      // Добавляем данные аутентификации, если они указаны
+      if (form.showAuthFields) {
+        if (form.email) {
+          accountData.meta.email = form.email;
+        }
+        if (form.password) {
+          accountData.meta.password = form.password;
+        }
+        if (form.twoFactorSecret) {
+          accountData.meta.twoFactorSecret = form.twoFactorSecret;
+        }
+        if (form.twoFactorCode) {
+          accountData.meta.twoFactorCode = form.twoFactorCode;
+        }
       }
-      
+
+      console.log('Отправка данных формы:', accountData);
+      // Вызываем переданную функцию onSubmit с данными формы
+      if (typeof onSubmit === 'function') {
+        onSubmit(accountData);
+      } else {
+        console.error('onSubmit не является функцией:', onSubmit);
+        setError('Ошибка отправки формы: обработчик не определен');
+      }
     } catch (err) {
+      console.error('Ошибка при обработке данных формы:', err);
       setError(err.message || 'Произошла ошибка при обработке аккаунта');
     }
   };
@@ -306,6 +317,12 @@ IP: ${data.ip}
     return 'Например: 192.168.1.1:8080:username:password';
   };
 
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    console.log('Кнопка Сохранить/Добавить нажата');
+    handleSubmit(e);
+  };
+
   return (
     <Modal
       title={initialData ? 'Редактировать аккаунт' : 'Новый аккаунт'}
@@ -313,8 +330,15 @@ IP: ${data.ip}
       onClose={onClose}
     >
       <form
-        onSubmit={handleSubmit}
+        onSubmit={handleFormSubmit}
         className="account-form-modal-body"
+        style={{
+          backgroundColor: '#1a1f35',
+          padding: '20px',
+          borderRadius: '8px',
+          width: '100%',
+          color: '#ffffff'
+        }}
       >
         <Input
           name="name"
@@ -538,7 +562,25 @@ IP: ${data.ip}
           </div>
         )}
 
-        <Button type="submit" className="button">{initialData ? 'Сохранить' : 'Добавить'}</Button>
+        <div style={{ marginTop: '25px' }}>
+          <button 
+            type="submit"
+            style={{
+              width: '100%',
+              padding: '12px',
+              backgroundColor: '#3b82f6',
+              border: 'none',
+              borderRadius: '6px',
+              color: 'white',
+              fontSize: '16px',
+              fontWeight: 'bold',
+              cursor: 'pointer',
+              transition: 'background-color 0.2s'
+            }}
+          >
+            {initialData ? 'Сохранить' : 'Добавить'}
+          </button>
+        </div>
       </form>
     </Modal>
   );

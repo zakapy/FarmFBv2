@@ -38,8 +38,8 @@
 }
 
 /* Кнопка запуска фарма */
-button.primary, .farm-header .Button {
-  background: linear-gradient(90deg,#3B82F6 60%,#60A5FA 100%);
+.farm-header .Button {
+  background: linear-gradient(90deg, #3B82F6 60%, #60A5FA 100%);
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -48,14 +48,24 @@ button.primary, .farm-header .Button {
   padding: 10px 28px;
   box-shadow: 0 2px 12px 0 rgba(59,130,246,0.13);
   cursor: pointer;
-  transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+  transition: all 0.2s ease;
   margin-left: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
 }
-button.primary:hover, .farm-header .Button:hover {
-  background: #2563eb;
+
+.farm-header .Button:hover {
+  background: linear-gradient(90deg, #2563eb 60%, #3B82F6 100%);
   color: #fff;
-  transform: scale(1.04);
+  transform: translateY(-1px);
   box-shadow: 0 4px 18px 0 rgba(59,130,246,0.18);
+}
+
+.farm-header .Button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 12px 0 rgba(59,130,246,0.13);
 }
 
 /* Стили для чекбоксов и иконок выбора функций */

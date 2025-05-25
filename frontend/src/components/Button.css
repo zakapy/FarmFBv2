@@ -293,3 +293,31 @@
     box-shadow: 0 0 0 0 rgba(0, 180, 255, 0);
   }
 }
+
+/* Стиль для кнопки "Добавить аккаунт" */
+.btn-add-account {
+  background: #3B82F6;
+  color: white;
+  font-size: 14px;
+  padding: 8px 14px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-width: auto;
+  text-transform: none;
+  letter-spacing: normal;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.35);
+  transition: all 0.2s ease;
+}
+
+.btn-add-account:hover {
+  background: #2563EB;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.45);
+}
+
+.btn-add-account:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.35);
+}
